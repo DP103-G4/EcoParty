@@ -41,7 +41,7 @@ public class NewsDaoMySql implements NewsDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return newsList;
+		return null;
 	}
 
 	@Override
