@@ -23,7 +23,7 @@ public class NewsDaoMySql implements NewsDao {
 
 	@Override
 	public List<News> getAll() {
-		String sql = "select news_id, news_title, news_content, news_time from Inform order by news_time desc;";
+		String sql = "select news_id, news_title, news_content, news_time from News order by news_time desc;";
 		List<News> newsList = new ArrayList<News>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
