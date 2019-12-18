@@ -28,12 +28,12 @@ public class NewsDaoMySql implements NewsDao {
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
 			try (ResultSet rs = ps.executeQuery();) {
-				while(rs.next()) {
-					int news_id = rs.getInt(1);
-					String news_title = rs.getString(2);
-					String news_content = rs.getString(3);
-					Date news_time = rs.getDate(4);
-					News news = new News(news_id, news_title, news_content, news_time);
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					String title = rs.getString(2);
+					String content = rs.getString(3);
+					Date time = rs.getDate(4);
+					News news = new News(id, title, content, time);
 					newsList.add(news);
 				}
 			}
