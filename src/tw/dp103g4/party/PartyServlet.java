@@ -55,6 +55,7 @@ public class PartyServlet extends HttpServlet {
 
 		if (action.equals("getAll")) {
 			
+			
 		} else if (action.equals("getCoverImg")) {
 			os = response.getOutputStream();
 			id = jsonObject.get("id").getAsInt();
@@ -102,24 +103,12 @@ public class PartyServlet extends HttpServlet {
 					coverImg = Base64.getMimeDecoder().decode(coverImgBase64);
 				}
 			}
-			if (jsonObject.get("beforeImgBase64") != null) {
-				String beforeImgBase64 = jsonObject.get("beforeImgBase64").getAsString();
-				if (beforeImgBase64 != null && !beforeImgBase64.isEmpty()) {
-					beforeImg = Base64.getMimeDecoder().decode(beforeImgBase64);
-				}
-			}
-			if (jsonObject.get("afterImgBase64") != null) {
-				String afterImgBase64 = jsonObject.get("afterImgBase64").getAsString();
-				if (afterImgBase64 != null && !afterImgBase64.isEmpty()) {
-					afterImg = Base64.getMimeDecoder().decode(afterImgBase64);
-				}
-			}
 			
 			int count = 0;
 			if (action.equals("partyInsert")) {
 				count = partyDao.insert(party, coverImg);
 			} else if (action.equals("partyUpdate")) {
-				count = partyDao.update(party, coverImg, beforeImg, afterImg);
+				count = partyDao.update(party, coverImg);
 			}
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("partyDelete")) {
