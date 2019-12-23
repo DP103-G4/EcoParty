@@ -1,4 +1,4 @@
-package tw.dp103g4.piecewarn;
+package tw.dp103g4.pieceWarn;
 
 import static tw.dp103g4.main.Common.*;
 
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import tw.dp103g4.msgwarn.MsgWarn;
+import tw.dp103g4.msgWarn.MsgWarn;
 
 public class PieceWarnDaoMySql implements PieceWarnDao{
 	
@@ -61,7 +61,7 @@ public class PieceWarnDaoMySql implements PieceWarnDao{
 		return pieceWarnList;
 	}
 	@Override
-	public int inster(PieceWarn pieceWarn) {
+	public int insert(PieceWarn pieceWarn) {
 		int count = 0;
 		String sql = "INSERT INTO Piece_warn " + "(piece_id,piece_warn_user_id,piece_warn_content) " + "VALUES (?,?,?);";
 		Connection connection = null;

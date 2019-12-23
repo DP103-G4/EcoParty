@@ -1,62 +1,67 @@
-package tw.dp103g4.msgwarn;
+package tw.dp103g4.pieceWarn;
 
 import java.sql.Date;
 
-public class MsgWarn {
+public class PieceWarn {
 	private int id;
-	private int messageId;
+	private int pieceId;
 	private int userId;
 	private Date time;
 	private String content;
-	
-	
-	public MsgWarn(int id,int messageId,int userId,Date time,String content) {
+
+	public PieceWarn(int id, int pieceId, int userId, Date time, String content) {
 		super();
 		this.id = id;
-		this.messageId = messageId;
+		this.pieceId = pieceId;
 		this.userId = userId;
 		this.time = time;
 		this.content = content;
-		
-		}
-	
-	@Override
-	public String toString() {
-		String text = "ID"+id+"\n content"+ content;
-		return text;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "PieceWarn [id=" + id + ", pieceId=" + pieceId + ", userId=" + userId + ", time=" + time + ", content="
+				+ content + "]";
+	}
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getMessageId() {
-		return messageId;
+
+	public int getPieceId() {
+		return pieceId;
 	}
-	public void setMessageId(int messageId) {
-		this.messageId = messageId;
+
+	public void setPieceId(int pieceId) {
+		this.pieceId = pieceId;
 	}
+
 	public int getUserId() {
 		return userId;
 	}
+
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+
 	public Date getTime() {
 		return time;
 	}
+
 	public void setTime(Date time) {
 		this.time = time;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
+
 }

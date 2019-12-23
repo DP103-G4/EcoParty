@@ -1,4 +1,9 @@
-package tw.dp103g4.msgwarn;
+package tw.dp103g4.talk;
+
+import static tw.dp103g4.main.Common.CLASS_NAME;
+import static tw.dp103g4.main.Common.PASSWORD;
+import static tw.dp103g4.main.Common.URL;
+import static tw.dp103g4.main.Common.USER;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -9,11 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static tw.dp103g4.main.Common.*;
+public class TalkDaoMySql implements TalkDao {
 
-public class MsgWarnDaoMySql implements MsgWarnDao {
-
-	public MsgWarnDaoMySql() {
+	public TalkDaoMySql() {
 		super();
 		try {
 			Class.forName(CLASS_NAME);
@@ -23,25 +26,28 @@ public class MsgWarnDaoMySql implements MsgWarnDao {
 	}
 
 	@Override
-	public List<MsgWarn> getAll() {
-		String sql = "SELECT msg_warn_id, message_id, msg_warn_user_id, msg_warn_time, msg_warn_content " + "FROM Msg_warn ORDER BY msg_warn_time ASC;";
+	public List<Talk> getAll() {
+		String sql = "SELECT talk_id, tk_receiver_id, tk_sender_id, party_id, talk_content, talk_time, talk_isRead "
+				+ "FROM Talk ORDER BY talk_time ASC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
-		List<MsgWarn> msgWarnList = new ArrayList<MsgWarn>();
+		List<Talk> talkList = new ArrayList<Talk>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ResultSet resultSet = ps.executeQuery();
 			while (resultSet.next()) {
 				int id = resultSet.getInt(1);
-				int messageId = resultSet.getInt(2);
-				int userId = resultSet.getInt(3);
-				Date time = resultSet.getDate(4);
+				int receiverId = resultSet.getInt(2);
+				int senderId = resultSet.getInt(3);
+				int partyId = resultSet.getInt(4);
 				String content = resultSet.getString(5);
-				MsgWarn msgWarn = new MsgWarn(id, messageId, userId, time, content);
-				msgWarnList.add(msgWarn);
+				Date time = resultSet.getDate(6);
+				Boolean isRead = resultSet.getBoolean(7);
+				Talk talk = new Talk(id, receiverId, senderId, partyId, content, time, isRead);
+				talkList.add(talk);
 			}
-			return msgWarnList;
+			return talkList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -56,24 +62,35 @@ public class MsgWarnDaoMySql implements MsgWarnDao {
 				e.printStackTrace();
 			}
 		}
-		return msgWarnList;
+		return talkList;
+
 	}
 
-
-	
-
 	@Override
-	public int inster(MsgWarn msgWarn) {
+	public int insert(Talk talk) {
 		int count = 0;
-		String sql = "INSERT INTO Msg_warn " + "(message_id,msg_warn_user_id,msg_warn_content) " + "VALUES (?,?,?);";
+		String sql ="";
+		int partyId = talk.getPartyId();
+		
+		if (partyId != -1) {
+			sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,party_id,talk_content) "
+					+ "VALUES (?,?,?,?);";
+		} else {
+			sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,talk_content) " + "VALUES (?,?,?);";
+		}
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, msgWarn.getMessageId());
-			ps.setInt(2, msgWarn.getUserId());
-			ps.setString(3, msgWarn.getContent());
+			ps.setInt(1, talk.getReceiverId());
+			ps.setInt(2, talk.getSenderId());
+			if (partyId != -1) {
+				ps.setInt(3, partyId);
+				ps.setString(4, talk.getContent());
+			} else {
+				ps.setString(3, talk.getContent());
+			}
 			count = ps.executeUpdate();
 
 		} catch (SQLException e) {
@@ -97,23 +114,22 @@ public class MsgWarnDaoMySql implements MsgWarnDao {
 	}
 
 	@Override
-	public int delete(int id) {
+	public int updateIsRead() {
 		int count = 0;
-		String sql = "DELETE FROM Msg_warn WHERE msg_warn_id = ?;";
+		String sql = "UPDATE Talk SET talk_isRead = 1 WHERE talk_isRead = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
 			count = ps.executeUpdate();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				if (ps != null) {
-					// When a Statement object is closed,
-					// its current ResultSet object is also closed
+
 					ps.close();
 				}
 				if (connection != null) {
@@ -123,7 +139,8 @@ public class MsgWarnDaoMySql implements MsgWarnDao {
 				e.printStackTrace();
 			}
 		}
+
 		return count;
 	}
-	
+
 }

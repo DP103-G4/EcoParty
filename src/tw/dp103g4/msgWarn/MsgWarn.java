@@ -1,39 +1,43 @@
-package tw.dp103g4.piecewarn;
+package tw.dp103g4.msgWarn;
 
 import java.sql.Date;
 
-public class PieceWarn {
+public class MsgWarn {
 	private int id;
-	private int pieceId;
+	private int messageId;
 	private int userId;
 	private Date time;
 	private String content;
 	
-	public PieceWarn(int id,int pieceId,int userId,Date time,String content) {
+	
+	public MsgWarn(int id,int messageId,int userId,Date time,String content) {
 		super();
 		this.id = id;
-		this.pieceId = pieceId;
+		this.messageId = messageId;
 		this.userId = userId;
 		this.time = time;
-		this.content = content;	
+		this.content = content;
+		
 		}
 	
 	@Override
 	public String toString() {
-		return "PieceWarn [id=" + id + ", pieceId=" + pieceId + ", userId=" + userId + ", time=" + time + ", content="
-				+ content + "]";
+		String text = "ID"+id+"\n content"+ content;
+		return text;
 	}
+
+	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getPieceId() {
-		return pieceId;
+	public int getMessageId() {
+		return messageId;
 	}
-	public void setPieceId(int pieceId) {
-		this.pieceId = pieceId;
+	public void setMessageId(int messageId) {
+		this.messageId = messageId;
 	}
 	public int getUserId() {
 		return userId;

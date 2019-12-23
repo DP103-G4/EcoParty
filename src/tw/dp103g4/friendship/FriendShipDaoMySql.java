@@ -90,7 +90,7 @@ public class FriendShipDaoMySql implements FriendShipDao {
 
 	@Override
 	public List<FriendShip> getAll() {
-		String sql = "SELECT userone_id, usertwo_id " + "FROM Friendship ORDER BY userone_id DESC;";
+		String sql = "SELECT userone_id, usertwo_id, isInvite " + "FROM Friendship ORDER BY userone_id DESC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<FriendShip> friendShipList = new ArrayList<FriendShip>();
@@ -101,8 +101,9 @@ public class FriendShipDaoMySql implements FriendShipDao {
 			while (resultSet.next()) {
 				int userOne = resultSet.getInt(1);
 				int userTwo = resultSet.getInt(2);
+				Boolean isInvite = resultSet.getBoolean(3);
 				
-				FriendShip friendShip = new FriendShip(userOne, userTwo);
+				FriendShip friendShip = new FriendShip(userOne, userTwo, isInvite);
 				friendShipList.add(friendShip);
 			}
 			return friendShipList;
@@ -121,6 +122,36 @@ public class FriendShipDaoMySql implements FriendShipDao {
 			}
 		}
 		return friendShipList;
+	}
+	
+	@Override
+	public int updateIsInvite() {
+		int count = 0;
+		String sql = "UPDATE Friendship SET isInvite = 1 WHERE isInvite = 0;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			count = ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return count;
 	}
 
 }

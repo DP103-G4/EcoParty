@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -29,7 +28,7 @@ public class FriendShipServlet extends HttpServlet {
 		writeText(response, new Gson().toJson(friendShips));
 	}
 
-	private void writeText(HttpServletResponse response, String outText) throws IOException{
+	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
@@ -57,19 +56,21 @@ public class FriendShipServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<FriendShip> friendShips = friendShipDao.getAll();
 			writeText(response, gson.toJson(friendShips));
-			
+
 		} else if (action.equals("insert")) {
 			int idOne = jsonObject.get("idOne").getAsInt();
 			int idTwo = jsonObject.get("idTwo").getAsInt();
-			int count = 0;
-			count = friendShipDao.insert(idOne, idTwo);
-			writeText(response, gson.toJson( idOne +"&"+ idTwo ));
-			
+			int count = friendShipDao.insert(idOne, idTwo);
+			writeText(response, gson.toJson(idOne + "&" + idTwo));
+
 		} else if (action.equals("delete")) {
 			int idOne = jsonObject.get("idOne").getAsInt();
 			int idTwo = jsonObject.get("idTwo").getAsInt();
 			int count = friendShipDao.delete(idOne, idTwo);
-			writeText(response, gson.toJson( idOne +"&"+ idTwo ));
+			writeText(response, gson.toJson(idOne + "&" + idTwo));
+
+		} else if (action.equals("updateIsInvite")) {
+			int count = friendShipDao.updateIsInvite();
 
 		}
 

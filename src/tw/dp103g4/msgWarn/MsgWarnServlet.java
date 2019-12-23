@@ -1,4 +1,4 @@
-package tw.dp103g4.piecewarn;
+package tw.dp103g4.msgWarn;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,19 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-@WebServlet("/PieceWarnServlet")
-public class PieceWarnServlet extends HttpServlet {
+@WebServlet("/MsgWarnServlet")
+public class MsgWarnServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CONTENT_TYPE = "text/html; charset=utf-8";
-	PieceWarnDao pieceWarnDao = null;
+	MsgWarnDao msgWarnDao = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if (pieceWarnDao == null) {
-			pieceWarnDao = new PieceWarnDaoMySql();
+		if (msgWarnDao == null) {
+			msgWarnDao = new MsgWarnDaoMySql();
 		}
-		List<PieceWarn> pieceWarns = pieceWarnDao.getAll();
-		writeText(response, new Gson().toJson(pieceWarns));
+		List<MsgWarn> msgWarns = msgWarnDao.getAll();
+		writeText(response, new Gson().toJson(msgWarns));
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException{
@@ -47,24 +47,24 @@ public class PieceWarnServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
-		if (pieceWarnDao == null) {
-			pieceWarnDao = new PieceWarnDaoMySql();
+		if (msgWarnDao == null) {
+			msgWarnDao = new MsgWarnDaoMySql();
 		}
 		String action = jsonObject.get("action").getAsString();
 		
 		if (action.equals("getAll")) {
-			List<PieceWarn> pieceWarns = pieceWarnDao.getAll();
-			writeText(response, gson.toJson(pieceWarns));			
-		} else if (action.equals("inster")) {
-			String pieceWarnJson = jsonObject.get("pieceWarn").getAsString();
-			System.out.println("pieceWarnJson = " + pieceWarnJson);
-			PieceWarn pieceWarn = gson.fromJson(pieceWarnJson, PieceWarn.class);
+			List<MsgWarn> msgWarns = msgWarnDao.getAll();
+			writeText(response, gson.toJson(msgWarns));			
+		} else if (action.equals("insert")) {
+			String msgWarnJson = jsonObject.get("msgWarn").getAsString();
+			System.out.println("msgWarnJson = " + msgWarnJson);
+			MsgWarn msgWarn = gson.fromJson(msgWarnJson, MsgWarn.class);
 			int count=0;
-			count = pieceWarnDao.inster(pieceWarn);
+			count = msgWarnDao.insert(msgWarn);
 			
 		}else if (action.equals("delete")) {
 			Integer id = jsonObject.get("id").getAsInt();
-			int count = pieceWarnDao.delete(id);
+			int count = msgWarnDao.delete(id);
 			writeText(response, String.valueOf(count));
 		}
 	}
