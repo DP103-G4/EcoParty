@@ -72,7 +72,7 @@ public class TalkDaoMySql implements TalkDao {
 		String sql ="";
 		int partyId = talk.getPartyId();
 		
-		if (partyId != -1) {
+		if (String.valueOf(partyId).equals("")) {
 			sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,party_id,talk_content) "
 					+ "VALUES (?,?,?,?);";
 		} else {

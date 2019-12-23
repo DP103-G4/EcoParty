@@ -8,10 +8,12 @@ public interface NewsDao {
 	
 	public News getById();
 	
-	public int Insert(News news);
+	public int insert(News news , byte[] image);
 	
-	public int Update(News news);
+	public int update(News news , byte[] image);
 	
-	public int deleteById(int id);
+	public int delete(int id);
+	
+	byte[] getImage(int id);
 	
 }

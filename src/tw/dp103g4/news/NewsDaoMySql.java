@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static tw.dp103g4.main.Common.*;
 
 public class NewsDaoMySql implements NewsDao {
@@ -51,21 +52,143 @@ public class NewsDaoMySql implements NewsDao {
 	}
 
 	@Override
-	public int Insert(News news) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insert(News news , byte[] image) {
+		int count = 0;
+		String sql = "INSERT INTO News " + "(news_title,news_content,image) " + "VALUES (?,?,?);";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, news.getTitle());
+			ps.setString(2, news.getContent());
+			ps.setBytes(3, image);
+			count = ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		return count;
 	}
 
 	@Override
-	public int Update(News news) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(News news , byte[] image) {
+		int count = 0;
+		String sql = "";
+		// image為null就不更新image欄位內容
+		if (image != null) {
+			sql = "UPDATE News SET news_title = ?, news_content = ?, image = ? WHERE news_id = ?;";
+		} else {
+			sql = "UPDATE News SET news_title = ?, news_content = ? WHERE news_id = ?;";
+		}
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, news.getTitle());
+			ps.setString(2, news.getContent());
+			if (image != null) {
+				ps.setBytes(3, image);
+				ps.setInt(4, news.getId());
+			} else {
+				ps.setInt(3, news.getId());
+			}
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					// When a Statement object is closed,
+					// its current ResultSet object is also closed
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 	@Override
-	public int deleteById(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int delete(int id) {
+		int count = 0;
+		String sql = "DELETE FROM News WHERE news_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					// When a Statement object is closed,
+					// its current ResultSet object is also closed
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+	
+	@Override
+	public byte[] getImage(int id) {
+		String sql = "SELECT image FROM News WHERE news_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		byte[] image = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					// When a Statement object is closed,
+					// its current ResultSet object is also closed
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return image;
 	}
 
 }
