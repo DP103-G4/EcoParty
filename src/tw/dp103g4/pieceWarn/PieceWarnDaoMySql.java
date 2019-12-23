@@ -13,8 +13,8 @@ import java.util.List;
 
 import tw.dp103g4.msgWarn.MsgWarn;
 
-public class PieceWarnDaoMySql implements PieceWarnDao{
-	
+public class PieceWarnDaoMySql implements PieceWarnDao {
+
 	public PieceWarnDaoMySql() {
 		super();
 		try {
@@ -26,7 +26,8 @@ public class PieceWarnDaoMySql implements PieceWarnDao{
 
 	@Override
 	public List<PieceWarn> getAll() {
-		String sql = "SELECT piece_warn_id, piece_id, piece_warn_user_id, piece_warn_time, piece_warn_content " + "FROM Piece_warn ORDER BY piece_warn_time ASC;";
+		String sql = "SELECT piece_warn_id, piece_id, piece_warn_user_id, piece_warn_time, piece_warn_content "
+				+ "FROM Piece_warn ORDER BY piece_warn_time ASC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<PieceWarn> pieceWarnList = new ArrayList<PieceWarn>();
@@ -60,10 +61,12 @@ public class PieceWarnDaoMySql implements PieceWarnDao{
 		}
 		return pieceWarnList;
 	}
+
 	@Override
 	public int insert(PieceWarn pieceWarn) {
 		int count = 0;
-		String sql = "INSERT INTO Piece_warn " + "(piece_id,piece_warn_user_id,piece_warn_content) " + "VALUES (?,?,?);";
+		String sql = "INSERT INTO Piece_warn " + "(piece_id,piece_warn_user_id,piece_warn_content) "
+				+ "VALUES (?,?,?);";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -93,6 +96,7 @@ public class PieceWarnDaoMySql implements PieceWarnDao{
 
 		return count;
 	}
+
 	@Override
 	public int delete(int id) {
 		int count = 0;
