@@ -1,8 +1,9 @@
-package tw.dp103g4.friendship;
+package tw.dp103g4.piecewarn;
 
 import static tw.dp103g4.main.Common.*;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,9 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import tw.dp103g4.msgwarn.MsgWarn;
 
-public class FriendShipDaoMySql implements FriendShipDao {
-	public FriendShipDaoMySql() {
+public class PieceWarnDaoMySql implements PieceWarnDao{
+	
+	public PieceWarnDaoMySql() {
 		super();
 		try {
 			Class.forName(CLASS_NAME);
@@ -22,19 +25,25 @@ public class FriendShipDaoMySql implements FriendShipDao {
 	}
 
 	@Override
-	public int insert(int idOne, int idTwo) {
-		int count = 0;
-		String sql = "INSERT INTO Friendship " + "(idone,idtwo)" + "VALUES (?,?);";
+	public List<PieceWarn> getAll() {
+		String sql = "SELECT piece_warn_id, piece_id, piece_warn_user_id, piece_warn_time, piece_warn_content " + "FROM Piece_warn ORDER BY piece_warn_time ASC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
+		List<PieceWarn> pieceWarnList = new ArrayList<PieceWarn>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, idOne);
-			ps.setInt(2, idTwo);
-
-			count = ps.executeUpdate();
-
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				int pieceId = resultSet.getInt(2);
+				int userId = resultSet.getInt(3);
+				Date time = resultSet.getDate(4);
+				String content = resultSet.getString(5);
+				PieceWarn pieceWarn = new PieceWarn(id, pieceId, userId, time, content);
+				pieceWarnList.add(pieceWarn);
+			}
+			return pieceWarnList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -49,26 +58,52 @@ public class FriendShipDaoMySql implements FriendShipDao {
 				e.printStackTrace();
 			}
 		}
-		return count;
+		return pieceWarnList;
 	}
-
 	@Override
-	public int delete(int idOne, int idTwo) {
+	public int inster(PieceWarn pieceWarn) {
 		int count = 0;
-		String sql = "DELETE FROM Friendship WHERE (userone_id = ?) and (usertwo_id = ?);";
+		String sql = "INSERT INTO Piece_warn " + "(piece_id,piece_warn_user_id,piece_warn_content) " + "VALUES (?,?,?);";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, idOne);
-			ps.setInt(2, idTwo);
+			ps.setInt(1, pieceWarn.getPieceId());
+			ps.setInt(2, pieceWarn.getUserId());
+			ps.setString(3, pieceWarn.getContent());
 			count = ps.executeUpdate();
-			if (count == 0) {
-				ps.setInt(1, idTwo);
-				ps.setInt(2, idOne);
-				count = ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
+
+		}
+
+		return count;
+	}
+	@Override
+	public int delete(int id) {
+		int count = 0;
+		String sql = "DELETE FROM Piece_warn WHERE piece_warn_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -86,41 +121,6 @@ public class FriendShipDaoMySql implements FriendShipDao {
 			}
 		}
 		return count;
-	}
-
-	@Override
-	public List<FriendShip> getAll() {
-		String sql = "SELECT userone_id, usertwo_id " + "FROM Friendship ORDER BY userone_id DESC;";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		List<FriendShip> friendShipList = new ArrayList<FriendShip>();
-		try {
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ResultSet resultSet = ps.executeQuery();
-			while (resultSet.next()) {
-				int userOne = resultSet.getInt(1);
-				int userTwo = resultSet.getInt(2);
-				
-				FriendShip friendShip = new FriendShip(userOne, userTwo);
-				friendShipList.add(friendShip);
-			}
-			return friendShipList;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return friendShipList;
 	}
 
 }
