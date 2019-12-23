@@ -11,5 +11,6 @@ public interface PartyPieceDao {
 	
 	public int delete(int id);
 	
+	
 
 }
