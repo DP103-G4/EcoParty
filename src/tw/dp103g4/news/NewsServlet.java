@@ -96,8 +96,8 @@ public class NewsServlet extends HttpServlet {
 		if (newsDao == null) {
 			newsDao = new NewsDaoMySql();
 		}
-		List<News> newsList = newsDao.getAll();
-		writeText(response, new Gson().toJson(newsList));
+		List<News> news = newsDao.getAll();
+		writeText(response, new Gson().toJson(news));
 	}
 
 }

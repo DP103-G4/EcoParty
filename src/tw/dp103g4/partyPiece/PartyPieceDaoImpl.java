@@ -25,17 +25,17 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 
 	@Override
 	public List<PartyPiece> getAllByParty(int partyId) {
-		String sql = "select piece_id, user_id, party_id, piece_content, piece_time from Party_piece;";
+		String sql = "select piece_id, user_id, piece_content, piece_time from Party_piece where party_id = ?;";
 		List<PartyPiece> partyPieceList = new ArrayList<PartyPiece>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, partyId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					int id = rs.getInt(1);
 					int userId = rs.getInt(2);
-					partyId = rs.getInt(3);
-					String content = rs.getString(4);
-					Date time = rs.getDate(5);
+					String content = rs.getString(3);
+					Date time = rs.getDate(4);
 					PartyPiece partyPiece = new PartyPiece(id, userId, partyId, content, time);
 					partyPieceList.add(partyPiece);
 				}

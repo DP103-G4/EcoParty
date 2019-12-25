@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import tw.dp103g4.news.News;
-
 import static tw.dp103g4.main.Common.*;
 
 
@@ -27,20 +25,20 @@ public class InformDaoImpl implements InformDao {
 
 	@Override
 	public List<Inform> getAllbyReceiver(int receiverId) {
-		String sql = "select inform_id, user_id, party_id, inform_time, inform_content, "
-				+ "inform_isRead from Inform order by inform_time desc;";
+		String sql = "select inform_id, party_id, inform_time, inform_content, "
+				+ "inform_isRead from Inform where user_id = ? order by inform_time desc;";
 		List<Inform> informList = new ArrayList<Inform>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
+				ps.setInt(1, receiverId);
 			try (ResultSet rs = ps.executeQuery();) {
 				while (rs.next()) {
 					int id = rs.getInt(1);
-					int userId = rs.getInt(2);
-					int partyId = rs.getInt(3);
-					Date time = rs.getDate(4);
-					String content = rs.getString(5);
-					boolean isRead = rs.getBoolean(6);
-					Inform inform = new Inform(id, userId, partyId, time, content, isRead);
+					int partyId = rs.getInt(2);
+					Date time = rs.getDate(3);
+					String content = rs.getString(4);
+					boolean isRead = rs.getBoolean(5);
+					Inform inform = new Inform(id, receiverId, partyId, time, content, isRead);
 					informList.add(inform);
 				}
 			}
@@ -59,8 +57,16 @@ public class InformDaoImpl implements InformDao {
 
 	@Override
 	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		String sql = "delete from Inform where inform_id;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 	@Override

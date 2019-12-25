@@ -23,7 +23,7 @@ import tw.dp103g4.main.ImageUtil;
 @WebServlet("/PartyServlet")
 public class PartyServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	PartyDaoImpl partyDao = null;
+	PartyDao partyDao = null;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id, imageSize;
@@ -51,7 +51,8 @@ public class PartyServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAll")) {
-			List<Party> parties = partyDao.getAll();
+			int state = jsonObject.get("state").getAsInt();
+			List<Party> parties = partyDao.getAll(state);
 			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getCoverImg")) {
 			os = response.getOutputStream();
@@ -130,7 +131,7 @@ public class PartyServlet extends HttpServlet {
 			partyDao = new PartyDaoImpl();
 		}
 		List<Party> parties = new ArrayList<Party>();
-		parties = partyDao.getAll();
+		parties = partyDao.getAll(1);
 		writeText(response, new Gson().toJson(parties));
 	}
 }

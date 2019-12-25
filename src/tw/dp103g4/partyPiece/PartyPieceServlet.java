@@ -3,6 +3,7 @@ package tw.dp103g4.partyPiece;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -19,7 +20,6 @@ import com.google.gson.JsonObject;
 public class PartyPieceServlet extends HttpServlet {
 	private static final String CONTENT_TYPE = "text/html; charset=utf-8";
        private PartyPieceDao partyPieceDao = null;
-	private int partyId;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -39,6 +39,7 @@ public class PartyPieceServlet extends HttpServlet {
 		}
 		String action = jsonObject.get("action").getAsString();
 		if (action.equals("getAll")) {
+			int partyId = jsonObject.get("partyId").getAsInt();
 			List<PartyPiece> pieces = partyPieceDao.getAllByParty(partyId);
 			writeText(response, gson.toJson(pieces));
 		} else if (action.equals("pieceInsert") || action.equals("pieceUpdate")) {
@@ -74,8 +75,8 @@ public class PartyPieceServlet extends HttpServlet {
 		if (partyPieceDao == null) {
 			partyPieceDao = new PartyPieceDaoImpl();
 		}
-		List<PartyPiece> partyPieces = partyPieceDao.getAllByParty(partyId);
-		partyPieces = partyPieceDao.getAllByParty(partyId);
+		List<PartyPiece> partyPieces = new ArrayList<PartyPiece>();
+		partyPieces = partyPieceDao.getAllByParty(1);
 		writeText(response, new Gson().toJson(partyPieces));
 		}
 }

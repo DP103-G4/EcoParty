@@ -3,6 +3,7 @@ package tw.dp103g4.inform;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -19,7 +20,6 @@ import com.google.gson.JsonObject;
 public class InformServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";       
 	private InformDao informDao = null;
-	private int receiverId;
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -39,6 +39,7 @@ public class InformServlet extends HttpServlet {
 		}
 		String action = jsonObject.get("action").getAsString();
 		if (action.equals("getAll")) {
+			int receiverId = jsonObject.get("receiverId").getAsInt();
 			List<Inform> informs = informDao.getAllbyReceiver(receiverId);
 			writeText(response, gson.toJson(informs));
 		}  else if (action.equals("informInsert")) {
@@ -68,8 +69,9 @@ public class InformServlet extends HttpServlet {
 			throws ServletException, IOException {
 		if (informDao == null) {
 			informDao = new InformDaoImpl();
-			List<Inform> informList = informDao.getAllbyReceiver(receiverId);
-			writeText(response, new Gson().toJson(informList));
+			List<Inform> informs = new ArrayList<Inform>();
+			informs = informDao.getAllbyReceiver(1);
+			writeText(response, new Gson().toJson(informs));
 		}
 	}
 
