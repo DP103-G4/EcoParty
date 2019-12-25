@@ -25,9 +25,10 @@ public class Party implements Serializable{
 	
 	
 	
-	public Party(int ownerId, String name, Date startTime, Date endTime, Date endPostTime, String location,
+	public Party(int id, int ownerId, String name, Date startTime, Date endTime, Date endPostTime, String location,
 			String address, String content, int countUpperLimit, int countLowerLimit, double distance) {
 		super();
+		this.id = id;
 		this.ownerId = ownerId;
 		this.name = name;
 		this.startTime = startTime;

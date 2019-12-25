@@ -6,12 +6,14 @@ public interface NewsDao {
 
 	public List<News> getAll();
 	
-	public News getById();
+	public News getById(int id);
 	
-	public int Insert(News news);
+	public int insert(News news, byte[] image);
 	
-	public int Update(News news);
+	public int update(News news, byte[] image);
 	
 	public int deleteById(int id);
+	
+	public byte[] getImageById(int id);
 	
 }

@@ -41,31 +41,88 @@ public class NewsDaoMySql implements NewsDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return newsList;
 	}
 
 	@Override
-	public News getById() {
+	public News getById(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int Insert(News news) {
-		// TODO Auto-generated method stub
-		return 0;
+	public byte[] getImageById(int id) {
+		String sql = "select news_img from News where news_id = ?;";
+		byte[] image = null;
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, id);
+			try (ResultSet rs = ps.executeQuery();) {
+				if (rs.next()) {
+					image = rs.getBytes(1);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return image;
 	}
 
 	@Override
-	public int Update(News news) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insert(News news, byte[] image) {
+		int count = 0;
+		String sql = "insert into News (news_title, news_content, news_img) value (?, ?, ?);";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setString(1, news.getTitle());
+			ps.setString(2, news.getContent());
+			ps.setBytes(3, image);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	@Override
+	public int update(News news, byte[] image) {
+		int count = 0;
+		String sql = "";
+		if (image != null) {
+			sql = "update News set news_title = ?, news_content = ? news_img = ? where news_id = ?;";
+		} else {
+			sql = "update News set news_title = ?, news_content = ? where news_id = ?;";
+		}
+
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setString(1, news.getTitle());
+			ps.setString(2, news.getContent());
+			if (image != null) {
+				ps.setBytes(3, image);
+				ps.setInt(4, news.getId());
+			} else {
+				ps.setInt(3, news.getId());
+			}
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 	@Override
 	public int deleteById(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		String sql = "delete from News where news_id = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 }
