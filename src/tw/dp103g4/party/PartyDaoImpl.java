@@ -28,8 +28,9 @@ public class PartyDaoImpl implements PartyDao {
 		String sql = "select party_id, owner_id, party_name, party_start_time, party_end_time, "
 				+ "party_post_time, party_post_end_time, party_location, party_address, party_content, "
 				+ "party_count_upper_limit, party_count_lower_limit, party_count_current, party_state, party_distance from Party "
-				+ "order by party_post_time desc;";
-		List<Party> partyList = new ArrayList<Party>();
+				+ "where party_state = 1 order by party_post_time desc;";
+
+				List<Party> partyList = new ArrayList<Party>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
 			try (ResultSet rs = ps.executeQuery();) {
