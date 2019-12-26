@@ -1,9 +1,8 @@
-package tw.dp103g4.partyLike;
+package tw.dp103g4.location;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -16,10 +15,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 @SuppressWarnings("serial")
-@WebServlet("/PartyLikeServlet")
-public class PartyLikeServlet extends HttpServlet {
-	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	PartyLikeDao partyLikeDao = null;
+@WebServlet("/LocationServlet")
+public class LocationServlet extends HttpServlet {
+	private static final String CONTENT_TYPE = "text/html; charset=utf-8";
+	private LocationDao locationDao = null;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -34,26 +33,28 @@ public class PartyLikeServlet extends HttpServlet {
 		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
-		if (partyLikeDao == null) {
-			partyLikeDao = new PartyLikeDaoImpl();
+		if (locationDao == null) {
+			locationDao = new LocationDaoMySql();
 		}
 		String action = jsonObject.get("action").getAsString();
-
 		if (action.equals("getAll")) {
-			int id = jsonObject.get("id").getAsInt();
-			List<PartyLike> partyLikes = partyLikeDao.getAllByUser(id);
-			writeText(response, gson.toJson(partyLikes));
-		}  else if (action.equals("partyLikeInsert")) {
-			String partyLikeJson = jsonObject.get("partyLike").getAsString();
-			System.out.println("partyLikeJson = " + partyLikeJson);
-			PartyLike partyLike = gson.fromJson(partyLikeJson, PartyLike.class);
+			List<Loaction> loactions = locationDao.getAll();
+			writeText(response, gson.toJson(loactions));
+		} else if (action.equals("locationInsert") || action.equals("locationUpdate")) {
+			String locationJson = jsonObject.get("location").getAsString();
+			System.out.println("locationJson" + locationJson);
+			
+			Loaction loaction = gson.fromJson(locationJson, Loaction.class);
 			int count = 0;
-			count = partyLikeDao.insert(partyLike);
+			if (action.equals("locationInsert")) {
+				count = locationDao.insert(loaction);
+			} else if (action.equals("locationUpdate")) {
+				count = locationDao.update(loaction);
+			}
 			writeText(response, String.valueOf(count));
-		} else if (action.equals("partyLikeDelete")) {
-			int id = jsonObject.get("id").getAsInt();
-			int partyId = jsonObject.get("partyId").getAsInt();
-			int count = partyLikeDao.delete(id, partyId);
+		} else if (action.equals("locationDelete")) {
+			int locationId = jsonObject.get("locationId").getAsInt();
+			int count = locationDao.deleteById(locationId);
 			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");
@@ -64,17 +65,16 @@ public class PartyLikeServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-		System.out.println("output" + outText);
+		System.out.println("output: " + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if (partyLikeDao == null) {
-			partyLikeDao = new PartyLikeDaoImpl();
+		if (locationDao == null) {
+			locationDao = new LocationDaoMySql();
 		}
-		List<PartyLike> partyLikes = new ArrayList<PartyLike>();
-		partyLikes = partyLikeDao.getAllByUser(1);
-		writeText(response, new Gson().toJson(partyLikes));
+		List<Loaction> locationList = locationDao.getAll();
+		writeText(response, new Gson().toJson(locationList));
 	}
 
 }

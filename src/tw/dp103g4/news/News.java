@@ -7,7 +7,7 @@ public class News {
 	private String title;
 	private String content;
 	private Date time;
-	
+
 	public News(int id, String title, String content, Date time) {
 		super();
 		this.id = id;
@@ -47,7 +47,5 @@ public class News {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	
-	
-	
+
 }

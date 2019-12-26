@@ -20,11 +20,12 @@ public class Party {
 	private int countCurrent;
 	private int state;
 	private double distance;
-	
-	public Party(int ownerId, String name, Date startTime, Date endTime, Date postEndTime, String location,
+
+	public Party(int id, int ownerId, String name, Date startTime, Date endTime, Date postEndTime, String location,
 			String address, String content, int countUpperLimit, int countLowerLimit, int countCurrent, int state,
 			double distance) {
 		super();
+		this.id = id;
 		this.ownerId = ownerId;
 		this.name = name;
 		this.startTime = startTime;

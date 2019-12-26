@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -22,18 +23,14 @@ import tw.dp103g4.main.ImageUtil;
 @WebServlet("/PartyServlet")
 public class PartyServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	PartyDaoImpl partyDao = null;
+	PartyDao partyDao = null;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id, imageSize;
 		byte[] coverImg, beforeImg, afterImg;
 		OutputStream os;
 		String partyJson;
 		Party party;
-		List<Party> partys;
 		
 		request.setCharacterEncoding("utf-8");
 		Gson gson = new Gson();
@@ -54,8 +51,9 @@ public class PartyServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAll")) {
-			
-			
+			int state = jsonObject.get("state").getAsInt();
+			List<Party> parties = partyDao.getAll(state);
+			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getCoverImg")) {
 			os = response.getOutputStream();
 			id = jsonObject.get("id").getAsInt();
@@ -128,4 +126,12 @@ public class PartyServlet extends HttpServlet {
 		System.out.println("output: " + outText);
 	}
 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (partyDao == null) {
+			partyDao = new PartyDaoImpl();
+		}
+		List<Party> parties = new ArrayList<Party>();
+		parties = partyDao.getAll(1);
+		writeText(response, new Gson().toJson(parties));
+	}
 }
