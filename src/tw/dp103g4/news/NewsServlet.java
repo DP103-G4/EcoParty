@@ -75,8 +75,8 @@ public class NewsServlet extends HttpServlet {
 			}
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("newsDelete")) {
-			int newsId = jsonObject.get("newsId").getAsInt();
-			int count = newsDao.deleteById(newsId);
+			int id = jsonObject.get("id").getAsInt();
+			int count = newsDao.delete(id);
 			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");

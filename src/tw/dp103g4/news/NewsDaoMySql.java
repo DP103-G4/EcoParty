@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static tw.dp103g4.main.Common.*;
 
 public class NewsDaoMySql implements NewsDao {
@@ -83,7 +84,7 @@ public class NewsDaoMySql implements NewsDao {
 		}
 		return count;
 	}
-
+	
 	@Override
 	public int update(News news, byte[] image) {
 		int count = 0;
@@ -96,6 +97,7 @@ public class NewsDaoMySql implements NewsDao {
 
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql)) {
+
 			ps.setString(1, news.getTitle());
 			ps.setString(2, news.getContent());
 			if (image != null) {
@@ -110,9 +112,8 @@ public class NewsDaoMySql implements NewsDao {
 		}
 		return count;
 	}
-
-	@Override
-	public int deleteById(int id) {
+	
+	public int delete(int id) {
 		int count = 0;
 		String sql = "delete from News where news_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
