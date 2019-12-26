@@ -12,7 +12,7 @@ public interface NewsDao {
 	
 	public int update(News news, byte[] image);
 	
-	public int deleteById(int id);
+	public int delete(int id);
 
 	public byte[] getImageById(int id);
 }

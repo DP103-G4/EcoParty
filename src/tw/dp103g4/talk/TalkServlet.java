@@ -55,9 +55,9 @@ public class TalkServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<Talk> pieceWarns = talkDao.getAll();
 			writeText(response, gson.toJson(pieceWarns));			
-		} else if (action.equals("insert")) {
+		} else if (action.equals("talkInsert")) {
 			String talkJson = jsonObject.get("talk").getAsString();
-			System.out.println("pieceWarnJson = " + talkJson);
+			System.out.println("TalkJson = " + talkJson);
 			Talk talk = gson.fromJson(talkJson, Talk.class);
 			int count = talkDao.insert(talk);
 			

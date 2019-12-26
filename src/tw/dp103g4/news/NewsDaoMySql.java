@@ -113,7 +113,7 @@ public class NewsDaoMySql implements NewsDao {
 		return count;
 	}
 	
-	public int deleteById(int id) {
+	public int delete(int id) {
 		int count = 0;
 		String sql = "delete from News where news_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);

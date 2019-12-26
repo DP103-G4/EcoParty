@@ -55,14 +55,14 @@ public class MsgWarnServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<MsgWarn> msgWarns = msgWarnDao.getAll();
 			writeText(response, gson.toJson(msgWarns));			
-		} else if (action.equals("insert")) {
+		} else if (action.equals("msgWarnInsert")) {
 			String msgWarnJson = jsonObject.get("msgWarn").getAsString();
 			System.out.println("msgWarnJson = " + msgWarnJson);
 			MsgWarn msgWarn = gson.fromJson(msgWarnJson, MsgWarn.class);
 			int count=0;
 			count = msgWarnDao.insert(msgWarn);
 			
-		}else if (action.equals("delete")) {
+		}else if (action.equals("msgWarnDelete")) {
 			Integer id = jsonObject.get("id").getAsInt();
 			int count = msgWarnDao.delete(id);
 			writeText(response, String.valueOf(count));

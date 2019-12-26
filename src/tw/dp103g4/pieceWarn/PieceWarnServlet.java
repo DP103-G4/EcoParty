@@ -55,14 +55,14 @@ public class PieceWarnServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<PieceWarn> pieceWarns = pieceWarnDao.getAll();
 			writeText(response, gson.toJson(pieceWarns));			
-		} else if (action.equals("insert")) {
+		} else if (action.equals("pieceWarnInsert")) {
 			String pieceWarnJson = jsonObject.get("pieceWarn").getAsString();
 			System.out.println("pieceWarnJson = " + pieceWarnJson);
 			PieceWarn pieceWarn = gson.fromJson(pieceWarnJson, PieceWarn.class);
 			int count=0;
 			count = pieceWarnDao.insert(pieceWarn);
 			
-		}else if (action.equals("delete")) {
+		}else if (action.equals("pieceWarnDelete")) {
 			Integer id = jsonObject.get("id").getAsInt();
 			int count = pieceWarnDao.delete(id);
 			writeText(response, String.valueOf(count));

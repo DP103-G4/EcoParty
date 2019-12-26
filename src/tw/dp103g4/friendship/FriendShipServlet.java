@@ -57,13 +57,13 @@ public class FriendShipServlet extends HttpServlet {
 			List<FriendShip> friendShips = friendShipDao.getAll();
 			writeText(response, gson.toJson(friendShips));
 
-		} else if (action.equals("insert")) {
+		} else if (action.equals("friendShipInsert")) {
 			int idOne = jsonObject.get("idOne").getAsInt();
 			int idTwo = jsonObject.get("idTwo").getAsInt();
 			int count = friendShipDao.insert(idOne, idTwo);
 			writeText(response, gson.toJson(idOne + "&" + idTwo));
 
-		} else if (action.equals("delete")) {
+		} else if (action.equals("friendShipDelete")) {
 			int idOne = jsonObject.get("idOne").getAsInt();
 			int idTwo = jsonObject.get("idTwo").getAsInt();
 			int count = friendShipDao.delete(idOne, idTwo);
