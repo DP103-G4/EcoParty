@@ -41,41 +41,6 @@ public class NewsServlet extends HttpServlet {
 			newsDao = new NewsDaoMySql();
 		}
 		String action = jsonObject.get("action").getAsString();
-
-		String newsJson = jsonObject.get("news").getAsString();
-		System.out.println("newsJson = " + newsJson);
-		News news = gson.fromJson(newsJson, News.class);
-		byte[] image = null;
-		// 檢查是否有上傳圖片
-		if (jsonObject.get("imageBase64") != null) {
-			String imageBase64 = jsonObject.get("imageBase64").getAsString();
-			if (imageBase64 != null && !imageBase64.isEmpty()) {
-				image = Base64.getMimeDecoder().decode(imageBase64);
-			}
-		}
-		int count = 0;
-		switch (action) {
-		case "getAll":
-			List<News> newsList = newsDao.getAll();
-			writeText(response, gson.toJson(newsList));
-			break;
-		case "insert":			
-			count = newsDao.insert(news, image);
-			writeText(response, String.valueOf(count));
-			break;
-		case "update":	
-			count = newsDao.update(news, image);
-			writeText(response, String.valueOf(count));
-			break;
-		case "delete":
-			int newsId = jsonObject.get("newsId").getAsInt();
-			count = newsDao.delete(newsId);
-			writeText(response, String.valueOf(count));
-			break;
-		case "getImage":
-			break;
-		default:
-
 		if (action.equals("getAll")) {
 			List<News> news = newsDao.getAll();
 			writeText(response, gson.toJson(news));

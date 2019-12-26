@@ -71,9 +71,19 @@ public class TalkDaoMySql implements TalkDao {
 		int count = 0;
 		String sql = "";
 		int partyId = talk.getPartyId();
+<<<<<<< HEAD
 
 		sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,party_id,talk_content) " + "VALUES (?,?,?,?);";
 
+=======
+		
+		if (partyId != -1) {
+			sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,party_id,talk_content) "
+					+ "VALUES (?,?,?,?);";
+		} else {
+			sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,talk_content) " + "VALUES (?,?,?);";
+		}
+>>>>>>> parent of 960c704... News + inster,update,delete
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
