@@ -76,7 +76,7 @@ public class PartyPieceServlet extends HttpServlet {
 			partyPieceDao = new PartyPieceDaoImpl();
 		}
 		List<PartyPiece> partyPieces = new ArrayList<PartyPiece>();
-		partyPieces = partyPieceDao.getAllByParty(1);
+		partyPieces = partyPieceDao.getAllByParty(3);
 		writeText(response, new Gson().toJson(partyPieces));
 		}
 }
