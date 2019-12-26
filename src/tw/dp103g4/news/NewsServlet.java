@@ -79,7 +79,6 @@ public class NewsServlet extends HttpServlet {
 			int count = newsDao.deleteById(newsId);
 			writeText(response, String.valueOf(count));
 		} else {
-
 			writeText(response, "");
 		}
 	}

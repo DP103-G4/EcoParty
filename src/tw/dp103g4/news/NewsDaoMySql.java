@@ -52,40 +52,6 @@ public class NewsDaoMySql implements NewsDao {
 	}
 
 	@Override
-
-	public int insert(News news , byte[] image) {
-		int count = 0;
-		String sql = "INSERT INTO News " + "(news_title,news_content,image) " + "VALUES (?,?,?);";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setString(1, news.getTitle());
-			ps.setString(2, news.getContent());
-			ps.setBytes(3, image);
-			count = ps.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-		}
-
-		return count;
-	}
-	
 	public byte[] getImageById(int id) {
 		String sql = "select news_img from News where news_id = ?;";
 		byte[] image = null;
@@ -103,6 +69,22 @@ public class NewsDaoMySql implements NewsDao {
 		return image;
 	}
 
+	@Override
+	public int insert(News news, byte[] image) {
+		int count = 0;
+		String sql = "insert into News (news_title, news_content, news_img) value (?, ?, ?);";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setString(1, news.getTitle());
+			ps.setString(2, news.getContent());
+			ps.setBytes(3, image);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+	
 	@Override
 	public int update(News news, byte[] image) {
 		int count = 0;
@@ -142,40 +124,6 @@ public class NewsDaoMySql implements NewsDao {
 			e.printStackTrace();
 		}
 		return count;
-	}
-	
-	@Override
-	public byte[] getImage(int id) {
-		String sql = "SELECT image FROM News WHERE news_id = ?;";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		byte[] image = null;
-		try {
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				image = rs.getBytes(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					// When a Statement object is closed,
-					// its current ResultSet object is also closed
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return image;
-
 	}
 
 }
