@@ -70,7 +70,7 @@ public class InformServlet extends HttpServlet {
 		if (informDao == null) {
 			informDao = new InformDaoImpl();
 			List<Inform> informs = new ArrayList<Inform>();
-			informs = informDao.getAllbyReceiver(1);
+			informs = informDao.getAllbyReceiver(2);
 			writeText(response, new Gson().toJson(informs));
 		}
 	}

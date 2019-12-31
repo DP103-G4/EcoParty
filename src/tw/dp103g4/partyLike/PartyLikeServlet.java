@@ -73,7 +73,7 @@ public class PartyLikeServlet extends HttpServlet {
 			partyLikeDao = new PartyLikeDaoImpl();
 		}
 		List<PartyLike> partyLikes = new ArrayList<PartyLike>();
-		partyLikes = partyLikeDao.getAllByUser(1);
+		partyLikes = partyLikeDao.getAllByUser(4);
 		writeText(response, new Gson().toJson(partyLikes));
 	}
 
