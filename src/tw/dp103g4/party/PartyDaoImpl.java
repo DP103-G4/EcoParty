@@ -88,6 +88,28 @@ public class PartyDaoImpl implements PartyDao {
 	}
 
 	@Override
+	public List<Party> getPieceList (int state) {
+		String sql = "select party_id from Party where party_state = ? order by party_end_time desc;";
+		
+		List<Party> pieceList = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id, state);
+					pieceList.add(party);
+				}
+			}
+			return pieceList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pieceList;
+	}
+	
+	@Override
 	public int insert(Party party, byte[] coverImg) {
 		int count = 0;
 		String sql = "INSERT INTO Party" + "(owner_id, party_name,"

@@ -59,6 +59,10 @@ public class PartyServlet extends HttpServlet {
 			state = jsonObject.get("state").getAsInt();
 			List<Party> parties = partyDao.getPartyList(state);
 			writeText(response, gson.toJson(parties));
+		} else if (action.equals("getPieceList")) {
+			state = jsonObject.get("state").getAsInt();
+			List<Party> parties = partyDao.getPieceList(state);
+			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getCoverImg")) {
 			os = response.getOutputStream();
 			id = jsonObject.get("id").getAsInt();

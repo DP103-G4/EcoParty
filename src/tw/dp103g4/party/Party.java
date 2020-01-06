@@ -54,8 +54,11 @@ public class Party {
 		this.state = state;
 	}
 
-
-
+	public Party(int id, int state) {
+		super();
+		this.id = id;
+		this.state = state;
+	}
 
 	public int getId() {
 		return id;

@@ -7,6 +7,8 @@ public interface PartyDao {
 	
 	
 	public List<Party> getPartyList(int state);
+	
+	public List<Party> getPieceList (int state);
 		
 	public int insert(Party party, byte[] coverImg);
 
