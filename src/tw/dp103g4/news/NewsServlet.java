@@ -41,7 +41,7 @@ public class NewsServlet extends HttpServlet {
 			newsDao = new NewsDaoMySql();
 		}
 		String action = jsonObject.get("action").getAsString();
-		if (action.equals("getAll")) {
+		if (action.equals("getAllNews")) {
 			List<News> news = newsDao.getAll();
 			writeText(response, gson.toJson(news));
 		} else if (action.equals("getImage")) {

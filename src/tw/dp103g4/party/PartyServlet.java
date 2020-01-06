@@ -24,6 +24,7 @@ import tw.dp103g4.main.ImageUtil;
 public class PartyServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	PartyDao partyDao = null;
+	int state;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id, imageSize;
@@ -41,7 +42,7 @@ public class PartyServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 		// 將輸入資料列印出來除錯用
-		// System.out.println("input: " + jsonIn);
+		 System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (partyDao == null) {
@@ -50,9 +51,13 @@ public class PartyServlet extends HttpServlet {
 
 		String action = jsonObject.get("action").getAsString();
 
-		if (action.equals("getAll")) {
-			int state = jsonObject.get("state").getAsInt();
+		if (action.equals("getAllParty")) {
+			state = jsonObject.get("state").getAsInt();
 			List<Party> parties = partyDao.getAll(state);
+			writeText(response, gson.toJson(parties));
+		} else if (action.equals("getPartyList")) {
+			state = jsonObject.get("state").getAsInt();
+			List<Party> parties = partyDao.getPartyList(state);
 			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getCoverImg")) {
 			os = response.getOutputStream();
@@ -76,7 +81,7 @@ public class PartyServlet extends HttpServlet {
 				response.setContentLength(beforeImg.length);
 				os.write(beforeImg);
 			}
-		} else if (action.equals("gerAfterImg")) {
+		} else if (action.equals("getAfterImg")) {
 			os = response.getOutputStream();
 			id = jsonObject.get("id").getAsInt();
 			imageSize = jsonObject.get("imageSize").getAsInt();
@@ -131,7 +136,7 @@ public class PartyServlet extends HttpServlet {
 			partyDao = new PartyDaoImpl();
 		}
 		List<Party> parties = new ArrayList<Party>();
-		parties = partyDao.getAll(1);
+		parties = partyDao.getAll(state);
 		writeText(response, new Gson().toJson(parties));
 	}
 }
