@@ -111,17 +111,6 @@ public class PartyServlet extends HttpServlet {
 				}
 			}
 			
-			int count = 0;
-			if (action.equals("partyInsert")) {
-				count = partyDao.insert(party, coverImg);
-			} else if (action.equals("partyUpdate")) {
-				count = partyDao.update(party, coverImg);
-			}
-			writeText(response, String.valueOf(count));
-		} else if (action.equals("partyDelete")) {
-			id = jsonObject.get("id").getAsInt();
-			int count = partyDao.delete(id);
-			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");
 		}

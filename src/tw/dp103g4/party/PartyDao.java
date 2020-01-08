@@ -10,12 +10,6 @@ public interface PartyDao {
 	
 	public List<Party> getPieceList (int state);
 		
-	public int insert(Party party, byte[] coverImg);
-
-	public int update(Party party, byte[] coverImg);
-	
-	public int delete(int id);
-	
 	public int setImg(int id, byte[] beforeImg, byte[] afterImg);
 	
 	public byte[] getCoverImg(int id);
