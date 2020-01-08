@@ -5,7 +5,10 @@ import java.util.List;
 public interface PartyDao {
 	public List<Party> getAll(int state);
 	
-	public Party findById(int id);
+	
+	public List<Party> getPartyList(int state);
+	
+	public List<Party> getPieceList (int state);
 		
 	public int insert(Party party, byte[] coverImg);
 

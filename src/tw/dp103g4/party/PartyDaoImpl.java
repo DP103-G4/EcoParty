@@ -61,11 +61,54 @@ public class PartyDaoImpl implements PartyDao {
 	}
 
 	@Override
-	public Party findById(int id) {
-
-		return null;
+	public List<Party> getPartyList(int state) {
+		String sql = "select party_id, owner_id, party_address, party_start_time, party_name from Party "
+				+ "where party_state = ? order by party_post_time desc;";
+		
+		List<Party> partyList = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					int ownerId = rs.getInt(2);
+					String address = rs.getString(3);
+					Date startTime = rs.getDate(4);
+					String name = rs.getString(5);
+					Party party = new Party(id, ownerId, name, startTime, address, state);
+					partyList.add(party);
+				}
+			}
+			return partyList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return partyList;
 	}
 
+	@Override
+	public List<Party> getPieceList (int state) {
+		String sql = "select party_id from Party where party_state = ? order by party_end_time desc;";
+		
+		List<Party> pieceList = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id, state);
+					pieceList.add(party);
+				}
+			}
+			return pieceList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pieceList;
+	}
+	
 	@Override
 	public int insert(Party party, byte[] coverImg) {
 		int count = 0;
@@ -224,8 +267,20 @@ public class PartyDaoImpl implements PartyDao {
 
 	@Override
 	public byte[] getAfterImg(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "select party_after_img from Party where party_id = ? order by party_end_time desc;";
+		byte[] image = null;
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, id);
+			try (ResultSet rs = ps.executeQuery();) {
+				if (rs.next()) {
+					image = rs.getBytes(1);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return image;
 	}
 
 	@Override

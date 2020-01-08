@@ -40,6 +40,25 @@ public class Party {
 		this.state = state;
 		this.distance = distance;
 	}
+	
+	
+	
+
+	public Party(int id, int ownerId, String name, Date startTime, String address, int state) {
+		super();
+		this.id = id;
+		this.ownerId = ownerId;
+		this.name = name;
+		this.startTime = startTime;
+		this.address = address;
+		this.state = state;
+	}
+
+	public Party(int id, int state) {
+		super();
+		this.id = id;
+		this.state = state;
+	}
 
 	public int getId() {
 		return id;
