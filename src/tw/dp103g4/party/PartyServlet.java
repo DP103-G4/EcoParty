@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import tw.dp103g4.main.ImageUtil;
@@ -33,15 +35,17 @@ public class PartyServlet extends HttpServlet {
 		Party party;
 		
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder()  
+				  .setDateFormat("yyyy-MM-dd HH:mm:ss")  
+				  .create(); 
 		BufferedReader br = request.getReader();
 		StringBuilder jsonIn = new StringBuilder();
 		String line = null;
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		// 將輸入資料列印出來除錯用
-		// System.out.println("input: " + jsonIn);
+//		將輸入資料列印出來除錯用
+		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (partyDao == null) {
@@ -52,8 +56,12 @@ public class PartyServlet extends HttpServlet {
 
 		if (action.equals("getAll")) {
 			int state = jsonObject.get("state").getAsInt();
-			List<Party> parties = partyDao.getAll(state);
-			writeText(response, gson.toJson(parties));
+			List<Party> partyList = partyDao.getAll(state);
+			writeText(response, gson.toJson(partyList));
+		} else if (action.equals("getParty")) {
+			id = jsonObject.get("id").getAsInt();
+			party = partyDao.findById(id);
+			writeText(response, gson.toJson(party));
 		} else if (action.equals("getCoverImg")) {
 			os = response.getOutputStream();
 			id = jsonObject.get("id").getAsInt();
@@ -92,8 +100,6 @@ public class PartyServlet extends HttpServlet {
 			System.out.println("partyJson = " + partyJson);
 			party = gson.fromJson(partyJson, Party.class);
 			coverImg = null;
-			beforeImg = null;
-			afterImg = null;
 			// 檢查是否有上傳圖片
 			if (jsonObject.get("coverImgBase64") != null) {
 				String coverImgBase64 = jsonObject.get("coverImgBase64").getAsString();
@@ -130,8 +136,16 @@ public class PartyServlet extends HttpServlet {
 		if (partyDao == null) {
 			partyDao = new PartyDaoImpl();
 		}
-		List<Party> parties = new ArrayList<Party>();
-		parties = partyDao.getAll(1);
-		writeText(response, new Gson().toJson(parties));
+		
+		int id = 124;
+		byte[] coverImg = null;
+		Party party = new Party(333, "淨灘活動333",
+				new Date(), new Date(), new Date(), new Date(),
+				"中央海灘", "桃園市中央路123巷456號", -181.0, -181.0,
+				"1231231231231231231212312312321312312312312", 50, 10, 15, 1, 100.0);
+		partyDao.insert(party, coverImg);
+		party = partyDao.findById(id);
+		writeText(response, new Gson().toJson(party));
+
 	}
 }
