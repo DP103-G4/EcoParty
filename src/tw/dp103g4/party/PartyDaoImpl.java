@@ -22,43 +22,7 @@ public class PartyDaoImpl implements PartyDao {
 		}
 	}
 
-	@Override
-	public List<Party> getAll(int state) {
-		String sql = "select party_id, owner_id, party_name, party_start_time, party_end_time, "
-				+ "party_post_end_time, party_location, party_address, party_content, "
-				+ "party_count_upper_limit, party_count_lower_limit, party_count_current, party_distance from Party "
-				+ "where party_state = ? order by party_post_time desc;";
-
-		List<Party> partyList = new ArrayList<Party>();
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setInt(1, state);
-			try (ResultSet rs = ps.executeQuery();) {
-				while (rs.next()) {
-					int id = rs.getInt(1);
-					int ownerId = rs.getInt(2);
-					String name = rs.getString(3);
-					Date startTime = rs.getDate(4);
-					Date endTime = rs.getDate(5);
-					Date postEndTime = rs.getDate(6);
-					String location = rs.getString(7);
-					String address = rs.getString(8);
-					String content = rs.getString(9);
-					int countUpperLimit = rs.getInt(10);
-					int countLowerLimit = rs.getInt(11);
-					int countCurrent = rs.getInt(12);
-					double distance = rs.getDouble(13);
-					Party party = new Party(id, ownerId, name, startTime, endTime, postEndTime, location, address,
-							content, countUpperLimit, countLowerLimit, countCurrent, state, distance);
-					partyList.add(party);
-				}
-			}
-			return partyList;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return partyList;
-	}
+	
 
 	@Override
 	public List<Party> getPartyList(int state) {
@@ -135,7 +99,7 @@ public class PartyDaoImpl implements PartyDao {
 
 	@Override
 	public byte[] getAfterImg(int id) {
-		String sql = "select party_after_img from Party where party_id = ? order by party_end_time desc;";
+		String sql = "select party_after_img from Party where party_id = ? ;";
 		byte[] image = null;
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {

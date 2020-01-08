@@ -3,7 +3,6 @@ package tw.dp103g4.party;
 import java.util.List;
 
 public interface PartyDao {
-	public List<Party> getAll(int state);
 	
 	
 	public List<Party> getPartyList(int state);

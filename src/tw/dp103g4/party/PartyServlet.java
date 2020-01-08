@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -50,12 +49,8 @@ public class PartyServlet extends HttpServlet {
 		}
 
 		String action = jsonObject.get("action").getAsString();
-
-		if (action.equals("getAllParty")) {
-			state = jsonObject.get("state").getAsInt();
-			List<Party> parties = partyDao.getAll(state);
-			writeText(response, gson.toJson(parties));
-		} else if (action.equals("getPartyList")) {
+		
+		if (action.equals("getPartyList")) {
 			state = jsonObject.get("state").getAsInt();
 			List<Party> parties = partyDao.getPartyList(state);
 			writeText(response, gson.toJson(parties));
@@ -125,11 +120,6 @@ public class PartyServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (partyDao == null) {
-			partyDao = new PartyDaoImpl();
-		}
-		List<Party> parties = new ArrayList<Party>();
-		parties = partyDao.getAll(state);
-		writeText(response, new Gson().toJson(parties));
+	
 	}
 }
