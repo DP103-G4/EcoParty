@@ -26,8 +26,11 @@ public class TalkServlet extends HttpServlet {
 		if (talkDao == null) {
 			talkDao = new TalkDaoMySql();
 		}
-		List<NewestTalk> newestTalks = talkDao.getNewestTalk(3);
-		writeText(response, new Gson().toJson(newestTalks));
+//		List<NewestTalk> newestTalks = talkDao.getNewestTalk(3);
+//		writeText(response, new Gson().toJson(newestTalks));
+		List<Talk> talks = talkDao.getAll(3, 4);
+		writeText(response, new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(talks));
+
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException{
@@ -55,8 +58,9 @@ public class TalkServlet extends HttpServlet {
 		
 		if (action.equals("getAll")) {
 			int userId = jsonObject.get("userId").getAsInt();
-			List<Talk> pieceWarns = talkDao.getAll(userId);
-			writeText(response, gson.toJson(pieceWarns));	
+			int senderId = jsonObject.get("senderId").getAsInt();
+			List<Talk> talks = talkDao.getAll(userId,senderId);
+			writeText(response, gson.toJson(talks));	
 			
 		} else if (action.equals("talkInsert")) {
 			String talkJson = jsonObject.get("talk").getAsString();

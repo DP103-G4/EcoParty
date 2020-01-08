@@ -130,7 +130,7 @@ public class FriendShipDaoMySql implements FriendShipDao {
 					while (accountResultSet.next()) {				
 						String account = accountResultSet.getString(1);
 						System.out.println(account);
-						FriendShip friendShip = new FriendShip(friendId, isInvite, account);
+						FriendShip friendShip = new FriendShip(userOne, userTwo, friendId, isInvite, account);
 						friendShipList.add(friendShip);}
 				}
 			}
@@ -230,7 +230,7 @@ public class FriendShipDaoMySql implements FriendShipDao {
 					while (accountResultSet.next()) {				
 						String account = accountResultSet.getString(1);
 						System.out.println(account);
-						FriendShip friendShip = new FriendShip(friendId, isInvite, account);
+						FriendShip friendShip = new FriendShip(userOne, userTwo, friendId, isInvite, account);
 						friendShipInvite.add(friendShip);}
 				}
 			}

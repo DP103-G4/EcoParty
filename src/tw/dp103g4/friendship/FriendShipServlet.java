@@ -68,7 +68,7 @@ public class FriendShipServlet extends HttpServlet {
 			int idOne = jsonObject.get("idOne").getAsInt();
 			int idTwo = jsonObject.get("idTwo").getAsInt();
 			int count = friendShipDao.delete(idOne, idTwo);
-			writeText(response, gson.toJson(idOne + "&" + idTwo));
+			writeText(response, gson.toJson(count));
 
 		} else if (action.equals("updateIsInvite")) {
 			int idOne = jsonObject.get("idOne").getAsInt();

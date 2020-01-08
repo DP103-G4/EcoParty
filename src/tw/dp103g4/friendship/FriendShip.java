@@ -12,8 +12,10 @@ public class FriendShip {
 		
 	
 
-	public FriendShip(int friendId, boolean isInvite, String account) {
+	public FriendShip(int idOne, int idTwo, int friendId, boolean isInvite, String account) {
 		super();
+		this.idOne = idOne;
+		this.idTwo = idTwo;
 		this.friendId = friendId;
 		this.isInvite = isInvite;
 		this.account = account;

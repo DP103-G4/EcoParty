@@ -26,15 +26,19 @@ public class TalkDaoMySql implements TalkDao {
 	}
 
 	@Override
-	public List<Talk> getAll(int userId) {
+	public List<Talk> getAll(int userId, int friendId) {
 		String sql = "SELECT talk_id, tk_receiver_id, tk_sender_id, party_id, talk_content, talk_time, talk_isRead "
-				+ "FROM Talk ORDER BY talk_time ASC;";
+				+ "FROM Talk WHERE tk_receiver_id = ? and tk_sender_id = ?  or (tk_receiver_id = ? and tk_sender_id = ?) ORDER BY talk_time ASC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Talk> talkList = new ArrayList<Talk>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, friendId);
+			ps.setInt(3, friendId);
+			ps.setInt(4, userId);
 			ResultSet resultSet = ps.executeQuery();
 			while (resultSet.next()) {
 				int id = resultSet.getInt(1);
