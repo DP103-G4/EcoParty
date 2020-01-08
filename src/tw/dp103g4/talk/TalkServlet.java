@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 @WebServlet("/TalkServlet")
@@ -25,8 +26,8 @@ public class TalkServlet extends HttpServlet {
 		if (talkDao == null) {
 			talkDao = new TalkDaoMySql();
 		}
-		List<Talk> talks = talkDao.getAll();
-		writeText(response, new Gson().toJson(talks));
+		List<NewestTalk> newestTalks = talkDao.getNewestTalk(3);
+		writeText(response, new Gson().toJson(newestTalks));
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException{
@@ -39,7 +40,7 @@ public class TalkServlet extends HttpServlet {
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		BufferedReader br = request.getReader();
 		StringBuilder jsonIn = new StringBuilder();
 		String line = null;
@@ -53,8 +54,10 @@ public class TalkServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 		
 		if (action.equals("getAll")) {
-			List<Talk> pieceWarns = talkDao.getAll();
-			writeText(response, gson.toJson(pieceWarns));			
+			int userId = jsonObject.get("userId").getAsInt();
+			List<Talk> pieceWarns = talkDao.getAll(userId);
+			writeText(response, gson.toJson(pieceWarns));	
+			
 		} else if (action.equals("talkInsert")) {
 			String talkJson = jsonObject.get("talk").getAsString();
 			System.out.println("TalkJson = " + talkJson);
@@ -62,12 +65,13 @@ public class TalkServlet extends HttpServlet {
 			int count = talkDao.insert(talk);
 			
 		} else if (action.equals("updateIsRead")) {
-			int count = talkDao.updateIsRead();
+			int senderId = jsonObject.get("senderId").getAsInt();
+			int count = talkDao.updateIsRead(senderId);
+			
+		}else if(action.equals("getNewestTalk")) {
+//			int userId = jsonObject.get("userId").getAsInt();
+			List<NewestTalk> newestTalks = talkDao.getNewestTalk(3);
+			writeText(response, gson.toJson(newestTalks));	
 		}
-//			else if (action.equals("delete")) {
-//			Integer id = jsonObject.get("id").getAsInt();
-//			int count = talkDao.delete(id);
-//			writeText(response, String.valueOf(count));
-//		}
 	}
 }

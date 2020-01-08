@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class FriendShipDaoMySql implements FriendShipDao {
 	public FriendShipDaoMySql() {
 		super();
@@ -89,23 +90,51 @@ public class FriendShipDaoMySql implements FriendShipDao {
 	}
 
 	@Override
-	public List<FriendShip> getAll() {
-		String sql = "SELECT userone_id, usertwo_id, isInvite " + "FROM Friendship ORDER BY userone_id DESC;";
+	public List<FriendShip> getAllFriend(int userId) {
+		String sql = "SELECT userone_id, usertwo_id, isInvite FROM Friendship "
+				+ "WHERE userone_id = ? or usertwo_id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<FriendShip> friendShipList = new ArrayList<FriendShip>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, userId);
 			ResultSet resultSet = ps.executeQuery();
+			int friendId;		
+			
 			while (resultSet.next()) {
 				int userOne = resultSet.getInt(1);
 				int userTwo = resultSet.getInt(2);
 				Boolean isInvite = resultSet.getBoolean(3);
-				
-				FriendShip friendShip = new FriendShip(userOne, userTwo, isInvite);
-				friendShipList.add(friendShip);
+				if (isInvite) {
+					if(userId == userOne) {
+						friendId = userTwo;
+						sql = "SELECT user_account FROM Friendship a LEFT join User b "
+								+ "on a.usertwo_id = b.user_id WHERE userone_id = ? and usertwo_id = ? and isInvite = true;";
+						ps = connection.prepareStatement(sql);
+						ps.setInt(1, userOne);
+						ps.setInt(2, friendId);
+						
+					}else {
+						friendId = userOne;
+						sql = "SELECT user_account FROM Friendship a "
+								+ "LEFT join User b on a.userone_id = b.user_id "
+								+ "WHERE usertwo_id = ? and userone_id = ? and isInvite = true;";
+						ps = connection.prepareStatement(sql);
+						ps.setInt(1, userTwo);	
+						ps.setInt(2, friendId);
+					}
+					ResultSet accountResultSet = ps.executeQuery();
+					while (accountResultSet.next()) {				
+						String account = accountResultSet.getString(1);
+						System.out.println(account);
+						FriendShip friendShip = new FriendShip(friendId, isInvite, account);
+						friendShipList.add(friendShip);}
+				}
 			}
+			
 			return friendShipList;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -125,15 +154,22 @@ public class FriendShipDaoMySql implements FriendShipDao {
 	}
 	
 	@Override
-	public int updateIsInvite() {
+	public int updateIsInvite(int idOne, int idTwo) {
 		int count = 0;
-		String sql = "UPDATE Friendship SET isInvite = 1 WHERE isInvite = 0;";
+		String sql = "UPDATE Friendship SET isInvite = 1 WHERE userone_id = ? and usertwo_id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
+			ps.setInt(1, idOne);
+			ps.setInt(2, idTwo);
 			count = ps.executeUpdate();
+			if (count == 0) {
+				ps.setInt(1, idTwo);
+				ps.setInt(2, idOne);
+				count = ps.executeUpdate();
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -152,6 +188,69 @@ public class FriendShipDaoMySql implements FriendShipDao {
 		}
 
 		return count;
+	}
+	
+	@Override
+	public List<FriendShip> getAllInvite(int userId){
+		String sql = "SELECT userone_id, usertwo_id, isInvite FROM Friendship " 
+						+ "WHERE userone_id = ? or usertwo_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<FriendShip> friendShipInvite = new ArrayList<FriendShip>();
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, userId);
+			ResultSet resultSet = ps.executeQuery();
+			int friendId;		
+			
+			while (resultSet.next()) {
+				int userOne = resultSet.getInt(1);
+				int userTwo = resultSet.getInt(2);
+				Boolean isInvite = resultSet.getBoolean(3);
+				if (!isInvite) {
+					if(userId == userOne) {
+						friendId = userTwo;
+						sql = "SELECT user_account FROM Friendship a LEFT join User b "
+								+ "on a.usertwo_id = b.user_id WHERE userone_id = ? and usertwo_id = ? and isInvite = false;";
+						ps = connection.prepareStatement(sql);
+						ps.setInt(1, userId);
+						ps.setInt(2, friendId);
+						
+					}else {
+						friendId = userOne;
+						sql = "SELECT user_account FROM Friendship a LEFT join User b "
+								+ "on a.userone_id = b.user_id WHERE usertwo_id = ? and userone_id = ? and isInvite = false;";
+						ps = connection.prepareStatement(sql);
+						ps.setInt(1, userId);	
+						ps.setInt(2, friendId);
+					}
+					ResultSet accountResultSet = ps.executeQuery();
+					while (accountResultSet.next()) {				
+						String account = accountResultSet.getString(1);
+						System.out.println(account);
+						FriendShip friendShip = new FriendShip(friendId, isInvite, account);
+						friendShipInvite.add(friendShip);}
+				}
+			}
+			
+			return friendShipInvite;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return friendShipInvite;
 	}
 
 }
