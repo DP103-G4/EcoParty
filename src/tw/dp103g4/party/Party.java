@@ -1,6 +1,6 @@
 package tw.dp103g4.party;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Party {
 	private int id;
@@ -21,18 +21,21 @@ public class Party {
 	private int state;
 	private double distance;
 
-	public Party(int id, int ownerId, String name, Date startTime, Date endTime, Date postEndTime, String location,
-			String address, String content, int countUpperLimit, int countLowerLimit, int countCurrent, int state,
-			double distance) {
+	
+	public Party(int ownerId, String name, Date startTime, Date endTime, Date postTime, Date postEndTime,
+			String location, String address, double longitude, double latitude, String content, int countUpperLimit,
+			int countLowerLimit, int countCurrent, int state, double distance) {
 		super();
-		this.id = id;
 		this.ownerId = ownerId;
 		this.name = name;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.postTime = postTime;
 		this.postEndTime = postEndTime;
 		this.location = location;
 		this.address = address;
+		this.longitude = longitude;
+		this.latitude = latitude;
 		this.content = content;
 		this.countUpperLimit = countUpperLimit;
 		this.countLowerLimit = countLowerLimit;
@@ -58,6 +61,12 @@ public class Party {
 		super();
 		this.id = id;
 		this.state = state;
+	}
+	
+
+	public Party(int id) {
+		super();
+		this.id = id;
 	}
 
 	public int getId() {
