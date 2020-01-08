@@ -26,6 +26,7 @@ import tw.dp103g4.main.ImageUtil;
 public class PartyServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	PartyDao partyDao = null;
+	int state;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id, imageSize;
@@ -45,7 +46,7 @@ public class PartyServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 //		將輸入資料列印出來除錯用
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (partyDao == null) {
@@ -54,10 +55,14 @@ public class PartyServlet extends HttpServlet {
 
 		String action = jsonObject.get("action").getAsString();
 
-		if (action.equals("getAll")) {
-			int state = jsonObject.get("state").getAsInt();
-			List<Party> partyList = partyDao.getAll(state);
-			writeText(response, gson.toJson(partyList));
+		if (action.equals("getPartyList")) {
+			state = jsonObject.get("state").getAsInt();
+			List<Party> parties = partyDao.getPartyList(state);
+			writeText(response, gson.toJson(parties));
+		} else if (action.equals("getPieceList")) {
+			state = jsonObject.get("state").getAsInt();
+			List<Party> parties = partyDao.getPieceList(state);
+			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getParty")) {
 			id = jsonObject.get("id").getAsInt();
 			party = partyDao.findById(id);
@@ -84,7 +89,7 @@ public class PartyServlet extends HttpServlet {
 				response.setContentLength(beforeImg.length);
 				os.write(beforeImg);
 			}
-		} else if (action.equals("gerAfterImg")) {
+		} else if (action.equals("getAfterImg")) {
 			os = response.getOutputStream();
 			id = jsonObject.get("id").getAsInt();
 			imageSize = jsonObject.get("imageSize").getAsInt();
@@ -108,17 +113,6 @@ public class PartyServlet extends HttpServlet {
 				}
 			}
 			
-			int count = 0;
-			if (action.equals("partyInsert")) {
-				count = partyDao.insert(party, coverImg);
-			} else if (action.equals("partyUpdate")) {
-				count = partyDao.update(party, coverImg);
-			}
-			writeText(response, String.valueOf(count));
-		} else if (action.equals("partyDelete")) {
-			id = jsonObject.get("id").getAsInt();
-			int count = partyDao.delete(id);
-			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");
 		}
@@ -133,19 +127,6 @@ public class PartyServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (partyDao == null) {
-			partyDao = new PartyDaoImpl();
-		}
 		
-		int id = 124;
-		byte[] coverImg = null;
-		Party party = new Party(333, "淨灘活動333",
-				new Date(), new Date(), new Date(), new Date(),
-				"中央海灘", "桃園市中央路123巷456號", -181.0, -181.0,
-				"1231231231231231231212312312321312312312312", 50, 10, 15, 1, 100.0);
-		partyDao.insert(party, coverImg);
-		party = partyDao.findById(id);
-		writeText(response, new Gson().toJson(party));
-
 	}
 }

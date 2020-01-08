@@ -21,7 +21,9 @@ public class Talk {
 		this.time = time;
 		this.isRead = isRead;
 	}
+	
 
+	
 	public int getId() {
 		return id;
 	}
@@ -41,6 +43,8 @@ public class Talk {
 	public int getSenderId() {
 		return senderId;
 	}
+	
+	
 
 	public void setSenderId(int senderId) {
 		this.senderId = senderId;
@@ -79,3 +83,4 @@ public class Talk {
 	}
 
 }
+

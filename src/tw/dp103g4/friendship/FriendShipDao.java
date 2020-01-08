@@ -7,8 +7,10 @@ public interface FriendShipDao {
 
 	int delete(int idOne, int idTwo);
 	
-	int updateIsInvite();
+	int updateIsInvite(int idOne, int idTwo);
 
-	List<FriendShip> getAll();
+	List<FriendShip> getAllFriend(int userId);
+	
+	List<FriendShip> getAllInvite(int userId);
 
 }

@@ -26,15 +26,19 @@ public class TalkDaoMySql implements TalkDao {
 	}
 
 	@Override
-	public List<Talk> getAll() {
+	public List<Talk> getAll(int userId, int friendId) {
 		String sql = "SELECT talk_id, tk_receiver_id, tk_sender_id, party_id, talk_content, talk_time, talk_isRead "
-				+ "FROM Talk ORDER BY talk_time ASC;";
+				+ "FROM Talk WHERE tk_receiver_id = ? and tk_sender_id = ?  or (tk_receiver_id = ? and tk_sender_id = ?) ORDER BY talk_time ASC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Talk> talkList = new ArrayList<Talk>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, friendId);
+			ps.setInt(3, friendId);
+			ps.setInt(4, userId);
 			ResultSet resultSet = ps.executeQuery();
 			while (resultSet.next()) {
 				int id = resultSet.getInt(1);
@@ -105,14 +109,15 @@ public class TalkDaoMySql implements TalkDao {
 	}
 
 	@Override
-	public int updateIsRead() {
+	public int updateIsRead(int userId) {
 		int count = 0;
-		String sql = "UPDATE Talk SET talk_isRead = 1 WHERE talk_isRead = 0;";
+		String sql = "UPDATE Talk SET talk_isRead = 1 WHERE user_id= ? and talk_isRead = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
 			count = ps.executeUpdate();
 
 		} catch (SQLException e) {
@@ -134,4 +139,45 @@ public class TalkDaoMySql implements TalkDao {
 		return count;
 	}
 
+	@Override
+	public List<NewestTalk> getNewestTalk(int userId) {
+		List<NewestTalk> newestTalksList = new ArrayList<NewestTalk>();
+		String sql = "SELECT a.tk_sender_id, a.talk_content, b.MaxTime, c.user_account " + 
+				"FROM ( select tk_sender_id, Max(talk_time) as MaxTime From Talk where tk_receiver_id = ? group by tk_sender_id ) b " + 
+				"inner join Talk a on a.tk_sender_id = b.tk_sender_id and a.talk_time = b.MaxTime " + 
+				"left join User c on a.tk_sender_id = c.user_id;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ResultSet resultSet = ps.executeQuery();			
+			while (resultSet.next()) {				
+				int senderId = resultSet.getInt(1);
+				String content = resultSet.getString(2);
+				Date newMsgTime = resultSet.getDate(3);
+				String account = resultSet.getString(4);
+				NewestTalk newestTalk = new NewestTalk(senderId,content,newMsgTime,account);		
+				
+				newestTalksList.add(newestTalk);}
+				
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return newestTalksList;
+	}
 }

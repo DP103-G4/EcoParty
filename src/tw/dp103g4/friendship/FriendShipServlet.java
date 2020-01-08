@@ -24,7 +24,7 @@ public class FriendShipServlet extends HttpServlet {
 		if (friendShipDao == null) {
 			friendShipDao = new FriendShipDaoMySql();
 		}
-		List<FriendShip> friendShips = friendShipDao.getAll();
+		List<FriendShip> friendShips = friendShipDao.getAllFriend(3);
 		writeText(response, new Gson().toJson(friendShips));
 	}
 
@@ -53,8 +53,9 @@ public class FriendShipServlet extends HttpServlet {
 		}
 		String action = jsonObject.get("action").getAsString();
 
-		if (action.equals("getAll")) {
-			List<FriendShip> friendShips = friendShipDao.getAll();
+		if (action.equals("getAllFriend")) {
+//			int userId = jsonObject.get("userId").getAsInt();
+			List<FriendShip> friendShips = friendShipDao.getAllFriend(3);
 			writeText(response, gson.toJson(friendShips));
 
 		} else if (action.equals("friendShipInsert")) {
@@ -67,13 +68,18 @@ public class FriendShipServlet extends HttpServlet {
 			int idOne = jsonObject.get("idOne").getAsInt();
 			int idTwo = jsonObject.get("idTwo").getAsInt();
 			int count = friendShipDao.delete(idOne, idTwo);
-			writeText(response, gson.toJson(idOne + "&" + idTwo));
+			writeText(response, gson.toJson(count));
 
 		} else if (action.equals("updateIsInvite")) {
-			int count = friendShipDao.updateIsInvite();
+			int idOne = jsonObject.get("idOne").getAsInt();
+			int idTwo = jsonObject.get("idTwo").getAsInt();
+			int count = friendShipDao.updateIsInvite(idOne, idTwo);
 
+		}else if (action.equals("getAllInvite")) {
+			int userId = jsonObject.get("userId").getAsInt();
+			List<FriendShip> friendShips = friendShipDao.getAllFriend(3);
+			writeText(response, gson.toJson(friendShips));
 		}
-
 	}
 
 }

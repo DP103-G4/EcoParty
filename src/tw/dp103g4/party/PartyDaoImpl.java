@@ -25,11 +25,6 @@ public class PartyDaoImpl implements PartyDao {
 	}
 
 	@Override
-	public List<Party> getAll(int state) {
-		return null;
-	}
-
-	@Override
 	public Party findById(int id) {
 		Party party = null;	
 		
@@ -46,7 +41,6 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				System.out.print("######");
 				int ownerId = rs.getInt(1);
 				String name = rs.getString(2);
 				Date startTime = rs.getDate(3);
@@ -170,59 +164,71 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setInt(15, party.getState());
 			ps.setDouble(16, party.getDistance());
 
+			count = ps.executeUpdate();
 			if (coverImg != null) {
 				ps.setBytes(17, coverImg);
 				ps.setInt(18, party.getId());
 			} else {
 				ps.setInt(17, party.getId());
 			}
-
-			count = ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		return count;
+		
+			return count;
+		
 	}
 
 	@Override
-	public int delete(int id) {
-		int count = 0;
-		String sql = "DELETE FROM Party WHERE party_id = ?;";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
-			count = ps.executeUpdate();
+	public List<Party> getPartyList(int state) {
+		String sql = "select party_id, owner_id, party_address, party_start_time, party_name from Party "
+				+ "where party_state = ? order by party_post_time desc;";
+		
+		List<Party> partyList = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					int ownerId = rs.getInt(2);
+					String address = rs.getString(3);
+					Date startTime = rs.getDate(4);
+					String name = rs.getString(5);
+					Party party = new Party(id, ownerId, name, startTime, address, state);
+					partyList.add(party);
+				}
+			}
+			return partyList;
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
-		return count;
+		return partyList;
 	}
 
+	@Override
+	public List<Party> getPieceList (int state) {
+		String sql = "select party_id from Party where party_state = ? order by party_end_time desc;";
+		
+		List<Party> pieceList = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id, state);
+					pieceList.add(party);
+				}
+			}
+			return pieceList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pieceList;
+	}
+	
 	@Override
 	public byte[] getCoverImg(int id) {
 		String sql = "select party_cover_img from Party where party_id = ?;";
@@ -305,4 +311,5 @@ public class PartyDaoImpl implements PartyDao {
 		return count;
 	}
 
+	
 }
