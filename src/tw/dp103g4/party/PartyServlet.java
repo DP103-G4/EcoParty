@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.mysql.cj.x.protobuf.MysqlxCrud.Insert;
 
 import tw.dp103g4.main.ImageUtil;
 
@@ -26,10 +27,9 @@ import tw.dp103g4.main.ImageUtil;
 public class PartyServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	PartyDao partyDao = null;
-	int state;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id, imageSize;
+		int id, imageSize, state;
 		byte[] coverImg, beforeImg, afterImg;
 		OutputStream os;
 		String partyJson;
@@ -106,13 +106,18 @@ public class PartyServlet extends HttpServlet {
 			party = gson.fromJson(partyJson, Party.class);
 			coverImg = null;
 			// 檢查是否有上傳圖片
-			if (jsonObject.get("coverImgBase64") != null) {
-				String coverImgBase64 = jsonObject.get("coverImgBase64").getAsString();
+			if (jsonObject.get("imageBase64") != null) {
+				String coverImgBase64 = jsonObject.get("imageBase64").getAsString();
 				if (coverImgBase64 != null && !coverImgBase64.isEmpty()) {
 					coverImg = Base64.getMimeDecoder().decode(coverImgBase64);
 				}
-			}
-			
+			} 
+			int count = 0;
+			if (action.equals("partyInsert"))
+				count = partyDao.insert(party, coverImg);
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("setImg")) {
+		//
 		} else {
 			writeText(response, "");
 		}

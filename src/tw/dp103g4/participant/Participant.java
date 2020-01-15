@@ -9,6 +9,15 @@ public class Participant {
 	
 	
 	
+	public Participant(int id, int partyId, int count, boolean isArrival, boolean isStaff) {
+		super();
+		this.id = id;
+		this.partyId = partyId;
+		this.count = count;
+		this.isArrival = isArrival;
+		this.isStaff = isStaff;
+	}
+
 	public Participant(int id, int partyId, int count) {
 		super();
 		this.id = id;

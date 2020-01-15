@@ -43,10 +43,10 @@ public class PartyDaoImpl implements PartyDao {
 			if (rs.next()) {
 				int ownerId = rs.getInt(1);
 				String name = rs.getString(2);
-				Date startTime = rs.getDate(3);
-				Date endTime = rs.getDate(4);
-				Date postTime = rs.getDate(5);
-				Date postEndTime = rs.getDate(6);
+				Date startTime = rs.getTimestamp(3);
+				Date endTime = rs.getTimestamp(4);
+				Date postTime = rs.getTimestamp(5);
+				Date postEndTime = rs.getTimestamp(6);
 				String location = rs.getString(7);
 				String address = rs.getString(8);
 				Double longitude = rs.getDouble(9);
@@ -56,12 +56,11 @@ public class PartyDaoImpl implements PartyDao {
 				int countLowerLimit = rs.getInt(13);
 				int countCurrent = rs.getInt(14);
 				int state = rs.getInt(15);
-				Double distance = rs.getDouble(16);
+				int distance = rs.getInt(16);
 				
-				party = new Party(ownerId, name, startTime, endTime, postTime, postEndTime, 
+				party = new Party(id, ownerId, name, startTime, endTime, postTime, postEndTime, 
 						location, address, longitude, latitude, content, 
 						countUpperLimit, countLowerLimit, countCurrent, state, distance);
-				party.setId(id);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -77,17 +76,28 @@ public class PartyDaoImpl implements PartyDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return party;
 	}
 
 	@Override
 	public int insert(Party party, byte[] coverImg) {
 		int count = 0;
-		String sql = "INSERT INTO Party" + "(owner_id, party_name,"
-				+ " party_start_time, party_end_time, party_post_time, party_post_end_time,"
-				+ " party_location, party_address, longitude, latitude, party_content,"
-				+ " party_count_upper_limit, party_count_lower_limit, party_count_current,"
-				+ " party_state, party_distance)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		String sql;
+		if (coverImg != null) {
+			sql = "INSERT INTO Party" + "(owner_id, party_name,"
+					+ " party_start_time, party_end_time, party_post_time, party_post_end_time,"
+					+ " party_location, party_address, longitude, latitude, party_content,"
+					+ " party_count_upper_limit, party_count_lower_limit, party_count_current,"
+					+ " party_state, party_distance, party_cover_img)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			
+		} else {
+			sql = "INSERT INTO Party" + "(owner_id, party_name,"
+					+ " party_start_time, party_end_time, party_post_time, party_post_end_time,"
+					+ " party_location, party_address, longitude, latitude, party_content,"
+					+ " party_count_upper_limit, party_count_lower_limit, party_count_current,"
+					+ " party_state, party_distance)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		}
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -108,7 +118,10 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setInt(13, party.getCountLowerLimit());
 			ps.setInt(14, party.getCountCurrent());
 			ps.setInt(15, party.getState());
-			ps.setDouble(16, party.getDistance());
+			ps.setInt(16, party.getDistance());
+			
+			if (coverImg != null) 
+				ps.setBytes(17, coverImg);
 
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -125,6 +138,7 @@ public class PartyDaoImpl implements PartyDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return count;
 	}
 
@@ -162,7 +176,7 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setInt(13, party.getCountLowerLimit());
 			ps.setInt(14, party.getCountCurrent());
 			ps.setInt(15, party.getState());
-			ps.setDouble(16, party.getDistance());
+			ps.setInt(16, party.getDistance());
 
 			count = ps.executeUpdate();
 			if (coverImg != null) {
@@ -172,11 +186,21 @@ public class PartyDaoImpl implements PartyDao {
 				ps.setInt(17, party.getId());
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
-			return count;
-		
+		return count;
 	}
 
 	@Override
@@ -231,10 +255,12 @@ public class PartyDaoImpl implements PartyDao {
 	
 	@Override
 	public byte[] getCoverImg(int id) {
-		String sql = "select party_cover_img from Party where party_id = ?;";
 		byte[] image = null;
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		String sql = "select party_cover_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -243,15 +269,18 @@ public class PartyDaoImpl implements PartyDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return image;
 	}
 
 	@Override
 	public byte[] getBeforeImg(int id) {
-		String sql = "select party_before_img from Party where party_id = ?;";
 		byte[] image = null;
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		String sql = "select party_before_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -260,15 +289,18 @@ public class PartyDaoImpl implements PartyDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return image;
 	}
 
 	@Override
 	public byte[] getAfterImg(int id) {
-		String sql = "select party_after_img from Party where party_id = ?;";
 		byte[] image = null;
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		String sql = "select party_after_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -277,6 +309,7 @@ public class PartyDaoImpl implements PartyDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return image;
 	}
 
@@ -308,6 +341,7 @@ public class PartyDaoImpl implements PartyDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return count;
 	}
 
