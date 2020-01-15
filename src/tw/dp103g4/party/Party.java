@@ -19,12 +19,35 @@ public class Party {
 	private int countLowerLimit;
 	private int countCurrent;
 	private int state;
-	private double distance;
+	private int distance;
 
+	
+	public Party(int id, int ownerId, String name, Date startTime, Date endTime, Date postTime, Date postEndTime,
+			String location, String address, double longitude, double latitude, String content, int countUpperLimit,
+			int countLowerLimit, int countCurrent, int state, int distance) {
+		super();
+		this.id = id;
+		this.ownerId = ownerId;
+		this.name = name;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.postTime = postTime;
+		this.postEndTime = postEndTime;
+		this.location = location;
+		this.address = address;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.content = content;
+		this.countUpperLimit = countUpperLimit;
+		this.countLowerLimit = countLowerLimit;
+		this.countCurrent = countCurrent;
+		this.state = state;
+		this.distance = distance;
+	}
 	
 	public Party(int ownerId, String name, Date startTime, Date endTime, Date postTime, Date postEndTime,
 			String location, String address, double longitude, double latitude, String content, int countUpperLimit,
-			int countLowerLimit, int countCurrent, int state, double distance) {
+			int countLowerLimit, int countCurrent, int state, int distance) {
 		super();
 		this.ownerId = ownerId;
 		this.name = name;
@@ -44,9 +67,6 @@ public class Party {
 		this.distance = distance;
 	}
 	
-	
-	
-
 	public Party(int id, int ownerId, String name, Date startTime, String address, int state) {
 		super();
 		this.id = id;
@@ -62,7 +82,6 @@ public class Party {
 		this.id = id;
 		this.state = state;
 	}
-	
 
 	public Party(int id) {
 		super();
@@ -197,11 +216,11 @@ public class Party {
 		this.state = state;
 	}
 
-	public double getDistance() {
+	public int getDistance() {
 		return distance;
 	}
 
-	public void setDistance(double distance) {
+	public void setDistance(int distance) {
 		this.distance = distance;
 	}
 	

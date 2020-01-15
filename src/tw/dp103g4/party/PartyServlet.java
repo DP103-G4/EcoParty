@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -26,10 +25,9 @@ import tw.dp103g4.main.ImageUtil;
 public class PartyServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	PartyDao partyDao = null;
-	int state, participantId;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id, imageSize;
+		int id, imageSize, state, participantId;;
 		byte[] coverImg, beforeImg, afterImg;
 		OutputStream os;
 		String partyJson;
@@ -110,12 +108,17 @@ public class PartyServlet extends HttpServlet {
 			party = gson.fromJson(partyJson, Party.class);
 			coverImg = null;
 			// 檢查是否有上傳圖片
-			if (jsonObject.get("coverImgBase64") != null) {
-				String coverImgBase64 = jsonObject.get("coverImgBase64").getAsString();
+			if (jsonObject.get("imageBase64") != null) {
+				String coverImgBase64 = jsonObject.get("imageBase64").getAsString();
 				if (coverImgBase64 != null && !coverImgBase64.isEmpty()) {
 					coverImg = Base64.getMimeDecoder().decode(coverImgBase64);
 				}
-			}
+			} 
+			int count = 0;
+			if (action.equals("partyInsert"))
+				count = partyDao.insert(party, coverImg);
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("setImg")) {
 			
 		} else {
 			writeText(response, "");
@@ -135,7 +138,7 @@ public class PartyServlet extends HttpServlet {
 			partyDao = new PartyDaoImpl();
 		}
 		List<Party> parties = new ArrayList<Party>();
-		parties = partyDao.getPartyList(state);
+		parties = partyDao.getPartyList(3);
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		writeText(response, gson.toJson(parties));
 		}
