@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,7 +28,7 @@ public class PartyServlet extends HttpServlet {
 	PartyDao partyDao = null;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id, imageSize, state;
+		int id, imageSize, state, participantId;;
 		byte[] coverImg, beforeImg, afterImg;
 		OutputStream os;
 		String partyJson;
@@ -54,7 +53,6 @@ public class PartyServlet extends HttpServlet {
 		}
 
 		String action = jsonObject.get("action").getAsString();
-
 		if (action.equals("getPartyList")) {
 			state = jsonObject.get("state").getAsInt();
 			List<Party> parties = partyDao.getPartyList(state);
@@ -67,6 +65,11 @@ public class PartyServlet extends HttpServlet {
 			id = jsonObject.get("id").getAsInt();
 			party = partyDao.findById(id);
 			writeText(response, gson.toJson(party));
+		} else if (action.equals("getCurrentParty")) {
+			state = jsonObject.get("state").getAsInt();
+			participantId = jsonObject.get("participantId").getAsInt();
+			List<Party> parties = partyDao.getCurrentParty(participantId, state);
+			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getCoverImg")) {
 			os = response.getOutputStream();
 			id = jsonObject.get("id").getAsInt();
@@ -132,6 +135,13 @@ public class PartyServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-	}
+		if (partyDao == null) {
+			partyDao = new PartyDaoImpl();
+		}
+		List<Party> parties = new ArrayList<Party>();
+		parties = partyDao.getPartyList(3);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		writeText(response, gson.toJson(parties));
+		}
 }
+

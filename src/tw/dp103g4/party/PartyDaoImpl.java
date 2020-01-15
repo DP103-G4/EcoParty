@@ -273,6 +273,7 @@ public class PartyDaoImpl implements PartyDao {
 		return image;
 	}
 
+	
 	@Override
 	public byte[] getBeforeImg(int id) {
 		byte[] image = null;
@@ -345,5 +346,27 @@ public class PartyDaoImpl implements PartyDao {
 		return count;
 	}
 
-	
+	@Override
+	public List<Party> getCurrentParty(int participantId, int state) {
+		String sql = "select pt.party_id from Participant pt left join "
+				+ "Party p on pt.party_id = p.party_id "
+				+ "where participant_id = ? and party_state = ?;";
+		List<Party> currentParty = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, participantId);
+			ps.setInt(2, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id);
+					currentParty.add(party);
+				}
+			}
+			return currentParty;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return currentParty;
+	}
 }

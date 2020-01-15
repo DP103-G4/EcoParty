@@ -71,7 +71,8 @@ public class InformDaoImpl implements InformDao {
 
 	@Override
 	public int setRead(int id) {
-		// TODO Auto-generated method stub
+		int count = 0;
+		
 		return 0;
 	}
 

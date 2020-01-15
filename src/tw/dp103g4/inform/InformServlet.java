@@ -41,7 +41,7 @@ public class InformServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 		if (action.equals("getAllInform")) {
 			receiverId = jsonObject.get("receiverId").getAsInt();
-			List<Inform> informs = informDao.getAllbyReceiver(2);
+			List<Inform> informs = informDao.getAllbyReceiver(receiverId);
 			writeText(response, gson.toJson(informs));
 		}  else if (action.equals("informInsert")) {
 			String informJson = jsonObject.get("news").getAsString();
