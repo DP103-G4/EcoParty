@@ -3,8 +3,14 @@ package tw.dp103g4.party;
 import java.util.List;
 
 public interface PartyDao {
-	public List<Party> getAll(int state);
+
+	public Party findById(int id);
 	
+	public int insert(Party party, byte[] coverImg);
+
+	public int update(Party party, byte[] coverImg);
+	
+	public List<Party> getCurrentParty(int participantId, int state);
 	
 	public List<Party> getPartyList(int state);
 	
