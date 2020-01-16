@@ -1,21 +1,30 @@
 package tw.dp103g4.talk;
-import java.sql.Date;
+import java.sql.Timestamp;
 public class NewestTalk {
 
 	
-
+		private int receiverId;
 		private int senderId;
 		private String content;
-		private Date newMsgTime;
+		private Timestamp newMsgTime;
 		private String account;
 		
-		public NewestTalk(int senderId, String content, Date newMsgTime, String account) {
+		public NewestTalk(int senderId, String content, Timestamp newMsgTime, String account) {
 			super();
 			this.senderId = senderId;
 			this.content = content;
 			this.newMsgTime = newMsgTime;
 			this.account = account;
 		}
+		
+		public int getReceiverId() {
+			return receiverId;
+		}
+
+		public void setReceiverId(int receiverId) {
+			this.receiverId = receiverId;
+		}
+
 		public int getSenderId() {
 			return senderId;
 		}
@@ -28,10 +37,10 @@ public class NewestTalk {
 		public void setContent(String content) {
 			this.content = content;
 		}
-		public Date getNewMsgTime() {
+		public Timestamp getNewMsgTime() {
 			return newMsgTime;
 		}
-		public void setNewMsgTime(Date newMsgTime) {
+		public void setNewMsgTime(Timestamp newMsgTime) {
 			this.newMsgTime = newMsgTime;
 		}
 		public String getAccount() {
