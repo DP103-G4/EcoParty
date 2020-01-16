@@ -41,7 +41,7 @@ public class NewsServlet extends HttpServlet {
 			newsDao = new NewsDaoMySql();
 		}
 		String action = jsonObject.get("action").getAsString();
-		if (action.equals("getAll")) {
+		if (action.equals("getAllNews")) {
 			List<News> news = newsDao.getAll();
 			writeText(response, gson.toJson(news));
 		} else if (action.equals("getImage")) {
@@ -75,8 +75,8 @@ public class NewsServlet extends HttpServlet {
 			}
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("newsDelete")) {
-			int newsId = jsonObject.get("newsId").getAsInt();
-			int count = newsDao.deleteById(newsId);
+			int id = jsonObject.get("id").getAsInt();
+			int count = newsDao.delete(id);
 			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");

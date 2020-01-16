@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 @SuppressWarnings("serial")
@@ -20,11 +21,11 @@ import com.google.gson.JsonObject;
 public class InformServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";       
 	private InformDao informDao = null;
-	
+	int receiverId;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		StringBuilder jsonIn = new StringBuilder();
 		BufferedReader br = request.getReader();
 		String line = "";
@@ -38,8 +39,8 @@ public class InformServlet extends HttpServlet {
 			informDao = new InformDaoImpl();
 		}
 		String action = jsonObject.get("action").getAsString();
-		if (action.equals("getAll")) {
-			int receiverId = jsonObject.get("receiverId").getAsInt();
+		if (action.equals("getAllInform")) {
+			receiverId = jsonObject.get("receiverId").getAsInt();
 			List<Inform> informs = informDao.getAllbyReceiver(receiverId);
 			writeText(response, gson.toJson(informs));
 		}  else if (action.equals("informInsert")) {
@@ -70,8 +71,9 @@ public class InformServlet extends HttpServlet {
 		if (informDao == null) {
 			informDao = new InformDaoImpl();
 			List<Inform> informs = new ArrayList<Inform>();
-			informs = informDao.getAllbyReceiver(1);
-			writeText(response, new Gson().toJson(informs));
+			informs = informDao.getAllbyReceiver(2);
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+			writeText(response, gson.toJson(informs));
 		}
 	}
 

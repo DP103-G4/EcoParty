@@ -2,14 +2,16 @@ package tw.dp103g4.party;
 
 import static tw.dp103g4.main.Common.*;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import java.util.List;
+
 
 public class PartyDaoImpl implements PartyDao {
 
@@ -23,57 +25,79 @@ public class PartyDaoImpl implements PartyDao {
 	}
 
 	@Override
-	public List<Party> getAll(int state) {
-		String sql = "select party_id, owner_id, party_name, party_start_time, party_end_time, "
-				+ "party_post_end_time, party_location, party_address, party_content, "
-				+ "party_count_upper_limit, party_count_lower_limit, party_count_current, party_distance from Party "
-				+ "where party_state = ? order by party_post_time desc;";
-
-		List<Party> partyList = new ArrayList<Party>();
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setInt(1, state);
-			try (ResultSet rs = ps.executeQuery();) {
-				while (rs.next()) {
-					int id = rs.getInt(1);
-					int ownerId = rs.getInt(2);
-					String name = rs.getString(3);
-					Date startTime = rs.getDate(4);
-					Date endTime = rs.getDate(5);
-					Date postEndTime = rs.getDate(6);
-					String location = rs.getString(7);
-					String address = rs.getString(8);
-					String content = rs.getString(9);
-					int countUpperLimit = rs.getInt(10);
-					int countLowerLimit = rs.getInt(11);
-					int countCurrent = rs.getInt(12);
-					double distance = rs.getDouble(13);
-					Party party = new Party(id, ownerId, name, startTime, endTime, postEndTime, location, address,
-							content, countUpperLimit, countLowerLimit, countCurrent, state, distance);
-					partyList.add(party);
-				}
+	public Party findById(int id) {
+		Party party = null;	
+		
+		String sql = "select owner_id, party_name, party_start_time, party_end_time, "
+				+ "party_post_time, party_post_end_time, party_location, party_address, longitude, latitude, party_content, "
+				+ "party_count_upper_limit, party_count_lower_limit, party_count_current, party_state, party_distance "
+				+ "from Party "
+				+ "where party_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int ownerId = rs.getInt(1);
+				String name = rs.getString(2);
+				Date startTime = rs.getTimestamp(3);
+				Date endTime = rs.getTimestamp(4);
+				Date postTime = rs.getTimestamp(5);
+				Date postEndTime = rs.getTimestamp(6);
+				String location = rs.getString(7);
+				String address = rs.getString(8);
+				Double longitude = rs.getDouble(9);
+				Double latitude = rs.getDouble(10);
+				String content = rs.getString(11);
+				int countUpperLimit = rs.getInt(12);
+				int countLowerLimit = rs.getInt(13);
+				int countCurrent = rs.getInt(14);
+				int state = rs.getInt(15);
+				int distance = rs.getInt(16);
+				
+				party = new Party(id, ownerId, name, startTime, endTime, postTime, postEndTime, 
+						location, address, longitude, latitude, content, 
+						countUpperLimit, countLowerLimit, countCurrent, state, distance);
 			}
-			return partyList;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		return partyList;
-	}
-
-	@Override
-	public Party findById(int id) {
-
-		return null;
+		
+		return party;
 	}
 
 	@Override
 	public int insert(Party party, byte[] coverImg) {
 		int count = 0;
-		String sql = "INSERT INTO Party" + "(owner_id, party_name,"
-				+ " party_start_time, party_end_time, party_post_end_time,"
-				+ " party_location, party_address, longitude, latitude, party_content,"
-				+ " party_count_upper_limit, party_count_lower_limit, party_count_current,"
-				+ " party_state, party_distance)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		String sql;
+		if (coverImg != null) {
+			sql = "INSERT INTO Party" + "(owner_id, party_name,"
+					+ " party_start_time, party_end_time, party_post_time, party_post_end_time,"
+					+ " party_location, party_address, longitude, latitude, party_content,"
+					+ " party_count_upper_limit, party_count_lower_limit, party_count_current,"
+					+ " party_state, party_distance, party_cover_img)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			
+		} else {
+			sql = "INSERT INTO Party" + "(owner_id, party_name,"
+					+ " party_start_time, party_end_time, party_post_time, party_post_end_time,"
+					+ " party_location, party_address, longitude, latitude, party_content,"
+					+ " party_count_upper_limit, party_count_lower_limit, party_count_current,"
+					+ " party_state, party_distance)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		}
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -81,19 +105,23 @@ public class PartyDaoImpl implements PartyDao {
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, party.getOwnerId());
 			ps.setString(2, party.getName());
-			ps.setDate(3, party.getStartTime());
-			ps.setDate(4, party.getEndTime());
-			ps.setDate(5, party.getPostEndTime());
-			ps.setString(6, party.getLocation());
-			ps.setString(7, party.getAddress());
-			ps.setDouble(8, party.getLongitude());
-			ps.setDouble(9, party.getLatitude());
-			ps.setString(10, party.getContent());
-			ps.setInt(11, party.getCountUpperLimit());
-			ps.setInt(12, party.getCountLowerLimit());
-			ps.setInt(13, party.getCountCurrent());
-			ps.setInt(14, party.getState());
-			ps.setDouble(15, party.getDistance());
+			ps.setTimestamp(3, new Timestamp(party.getStartTime().getTime()));
+			ps.setTimestamp(4, new Timestamp(party.getEndTime().getTime()));
+			ps.setTimestamp(5, new Timestamp(party.getPostTime().getTime()));
+			ps.setTimestamp(6, new Timestamp(party.getPostEndTime().getTime()));
+			ps.setString(7, party.getLocation());
+			ps.setString(8, party.getAddress());
+			ps.setDouble(9, party.getLongitude());
+			ps.setDouble(10, party.getLatitude());
+			ps.setString(11, party.getContent());
+			ps.setInt(12, party.getCountUpperLimit());
+			ps.setInt(13, party.getCountLowerLimit());
+			ps.setInt(14, party.getCountCurrent());
+			ps.setInt(15, party.getState());
+			ps.setInt(16, party.getDistance());
+			
+			if (coverImg != null) 
+				ps.setBytes(17, coverImg);
 
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -110,6 +138,7 @@ public class PartyDaoImpl implements PartyDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return count;
 	}
 
@@ -130,30 +159,33 @@ public class PartyDaoImpl implements PartyDao {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, party.getOwnerId());
 			ps.setString(2, party.getName());
-			ps.setDate(3, party.getStartTime());
-			ps.setDate(4, party.getEndTime());
-			ps.setDate(5, party.getPostEndTime());
-			ps.setString(6, party.getLocation());
-			ps.setString(7, party.getAddress());
-			ps.setDouble(8, party.getLongitude());
-			ps.setDouble(9, party.getLatitude());
-			ps.setString(10, party.getContent());
-			ps.setInt(11, party.getCountUpperLimit());
-			ps.setInt(12, party.getCountLowerLimit());
-			ps.setInt(13, party.getCountCurrent());
-			ps.setInt(14, party.getState());
-			ps.setDouble(15, party.getDistance());
+			ps.setTimestamp(3, new Timestamp(party.getStartTime().getTime()));
+			ps.setTimestamp(4, new Timestamp(party.getEndTime().getTime()));
+			ps.setTimestamp(5, new Timestamp(party.getPostTime().getTime()));
+			ps.setTimestamp(6, new Timestamp(party.getPostEndTime().getTime()));
+			ps.setString(7, party.getLocation());
+			ps.setString(8, party.getAddress());
+			ps.setDouble(9, party.getLongitude());
+			ps.setDouble(10, party.getLatitude());
+			ps.setString(11, party.getContent());
+			ps.setInt(12, party.getCountUpperLimit());
+			ps.setInt(13, party.getCountLowerLimit());
+			ps.setInt(14, party.getCountCurrent());
+			ps.setInt(15, party.getState());
+			ps.setInt(16, party.getDistance());
 
+			count = ps.executeUpdate();
 			if (coverImg != null) {
-				ps.setBytes(16, coverImg);
-				ps.setInt(17, party.getId());
+				ps.setBytes(17, coverImg);
+				ps.setInt(18, party.getId());
 			} else {
-				ps.setInt(16, party.getId());
+				ps.setInt(17, party.getId());
 			}
-
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -167,19 +199,134 @@ public class PartyDaoImpl implements PartyDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return count;
 	}
 
 	@Override
-	public int delete(int id) {
+	public List<Party> getPartyList(int state) {
+		String sql = "select party_id, owner_id, party_address, party_start_time, party_name from Party "
+				+ "where party_state = ? order by party_post_time desc;";
+		
+		List<Party> partyList = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					int ownerId = rs.getInt(2);
+					String address = rs.getString(3);
+					Date startTime = rs.getDate(4);
+					String name = rs.getString(5);
+					Party party = new Party(id, ownerId, name, startTime, address, state);
+					partyList.add(party);
+				}
+			}
+			return partyList;
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return partyList;
+	}
+
+	@Override
+	public List<Party> getPieceList (int state) {
+		String sql = "select party_id from Party where party_state = ? order by party_end_time desc;";
+		
+		List<Party> pieceList = new ArrayList<Party>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id, state);
+					pieceList.add(party);
+				}
+			}
+			return pieceList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pieceList;
+	}
+	
+	@Override
+	public byte[] getCoverImg(int id) {
+		byte[] image = null;
+		String sql = "select party_cover_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return image;
+	}
+
+	
+	@Override
+	public byte[] getBeforeImg(int id) {
+		byte[] image = null;
+		String sql = "select party_before_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return image;
+	}
+
+	@Override
+	public byte[] getAfterImg(int id) {
+		byte[] image = null;
+		String sql = "select party_after_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return image;
+	}
+
+	@Override
+	public int setImg(int id, byte[] beforeImg, byte[] afterImg) {
 		int count = 0;
-		String sql = "DELETE FROM Party WHERE party_id = ?;";
+		String sql = "UPDATE Party SET" + "	party_before_img = ?, party_after_img = ?"
+				+ "where party_id = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
+			ps.setBytes(1, beforeImg);
+			ps.setBytes(2, afterImg);
+			ps.setInt(3, id);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -195,43 +342,31 @@ public class PartyDaoImpl implements PartyDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return count;
 	}
 
 	@Override
-	public byte[] getCoverImg(int id) {
-		String sql = "select party_cover_img from Party where party_id = ?;";
-		byte[] image = null;
+	public List<Party> getCurrentParty(int participantId, int state) {
+		String sql = "select pt.party_id from Participant pt left join "
+				+ "Party p on pt.party_id = p.party_id "
+				+ "where participant_id = ? and party_state = ?;";
+		List<Party> currentParty = new ArrayList<Party>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setInt(1, id);
+			ps.setInt(1, participantId);
+			ps.setInt(2, state);
 			try (ResultSet rs = ps.executeQuery();) {
-				if (rs.next()) {
-					image = rs.getBytes(1);
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id);
+					currentParty.add(party);
 				}
 			}
+			return currentParty;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return image;
+		return currentParty;
 	}
-
-	@Override
-	public byte[] getBeforeImg(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public byte[] getAfterImg(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int setImg(int id, byte[] beforeImg, byte[] afterImg) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

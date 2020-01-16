@@ -7,8 +7,6 @@ public interface PartyMessageDao {
 	
 	public int insert(PartyMessage partyMessage);
 	
-	public int update(PartyMessage partyMessage);
-	
 	public int delete(int id);
 	
 }
