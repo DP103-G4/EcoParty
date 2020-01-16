@@ -54,8 +54,8 @@ public class FriendShipServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAllFriend")) {
-//			int userId = jsonObject.get("userId").getAsInt();
-			List<FriendShip> friendShips = friendShipDao.getAllFriend(3);
+			int userId = jsonObject.get("userId").getAsInt();
+			List<FriendShip> friendShips = friendShipDao.getAllFriend(userId);
 			writeText(response, gson.toJson(friendShips));
 
 		} else if (action.equals("friendShipInsert")) {
@@ -77,7 +77,7 @@ public class FriendShipServlet extends HttpServlet {
 
 		}else if (action.equals("getAllInvite")) {
 			int userId = jsonObject.get("userId").getAsInt();
-			List<FriendShip> friendShips = friendShipDao.getAllFriend(3);
+			List<FriendShip> friendShips = friendShipDao.getAllFriend(userId);
 			writeText(response, gson.toJson(friendShips));
 		}
 	}

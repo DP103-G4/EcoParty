@@ -1,6 +1,6 @@
 package tw.dp103g4.talk;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Talk {
 	private int id;
@@ -8,10 +8,10 @@ public class Talk {
 	private int senderId;
 	private int partyId;
 	private String content;
-	private Date time;
+	private Timestamp time;
 	private Boolean isRead;
 
-	public Talk(int id, int receiverId, int senderId, int partyId, String content, Date time, Boolean isRead) {
+	public Talk(int id, int receiverId, int senderId, int partyId, String content, Timestamp time, Boolean isRead) {
 		super();
 		this.id = id;
 		this.receiverId = receiverId;
@@ -66,11 +66,11 @@ public class Talk {
 		this.content = content;
 	}
 
-	public Date getTime() {
+	public Timestamp getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(Timestamp time) {
 		this.time = time;
 	}
 
