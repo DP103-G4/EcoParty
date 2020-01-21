@@ -3,13 +3,13 @@ package tw.dp103g4.location;
 import java.util.List;
 
 public interface LocationDao {
-	public List<Loaction> getAll();
+	public List<Location> getAll(int partyId);
 
-	public Loaction getById(int id);
+	public Location getById(int id);
 
-	public int insert(Loaction loaction);
+	public int insert(Location location);
 
-	public int update(Loaction loaction);
+	public int update(Location location);
 
 	public int deleteById(int id);
 

@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 public class LocationServlet extends HttpServlet {
 	private static final String CONTENT_TYPE = "text/html; charset=utf-8";
 	private LocationDao locationDao = null;
+	private int partyId;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -38,13 +39,14 @@ public class LocationServlet extends HttpServlet {
 		}
 		String action = jsonObject.get("action").getAsString();
 		if (action.equals("getAll")) {
-			List<Loaction> loactions = locationDao.getAll();
-			writeText(response, gson.toJson(loactions));
+			int partyId = jsonObject.get("partyId").getAsInt();
+			List<Location> locations = locationDao.getAll(partyId);
+			writeText(response, gson.toJson(locations));
 		} else if (action.equals("locationInsert") || action.equals("locationUpdate")) {
 			String locationJson = jsonObject.get("location").getAsString();
 			System.out.println("locationJson" + locationJson);
 			
-			Loaction loaction = gson.fromJson(locationJson, Loaction.class);
+			Location loaction = gson.fromJson(locationJson, Location.class);
 			int count = 0;
 			if (action.equals("locationInsert")) {
 				count = locationDao.insert(loaction);
@@ -53,7 +55,7 @@ public class LocationServlet extends HttpServlet {
 			}
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("locationDelete")) {
-			int locationId = jsonObject.get("locationId").getAsInt();
+			int locationId = jsonObject.get("id").getAsInt();
 			int count = locationDao.deleteById(locationId);
 			writeText(response, String.valueOf(count));
 		} else {
@@ -73,7 +75,7 @@ public class LocationServlet extends HttpServlet {
 		if (locationDao == null) {
 			locationDao = new LocationDaoMySql();
 		}
-		List<Loaction> locationList = locationDao.getAll();
+		List<Location> locationList = locationDao.getAll(4);
 		writeText(response, new Gson().toJson(locationList));
 	}
 

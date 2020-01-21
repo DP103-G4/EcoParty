@@ -1,6 +1,6 @@
 package tw.dp103g4.location;
 
-public class Loaction {
+public class Location {
 	private int id;
 	private int partyId;
 	private int userId;
@@ -9,7 +9,7 @@ public class Loaction {
 	private String name;
 	private String content;
 	
-	public Loaction(int id, int partyId, int userId, double latitude, double longitude, String name, String content) {
+	public Location(int id, int partyId, int userId, double latitude, double longitude, String name, String content) {
 		super();
 		this.id = id;
 		this.partyId = partyId;
