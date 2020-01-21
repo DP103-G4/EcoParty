@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class User {
 	
-//	private int id;
+	private int userId;
 	private String account;
 	private String password;
 	private String email;
@@ -37,71 +37,66 @@ public class User {
 		this.account = account;
 		this.password = password;
 	}
+	
+	public User(int userId, String account) {
+		super();
+		this.userId = userId;
+		this.account = account;		
+	}
+	
+	public int getUserId() {
+		return userId;
+	}
 
-
-
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
 	public String getAccount() {
 		return account;
 	}
 
-
 	public void setAccount(String account) {
 		this.account = account;
 	}
-
 
 	public String getPassword() {
 		return password;
 	}
 
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 
 	public String getEmail() {
 		return email;
 	}
 
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 
 	public String getName() {
 		return name;
 	}
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	public boolean isOver() {
 		return isOver;
 	}
 
-
 	public void setOver(boolean isOver) {
 		this.isOver = isOver;
 	}
-
 
 	public Date getTime() {
 		return time;
 	}
 
-
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	
-	
-	
-	
-
 }

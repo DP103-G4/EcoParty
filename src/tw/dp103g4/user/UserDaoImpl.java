@@ -273,5 +273,38 @@ public class UserDaoImpl implements UserDao {
 		}
 		return isValid;
 	}
+	
+	@Override
+	public User searchUser(String account) {
+		String sql = "SELECT user_id, user_account FROM User WHERE user_account = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		User user = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, account);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int userId = rs.getInt(1);
+				String reAccount = rs.getString(2);
+				user = new User(userId, reAccount);				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return user;
+	}
 
 }

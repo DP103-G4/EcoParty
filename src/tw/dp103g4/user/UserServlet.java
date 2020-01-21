@@ -128,8 +128,13 @@ public class UserServlet extends HttpServlet {
 			String account = jsonObject.get("account").getAsString();
 			User user = userDao.findById(account);
 			writeText(response, gson.toJson(user));
-		}
-		else {
+			
+		}else if (action.equals("searchUser")) {
+			String account = jsonObject.get("account").getAsString();
+			User user = userDao.searchUser(account);
+			writeText(response, gson.toJson(user));
+			
+		}else {
 		writeText(response, "");
 		}
 
