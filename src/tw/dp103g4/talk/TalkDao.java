@@ -6,7 +6,7 @@ public interface TalkDao {
 	List<Talk> getAll(int userId, int friendId);
 	List<NewestTalk> getNewestTalk(int userId);
 	int insert(Talk talk);
-	int updateIsRead(int userId);
+	int updateIsRead(int senderId, int receiverId);
 
 	
 

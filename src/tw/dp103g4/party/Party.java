@@ -22,6 +22,7 @@ public class Party {
 	private int distance;
 
 	
+	
 	public Party(int id, int ownerId, String name, Date startTime, Date endTime, Date postTime, Date postEndTime,
 			String location, String address, double longitude, double latitude, String content, int countUpperLimit,
 			int countLowerLimit, int countCurrent, int state, int distance) {
@@ -44,7 +45,7 @@ public class Party {
 		this.state = state;
 		this.distance = distance;
 	}
-	
+
 	public Party(int ownerId, String name, Date startTime, Date endTime, Date postTime, Date postEndTime,
 			String location, String address, double longitude, double latitude, String content, int countUpperLimit,
 			int countLowerLimit, int countCurrent, int state, int distance) {

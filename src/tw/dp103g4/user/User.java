@@ -1,9 +1,10 @@
 package tw.dp103g4.user;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class User {
-	private int id;
+	
+	private int userId;
 	private String account;
 	private String password;
 	private String email;
@@ -11,9 +12,9 @@ public class User {
 	private boolean isOver;
 	private Date time;
 	
-	public User(int id, String account, String password, String email, String name, boolean isOver, Date time) {
+	
+	public User(String account, String password, String email, String name, boolean isOver, Date time) {
 		super();
-		this.id = id;
 		this.account = account;
 		this.password = password;
 		this.email = email;
@@ -22,12 +23,33 @@ public class User {
 		this.time = time;
 	}
 
-	public int getId() {
-		return id;
+	
+	public User(String account, String password, String email, String name) {
+		super();
+		this.account = account;
+		this.password = password;
+		this.email = email;
+		this.name = name;
+	}
+	
+	public User(String account, String password) {
+		super();
+		this.account = account;
+		this.password = password;
+	}
+	
+	public User(int userId, String account) {
+		super();
+		this.userId = userId;
+		this.account = account;		
+	}
+	
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public String getAccount() {
@@ -77,5 +99,4 @@ public class User {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	
 }

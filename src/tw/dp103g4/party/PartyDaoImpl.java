@@ -255,10 +255,12 @@ public class PartyDaoImpl implements PartyDao {
 	
 	@Override
 	public byte[] getCoverImg(int id) {
-		String sql = "select party_cover_img from Party where party_id = ?;";
 		byte[] image = null;
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		String sql = "select party_cover_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -267,16 +269,19 @@ public class PartyDaoImpl implements PartyDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return image;
 	}
 
 	
 	@Override
 	public byte[] getBeforeImg(int id) {
-		String sql = "select party_before_img from Party where party_id = ?;";
 		byte[] image = null;
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		String sql = "select party_before_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -285,15 +290,18 @@ public class PartyDaoImpl implements PartyDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return image;
 	}
 
 	@Override
 	public byte[] getAfterImg(int id) {
-		String sql = "select party_after_img from Party where party_id = ? ;";
 		byte[] image = null;
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		String sql = "select party_after_img from Party where party_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -302,6 +310,7 @@ public class PartyDaoImpl implements PartyDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return image;
 	}
 

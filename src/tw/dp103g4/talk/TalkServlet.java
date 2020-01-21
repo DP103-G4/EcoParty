@@ -26,10 +26,10 @@ public class TalkServlet extends HttpServlet {
 		if (talkDao == null) {
 			talkDao = new TalkDaoMySql();
 		}
-//		List<NewestTalk> newestTalks = talkDao.getNewestTalk(3);
-//		writeText(response, new Gson().toJson(newestTalks));
-		List<Talk> talks = talkDao.getAll(3, 4);
-		writeText(response, new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(talks));
+		List<NewestTalk> newestTalks = talkDao.getNewestTalk(3);
+		writeText(response, new Gson().toJson(newestTalks));
+//		List<Talk> talks = talkDao.getAll(3, 4);
+//		writeText(response, new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(talks));
 
 	}
 
@@ -58,8 +58,8 @@ public class TalkServlet extends HttpServlet {
 		
 		if (action.equals("getAll")) {
 			int userId = jsonObject.get("userId").getAsInt();
-			int senderId = jsonObject.get("senderId").getAsInt();
-			List<Talk> talks = talkDao.getAll(userId,senderId);
+			int friendId = jsonObject.get("friendId").getAsInt();
+			List<Talk> talks = talkDao.getAll(userId,friendId);
 			writeText(response, gson.toJson(talks));	
 			
 		} else if (action.equals("talkInsert")) {
@@ -67,14 +67,17 @@ public class TalkServlet extends HttpServlet {
 			System.out.println("TalkJson = " + talkJson);
 			Talk talk = gson.fromJson(talkJson, Talk.class);
 			int count = talkDao.insert(talk);
+			writeText(response, String.valueOf(count));
 			
 		} else if (action.equals("updateIsRead")) {
 			int senderId = jsonObject.get("senderId").getAsInt();
-			int count = talkDao.updateIsRead(senderId);
-			
+			int receiverId = jsonObject.get("receiverId").getAsInt();
+			int count = talkDao.updateIsRead(senderId,receiverId);
+			writeText(response, String.valueOf(count));
+
 		}else if(action.equals("getNewestTalk")) {
-//			int userId = jsonObject.get("userId").getAsInt();
-			List<NewestTalk> newestTalks = talkDao.getNewestTalk(3);
+			int userId = jsonObject.get("userId").getAsInt();
+			List<NewestTalk> newestTalks = talkDao.getNewestTalk(userId);
 			writeText(response, gson.toJson(newestTalks));	
 		}
 	}
