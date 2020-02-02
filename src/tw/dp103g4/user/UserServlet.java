@@ -117,6 +117,12 @@ public class UserServlet extends HttpServlet {
 			isValid = userDao.isLogin(account, password);
 			writeText(response, String.valueOf(isValid));
 		}
+		else if (action.equals("getUserIdByAccount")) {
+			int id = 0;
+			String account = jsonObject.get("account").getAsString();
+			id = userDao.getUserIdByAccount(account);
+			writeText(response, String.valueOf(id));
+		}
 //		else if
 //			(action.equals("delete")) {
 //			String account = jsonObject.get("account").getAsString();
@@ -125,8 +131,8 @@ public class UserServlet extends HttpServlet {
 //		} 
 		//登入：回傳資料
 		else if (action.equals("findById")) {
-			String account = jsonObject.get("account").getAsString();
-			User user = userDao.findById(account);
+			int id = jsonObject.get("id").getAsInt();
+			User user = userDao.findById(id);
 			writeText(response, gson.toJson(user));
 		}
 		else {

@@ -136,15 +136,16 @@ public class UserDaoImpl implements UserDao {
 	// 登入後回傳相符的資料在detailFragment
 	@Override
 //	public User findById(String account, String password) {
-		public User findById(String account) {
-		String sql = "SELECT user_email, user_name FROM User WHERE user_account = ?;";
+		public User findById(int id) {
+		//get id 帳號密碼信箱暱稱 （可以不顯示但要抓到資料）
+		String sql = "SELECT user_email, user_name FROM User WHERE user_id = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		User user = null;
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, account);
+			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				String email = rs.getString(1);
@@ -272,6 +273,23 @@ public class UserDaoImpl implements UserDao {
 			}
 		}
 		return isValid;
+	}
+
+	@Override
+	public int getUserIdByAccount(String account) {
+		int id = 0;
+		String sql = "SELECT user_id FROM User WHERE user_account = ?;";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = conn.prepareStatement(sql);) {
+			ps.setString(1, account);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				id = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 }

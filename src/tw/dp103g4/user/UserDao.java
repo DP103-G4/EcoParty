@@ -4,23 +4,23 @@ import java.util.List;
 
 public interface UserDao {
 	// 增刪改查
-	public int insert(User user, byte[] userImg);
+	int insert(User user, byte[] userImg);
 
-	public int update(User user, byte[] userImg);
+	int update(User user, byte[] userImg);
 
 //	public int delete(String account);
-
+	int getUserIdByAccount(String account);
 	
 	//判斷登入：布林
-	public boolean isLogin(String account, String password);
+	boolean isLogin(String account, String password);
 	
-	//判斷登入：有相符就回傳
-	public User findById(String account);
+	//登入：有相符就回傳
+	User findById(int id);
 
 	// 呈現資料列表
-	public List<User> getAll();
+	List<User> getAll();
 
 	// 用String account 去找圖片id(以byte[]回傳)
-	public byte[] getUserImg(String account);
+	byte[] getUserImg(String account);
 	
 }
