@@ -59,15 +59,21 @@ public class LocationDaoMySql implements LocationDao{
 		int count = 0;
 		String sql = "insert into Location (party_id, user_id, longitude, latitude, location_name, location_content)"
 				+ " value (?, ?, ?, ?, ?, ?);";
+		//查詢下⼀個準備產⽣的號碼
+		String idSql = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'EcoParty' AND TABLE_NAME = 'Location';";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement psId = connection.prepareStatement(idSql);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setInt(1, location.getPartyId());
-			ps.setInt(2, location.getUserId());
-			ps.setDouble(3, location.getLongitude());
-			ps.setDouble(4, location.getLatitude());
-			ps.setString(5, location.getName());
-			ps.setString(6, location.getContent());
-			count = ps.executeUpdate();
+			ResultSet rs = psId.executeQuery();
+			if (rs.next()) {
+				ps.setInt(1, location.getPartyId());
+				ps.setInt(2, location.getUserId());
+				ps.setDouble(3, location.getLongitude());
+				ps.setDouble(4, location.getLatitude());
+				ps.setString(5, location.getName());
+				ps.setString(6, location.getContent());
+				count = ps.executeUpdate() == 0 ? 0 : rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

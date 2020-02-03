@@ -55,8 +55,8 @@ public class LocationServlet extends HttpServlet {
 			}
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("locationDelete")) {
-			int locationId = jsonObject.get("id").getAsInt();
-			int count = locationDao.deleteById(locationId);
+			int id = jsonObject.get("id").getAsInt();
+			int count = locationDao.deleteById(id);
 			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");
