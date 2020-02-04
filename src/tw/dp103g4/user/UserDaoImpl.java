@@ -64,9 +64,9 @@ public class UserDaoImpl implements UserDao {
 		String sql = "";
 		// image為null就不更新image欄位內容
 		if (userImg != null) {
-			sql = "UPDATE User SET  user_password = ?, user_email = ?, user_name = ?, user_img = ? WHERE user_account = ?;";
+			sql = "UPDATE User SET user_password = ?, user_email = ?, user_name = ?, user_img = ? WHERE user_account = ?;";
 		} else {
-			sql = "UPDATE User SET  user_password = ?, user_email = ?, user_name = ? WHERE user_account = ?;";
+			sql = "UPDATE User SET user_password = ?, user_email = ?, user_name = ? WHERE user_account = ?;";
 		}
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -104,40 +104,11 @@ public class UserDaoImpl implements UserDao {
 		return count;
 	}
 
-//	@Override
-//	public int delete(String account) {
-//		int count = 0;
-//		String sql = "DELETE FROM User WHERE user_account = ?;";
-//		Connection connection = null;
-//		PreparedStatement ps = null;
-//		try {
-//			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-//			ps = connection.prepareStatement(sql);
-//			ps.setString(1, account);
-//			count = ps.executeUpdate();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				if (ps != null) {
-//					ps.close();
-//				}
-//				if (connection != null) {
-//					connection.close();
-//				}
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return count;
-//	}
-//	
-
 	// 登入後回傳相符的資料在detailFragment
 	@Override
 //	public User findById(String account, String password) {
-		public User findById(int id) {
-		//get id 帳號密碼信箱暱稱 （可以不顯示但要抓到資料）
+	public User findById(int id) {
+		// get id 帳號密碼信箱暱稱 （可以不顯示但要抓到資料）
 		String sql = "SELECT user_email, user_name FROM User WHERE user_id = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -210,15 +181,15 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public byte[] getUserImg(String account) {
-		String sql = "SELECT user_img FROM User WHERE user_account = ?;";
+	public byte[] getUserImg(int id) {
+		String sql = "SELECT user_img FROM User WHERE user_id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		byte[] image = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, account);
+			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				// image = []
@@ -259,8 +230,7 @@ public class UserDaoImpl implements UserDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 
-		}
-		finally {
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -275,6 +245,7 @@ public class UserDaoImpl implements UserDao {
 		return isValid;
 	}
 
+	// 用Account取Id
 	@Override
 	public int getUserIdByAccount(String account) {
 		int id = 0;
@@ -283,7 +254,7 @@ public class UserDaoImpl implements UserDao {
 				PreparedStatement ps = conn.prepareStatement(sql);) {
 			ps.setString(1, account);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs.next()) { //如果next有資料就取得id
 				id = rs.getInt(1);
 			}
 		} catch (SQLException e) {

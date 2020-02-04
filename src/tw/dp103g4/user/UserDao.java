@@ -8,7 +8,7 @@ public interface UserDao {
 
 	int update(User user, byte[] userImg);
 
-//	public int delete(String account);
+	// 登入後，用帳號取Id
 	int getUserIdByAccount(String account);
 	
 	//判斷登入：布林
@@ -21,6 +21,6 @@ public interface UserDao {
 	List<User> getAll();
 
 	// 用String account 去找圖片id(以byte[]回傳)
-	byte[] getUserImg(String account);
+	byte[] getUserImg(int id);
 	
 }

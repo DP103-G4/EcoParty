@@ -23,12 +23,14 @@ import tw.dp103g4.main.ImageUtil;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
+	//把userdao宣告為null位置
 	UserDao userDao = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		if (userDao == null) {
+			//把userdao宣告為UserDaoImpl位置
 			userDao = new UserDaoImpl();
 		}
 		List<User> users = userDao.getAll();
@@ -68,10 +70,10 @@ public class UserServlet extends HttpServlet {
 //	}else
 		if (action.equals("getUserImage")) {
 			OutputStream os = response.getOutputStream();
-			String account = jsonObject.get("account").getAsString();
+			int id = jsonObject.get("id").getAsInt();
 			//
 			int imageSize = jsonObject.get("imageSize").getAsInt();
-			byte[] image = userDao.getUserImg(account);
+			byte[] image = userDao.getUserImg(id);
 			if (image != null) {
 				// 圖不為空
 				// 直接輸出＆告知圖檔型態
@@ -123,12 +125,6 @@ public class UserServlet extends HttpServlet {
 			id = userDao.getUserIdByAccount(account);
 			writeText(response, String.valueOf(id));
 		}
-//		else if
-//			(action.equals("delete")) {
-//			String account = jsonObject.get("account").getAsString();
-//			int count = userDao.delete(account);
-//			writeText(response, String.valueOf(count));
-//		} 
 		//登入：回傳資料
 		else if (action.equals("findById")) {
 			int id = jsonObject.get("id").getAsInt();
