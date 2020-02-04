@@ -23,4 +23,6 @@ public interface UserDao {
 	// 用String account 去找圖片id(以byte[]回傳)
 	byte[] getUserImg(int id);
 	
+	public User searchUser(String account);
+	
 }

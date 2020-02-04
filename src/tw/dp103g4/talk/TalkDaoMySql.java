@@ -156,7 +156,8 @@ public class TalkDaoMySql implements TalkDao {
 				+ "FROM ( select tk_receiver_id, tk_sender_id, Max(talk_time) as MaxTime From Talk where tk_receiver_id = ? or tk_sender_id = ? group by tk_sender_id, tk_receiver_id ) b "
 				+ "inner join Talk a on a.tk_sender_id = b.tk_sender_id and a.talk_time = b.MaxTime "
 				+ "left join User c on a.tk_sender_id = c.user_id "
-				+ "left join User d on a.tk_receiver_id = d.user_id;";
+				+ "left join User d on a.tk_receiver_id = d.user_id "
+				+ "Order by b.MaxTime DESC;";
 		HashSet<String> friendCheck = new HashSet<String>();
 		int friendId;
 		Connection connection = null;

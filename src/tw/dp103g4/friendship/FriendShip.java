@@ -20,6 +20,11 @@ public class FriendShip {
 		this.isInvite = isInvite;
 		this.account = account;
 	}
+	public FriendShip (int friendId, String account) {
+		super();
+		this.friendId = friendId;
+		this.account = account;
+	}
 	
 
 	public int getFriendId() {

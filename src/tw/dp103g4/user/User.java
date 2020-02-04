@@ -46,6 +46,17 @@ public class User {
 		this.account = account;
 		this.password = password;
 	}
+	
+	public User(int id, String account) {
+		super();
+		this.id = id;
+		this.account = account;
+	}
+	
+	
+	public int getUserId() {
+		return id;
+	}
 
 	public int getId() {
 		return id;
@@ -53,6 +64,7 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
+		
 	}
 
 	public String getAccount() {
@@ -102,5 +114,5 @@ public class User {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-
+	
 }
