@@ -9,7 +9,7 @@ public interface ParticipantDao {
 	
 	public int insert(Participant participant);
 	
-	public int delete(int id);
+	public int delete(Participant participant);
 	
 	public int setArrival(int id);
 }

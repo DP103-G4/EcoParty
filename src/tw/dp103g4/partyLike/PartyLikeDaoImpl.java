@@ -47,7 +47,7 @@ public class PartyLikeDaoImpl implements PartyLikeDao {
 		String sql = "insert into Party_like (user_id, party_id) value (?, ?);";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setInt(1, partylike.getId());
+			ps.setInt(1, partylike.getUserId());
 			ps.setInt(2, partylike.getPartyId());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -57,13 +57,13 @@ public class PartyLikeDaoImpl implements PartyLikeDao {
 	}
 
 	@Override
-	public int delete(int id, int partyId) {
+	public int delete(PartyLike partylike) {
 		int count = 0;
 		String sql = "delete from Party_like where user_id = ? and party_id = ?";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ps.setInt(1, id);
-			ps.setInt(2, partyId);
+			ps.setInt(1, partylike.getUserId());
+			ps.setInt(2, partylike.getPartyId());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

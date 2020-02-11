@@ -25,8 +25,9 @@ public class PartyDaoImpl implements PartyDao {
 	}
 
 	@Override
-	public Party findById(int id) {
-		Party party = null;	
+	public PartyInfo findById(int partyId, int userId) {
+		Party party = null;
+		PartyInfo partyInfo = null;
 		
 		String sql = "select owner_id, party_name, party_start_time, party_end_time, "
 				+ "party_post_time, party_post_end_time, party_location, party_address, longitude, latitude, party_content, "
@@ -38,7 +39,7 @@ public class PartyDaoImpl implements PartyDao {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
+			ps.setInt(1, partyId);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				int ownerId = rs.getInt(1);
@@ -58,9 +59,38 @@ public class PartyDaoImpl implements PartyDao {
 				int state = rs.getInt(15);
 				int distance = rs.getInt(16);
 				
-				party = new Party(id, ownerId, name, startTime, endTime, postTime, postEndTime, 
+				party = new Party(partyId, ownerId, name, startTime, endTime, postTime, postEndTime, 
 						location, address, longitude, latitude, content, 
 						countUpperLimit, countLowerLimit, countCurrent, state, distance);
+		
+				partyInfo = new PartyInfo(party, false, false, false);
+				
+				if (userId != 0) {
+					sql = "select participant_isStaff "
+						+ "from Participant where participant_id = ? and party_id = ? limit 1;";
+					ps = connection.prepareStatement(sql);
+					ps.setInt(1, userId);
+					ps.setInt(2, partyId);
+					rs = ps.executeQuery();
+					if (rs.next()) {
+						partyInfo.setIsIn(true);
+						partyInfo.setIsStaff(rs.getBoolean(1));
+					}
+					
+					sql = "select count(*) from Party_like where user_id = ? and party_id = ? limit 1;";
+					ps = connection.prepareStatement(sql);
+					ps.setInt(1, userId);
+					ps.setInt(2, partyId);
+					rs = ps.executeQuery();
+					if (rs.next()) {
+						int count = rs.getInt(1);
+						if (count == 1) {
+							partyInfo.setIsLike(true);
+						}
+					}
+					
+				}
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -77,7 +107,7 @@ public class PartyDaoImpl implements PartyDao {
 			}
 		}
 		
-		return party;
+		return partyInfo;
 	}
 
 	@Override
@@ -368,5 +398,82 @@ public class PartyDaoImpl implements PartyDao {
 			e.printStackTrace();
 		}
 		return currentParty;
+	}
+
+	@Override
+	public int setCountCurrent(int partyId, int in) {
+		int count = 0;
+		int countCurrent = 0;
+		
+		String sql = "select party_count_current from Party where party_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, partyId);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				countCurrent = rs.getInt(1);
+			}
+			
+			countCurrent += in;
+		
+			sql = "UPDATE Party SET party_count_current = ? where party_id = ?;";
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, countCurrent);
+			ps.setInt(2, partyId);
+			count = ps.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	}
+
+	@Override
+	public int setState(int id, int state) {	
+		int count = 0;
+		
+		String sql = "UPDATE Party SET party_state = ? where party_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, state);
+			ps.setInt(2, id);
+
+			count = ps.executeUpdate();
+	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
 	}
 }
