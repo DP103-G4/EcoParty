@@ -53,11 +53,6 @@ public class User {
 		this.id = id;
 		this.account = account;
 	}
-	
-	
-	public int getUserId() {
-		return id;
-	}
 
 	public int getId() {
 		return id;

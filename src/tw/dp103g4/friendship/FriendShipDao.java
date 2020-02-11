@@ -9,7 +9,9 @@ public interface FriendShipDao {
 	
 	int updateIsInvite(int idOne, int idTwo);
 	
-	boolean isInviteById(int idOne, int idTwo);
+	public FriendShip isInviteById(int idOne, int idTwo);
+	
+	boolean searchFriendShipAdd(int idOne, int idTwo);
 
 	List<FriendShip> getAllFriend(int userId);
 	

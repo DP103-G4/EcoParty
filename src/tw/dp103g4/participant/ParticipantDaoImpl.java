@@ -66,14 +66,66 @@ public class ParticipantDaoImpl implements ParticipantDao {
 
 	@Override
 	public int insert(Participant participant) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		int countCurrent = 0;
+		String sql;
+		sql = "INSERT INTO Participant" + "(participant_id, party_id, participant_count)" + " VALUES(?, ?, ?);";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, participant.getId());
+			ps.setInt(2, participant.getPartyId());
+			ps.setInt(3, participant.getCount());
+			ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
 	}
 
 	@Override
-	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int delete(Participant participant) {
+		int count = 0;
+		String sql = "DELETE FROM Participant WHERE participant_id = ? and party_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, participant.getId());
+			ps.setInt(2, participant.getPartyId());
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 	@Override
