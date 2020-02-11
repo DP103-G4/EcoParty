@@ -83,9 +83,7 @@ public class UserServlet extends HttpServlet {
 				response.setContentLength(image.length);
 				os.write(image);
 			}
-		}
-//		 else 
-			if (action.equals("insert") || action.equals("update")) {
+		} else if (action.equals("insert") || action.equals("update")) {
 			String userJson = jsonObject.get("user").getAsString();
 			System.out.println("userJson = " + userJson);
 			// 字串解析成物件bookJson->Book.class

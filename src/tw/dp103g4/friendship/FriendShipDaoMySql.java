@@ -181,11 +181,13 @@ public class FriendShipDaoMySql implements FriendShipDao {
 	}
 	
 	@Override
-	public boolean isInviteById(int idOne, int idTwo) {
+	public FriendShip isInviteById(int idOne, int idTwo) {
 		String sql = "Select isinvite from Friendship WHERE userone_id = ? and usertwo_id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
+		FriendShip friendShip = null;
 		boolean isInvite = false;
+		boolean noInsert = false;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
@@ -197,11 +199,14 @@ public class FriendShipDaoMySql implements FriendShipDao {
 				ps.setInt(2, idOne);
 				resultSet = ps.executeQuery();
 				if (!resultSet.next()) {
-					return false;
+					noInsert = true;
 				}
 			}
-			System.out.println("3:"+isInvite);
-			isInvite = resultSet.getBoolean(1);
+			if (!noInsert) {
+				isInvite = resultSet.getBoolean(1);
+			}
+			friendShip = new FriendShip(noInsert, isInvite);
+			System.out.println("hi:"+friendShip);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -216,7 +221,7 @@ public class FriendShipDaoMySql implements FriendShipDao {
 				e.printStackTrace();
 			}
 		}
-		return isInvite;
+		return friendShip;
 	}
 
 	@Override
@@ -264,6 +269,37 @@ public class FriendShipDaoMySql implements FriendShipDao {
 			}
 		}
 		return friendShipInvite;
+	}
+	
+	@Override
+	public boolean searchFriendShipAdd(int idOne, int idTwo) {
+		String sql = "Select * from Friendship WHERE userone_id = ? and usertwo_id = ? and isinvite = 0;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		boolean isInvite = false;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, idOne);
+			ps.setInt(2, idTwo);
+			ResultSet resultSet = ps.executeQuery();
+			isInvite = resultSet.next();
+			System.out.println(isInvite);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return isInvite;
 	}
 
 }
