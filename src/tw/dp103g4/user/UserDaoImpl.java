@@ -64,28 +64,25 @@ public class UserDaoImpl implements UserDao {
 		String sql = "";
 		// image為null就不更新image欄位內容
 		if (userImg != null) {
-			sql = "UPDATE User SET user_password = ?, user_email = ?, user_name = ?, user_img = ? WHERE user_account = ?;";
+			sql = "UPDATE User SET user_password = ?, user_email = ?, user_name = ?, user_img = ? WHERE user_id = ?;";
 		} else {
-			sql = "UPDATE User SET user_password = ?, user_email = ?, user_name = ? WHERE user_account = ?;";
+			sql = "UPDATE User SET user_password = ?, user_email = ?, user_name = ? WHERE user_id = ?;";
 		}
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			// 要對應sql的問號位置
-//			ps.setString(1, user.getAccount());
 			ps.setString(1, user.getPassword());
 			ps.setString(2, user.getEmail());
 			ps.setString(3, user.getName());
 			if (userImg != null) {
 				ps.setBytes(4, userImg); // 第一行的userImg在第4位
-//				ps.setInt(6, user.getId());// 第一行的userId第6位
+				ps.setInt(5, user.getId());// 第一行的userId第5位
 			} else {
-				ps.setString(4, user.getAccount());// image為空，第二行的account在第4位
+				ps.setInt(4, user.getId());// 第二行的userId在第4位
 			}
-			// 以上是 完整MySQL的語法
-			// 在一起丟給MySQL執行
+			// 以上是 完整MySQL的語法，再一起丟給MySQL執行
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -106,10 +103,9 @@ public class UserDaoImpl implements UserDao {
 
 	// 登入後回傳相符的資料在detailFragment
 	@Override
-//	public User findById(String account, String password) {
 	public User findById(int id) {
 		// get id 帳號密碼信箱暱稱 （可以不顯示但要抓到資料）
-		String sql = "SELECT user_email, user_name FROM User WHERE user_id = ?;";
+		String sql = "SELECT user_email, user_name , user_password FROM User WHERE user_id = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		User user = null;
@@ -121,7 +117,8 @@ public class UserDaoImpl implements UserDao {
 			if (rs.next()) {
 				String email = rs.getString(1);
 				String name = rs.getString(2);
-				user = new User(null, null, email, name);
+				String password = rs.getString(3);
+				user = new User(id, null, password, email, name);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

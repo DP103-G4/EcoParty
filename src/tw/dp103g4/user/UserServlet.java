@@ -68,7 +68,7 @@ public class UserServlet extends HttpServlet {
 //			List<User> users = userDao.getAll();
 //			writeText(response, gson.toJson(users));
 //	}else
-		if (action.equals("getUserImage")) {
+		if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("id").getAsInt();
 			//
@@ -83,9 +83,7 @@ public class UserServlet extends HttpServlet {
 				response.setContentLength(image.length);
 				os.write(image);
 			}
-		}
-//		 else 
-			if (action.equals("insert") || action.equals("update")) {
+		} else if (action.equals("insert") || action.equals("update")) {
 			String userJson = jsonObject.get("user").getAsString();
 			System.out.println("userJson = " + userJson);
 			// 字串解析成物件bookJson->Book.class
@@ -136,7 +134,19 @@ public class UserServlet extends HttpServlet {
 			User user = userDao.searchUser(account);
 			writeText(response, gson.toJson(user));
 			
-		}else {
+		} else if (action.equals("changePassword")) {
+			int count = 0;
+			int id = jsonObject.get("id").getAsInt();
+			String oldPassword = jsonObject.get("oldPassword").getAsString();
+			String newPassword = jsonObject.get("newPassword").getAsString();
+			User user = userDao.findById(id);
+			user.setId(id);
+			if (user.getPassword().equals(oldPassword)) {
+				user.setPassword(newPassword);
+				count = userDao.update(user, null);
+			}
+			writeText(response, String.valueOf(count));
+		} else {
 		writeText(response, "");
 		}
 

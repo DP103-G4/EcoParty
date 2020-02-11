@@ -33,8 +33,9 @@ public class User {
 		this.time = time;
 	}
 
-	public User(String account, String password, String email, String name) {
+	public User(int id, String account, String password, String email, String name) {
 		super();
+		this.id = id;
 		this.account = account;
 		this.password = password;
 		this.email = email;
