@@ -51,9 +51,11 @@ public class PartyLikeServlet extends HttpServlet {
 			count = partyLikeDao.insert(partyLike);
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("partyLikeDelete")) {
-			int id = jsonObject.get("id").getAsInt();
-			int partyId = jsonObject.get("partyId").getAsInt();
-			int count = partyLikeDao.delete(id, partyId);
+			String partyLikeJson = jsonObject.get("partyLike").getAsString();
+			System.out.println("partyLikeJson = " + partyLikeJson);
+			PartyLike partyLike = gson.fromJson(partyLikeJson, PartyLike.class);
+			int count = 0;
+			count = partyLikeDao.delete(partyLike);
 			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");

@@ -1,30 +1,26 @@
 package tw.dp103g4.partyLike;
 
 public class PartyLike {
-	private int id;
+	private int userId;
 	private int partyId;
-	
-	public PartyLike(int id, int partyId) {
+	public PartyLike(int userId, int partyId) {
 		super();
-		this.id = id;
+		this.userId = userId;
 		this.partyId = partyId;
 	}
-
-	public int getId() {
-		return id;
+	public int getUserId() {
+		return userId;
 	}
-
-	public void setId(int id) {
-		this.id = id;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
-
 	public int getPartyId() {
 		return partyId;
 	}
-
 	public void setPartyId(int partyId) {
 		this.partyId = partyId;
 	}
+	
 	
 	
 }
