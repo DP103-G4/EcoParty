@@ -7,6 +7,6 @@ public interface PartyLikeDao {
 	
 	public int insert(PartyLike partylike);
 	
-	public int delete(int id, int partyId);
+	public int delete(PartyLike partylike);
 
 }

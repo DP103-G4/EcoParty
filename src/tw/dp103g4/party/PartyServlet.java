@@ -28,11 +28,12 @@ public class PartyServlet extends HttpServlet {
 	PartyDao partyDao = null;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id, imageSize, state, participantId;;
+		int id, imageSize, state, participantId, userId;
 		byte[] coverImg, beforeImg, afterImg;
 		OutputStream os;
 		String partyJson;
 		Party party;
+		PartyInfo PartyInfo;
 		
 		request.setCharacterEncoding("utf-8");
 		Gson gson = new GsonBuilder()  
@@ -63,8 +64,9 @@ public class PartyServlet extends HttpServlet {
 			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getParty")) {
 			id = jsonObject.get("id").getAsInt();
-			party = partyDao.findById(id);
-			writeText(response, gson.toJson(party));
+			userId = jsonObject.get("userId").getAsInt();
+			PartyInfo = partyDao.findById(id, userId);
+			writeText(response, gson.toJson(PartyInfo));
 		} else if (action.equals("getCurrentParty")) {
 			state = jsonObject.get("state").getAsInt();
 			participantId = jsonObject.get("participantId").getAsInt();
@@ -119,8 +121,12 @@ public class PartyServlet extends HttpServlet {
 			if (action.equals("partyInsert"))
 				count = partyDao.insert(party, coverImg);
 			writeText(response, String.valueOf(count));
-		} else if (action.equals("setImg")) {
-		//
+		} else if (action.equals("chagePartyState")) {
+			id = jsonObject.get("id").getAsInt();
+			state = jsonObject.get("state").getAsInt();
+			int count = 0;
+			count = partyDao.setState(id, state);
+			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");
 		}

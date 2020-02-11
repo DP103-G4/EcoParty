@@ -15,16 +15,22 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import tw.dp103g4.party.Party;
+import tw.dp103g4.party.PartyDao;
+import tw.dp103g4.party.PartyDaoImpl;
+
 
 @WebServlet("/ParticipantServlet")
 public class ParticipantServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	ParticipantDao participantDao = null;
+	PartyDao partyDao = null;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int partyId;
-		
+		Participant participant;
+		String participantJson;
 		request.setCharacterEncoding("utf-8");
 		
 		Gson gson = new GsonBuilder()  
@@ -50,6 +56,23 @@ public class ParticipantServlet extends HttpServlet {
 			partyId = jsonObject.get("partyId").getAsInt();
 			List<Participant> participants = participantDao.getAllByParty(partyId);
 			writeText(response, gson.toJson(participants));
+		} else if (action.equals("participantInsert") || action.equals("participantDelete")) {
+			participantJson = jsonObject.get("participant").getAsString();
+			System.out.println("participantJson = " + participantJson);
+			participant = gson.fromJson(participantJson, Participant.class);
+
+			int count = 0;
+			if (partyDao == null) {
+				partyDao = new PartyDaoImpl();
+			}
+			if (action.equals("participantInsert")) {
+				participantDao.insert(participant);
+				count = partyDao.setCountCurrent(participant.getPartyId(), participant.getCount());
+			} else if (action.equals("participantDelete")) {
+				participantDao.delete(participant);
+				count = partyDao.setCountCurrent(participant.getPartyId(), ((-1)*participant.getCount()));
+			}
+			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");
 		}
