@@ -382,8 +382,12 @@ public class PartyDaoImpl implements PartyDao {
 				+ "Party p on pt.party_id = p.party_id "
 				+ "where participant_id = ? and party_state = ?;";
 		List<Party> currentParty = new ArrayList<Party>();
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, participantId);
 			ps.setInt(2, state);
 			try (ResultSet rs = ps.executeQuery();) {
@@ -393,10 +397,34 @@ public class PartyDaoImpl implements PartyDao {
 					currentParty.add(party);
 				}
 			}
-			return currentParty;
+			
+			sql = "select party_id from party where owner_id = ? and party_state = ?";
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, participantId);
+			ps.setInt(2, state);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id);
+					currentParty.add(party);
+				}
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		
 		return currentParty;
 	}
 
