@@ -26,7 +26,7 @@ public class ParticipantServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	ParticipantDao participantDao = null;
 	PartyDao partyDao = null;
-
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int partyId;
 		Participant participant;
