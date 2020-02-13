@@ -54,6 +54,10 @@ public class InformServlet extends HttpServlet {
 			int informId = jsonObject.get("informId").getAsInt();
 			int count = informDao.delete(informId);
 			writeText(response, String.valueOf(count));
+		} else if (action.equals("setRead")) {
+			int receiverId = jsonObject.get("receiverId").getAsInt();
+			int count = informDao.setRead(receiverId);
+			writeText(response, String.valueOf(count));
 		} else {
 			writeText(response, "");
 		}
