@@ -15,6 +15,8 @@ public interface PartyDao {
 	
 	public List<Party> getCurrentParty(int participantId, int state);
 	
+	public List<Party> getMyParty(int userId);
+	
 	public List<Party> getPartyList(int state);
 	
 	public List<Party> getPieceList (int state);

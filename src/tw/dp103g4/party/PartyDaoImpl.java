@@ -375,9 +375,52 @@ public class PartyDaoImpl implements PartyDao {
 		
 		return count;
 	}
-
+	
 	@Override
-	public List<Party> getCurrentParty(int participantId, int state) {
+	public List<Party> getMyParty(int userId) {
+		String sql = "select p.party_id from participant pt join party p on pt.party_id = p.party_id "
+				+ "where participant_id = ? and (party_state = 1 or 2 or 3) union "
+				+ "select p.party_id from party_like pl join party p on pl.party_id = p.party_id "
+				+ "where user_id = ? and (party_state = 1 or 2 or 3) union "
+				+ "select party_id from party where owner_id = ? and (party_state = 1 or 2 or 3);";
+		List<Party> myParty = new ArrayList<Party>();
+		
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, userId);
+			ps.setInt(3, userId);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					Party party = new Party(id);
+					myParty.add(party);
+				}
+			}
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return myParty;
+	}
+	
+	@Override
+	public List<Party> getCurrentParty(int participantId, int state)  {
 		String sql = "select pt.party_id from Participant pt left join "
 				+ "Party p on pt.party_id = p.party_id "
 				+ "where participant_id = ? and party_state = ?;";
@@ -504,4 +547,5 @@ public class PartyDaoImpl implements PartyDao {
 		
 		return count;
 	}
+
 }
