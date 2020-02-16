@@ -9,5 +9,5 @@ public interface InformDao {
 	
 	public int delete(int id);
 	
-	public int setRead(int id);
+	public int setRead(int receiverId);
 }

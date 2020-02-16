@@ -67,6 +67,10 @@ public class PartyServlet extends HttpServlet {
 			userId = jsonObject.get("userId").getAsInt();
 			PartyInfo = partyDao.findById(id, userId);
 			writeText(response, gson.toJson(PartyInfo));
+		} else if (action.equals("getMyParty")) {
+			userId = jsonObject.get("userId").getAsInt();
+			List<Party> parties = partyDao.getMyParty(userId);
+			writeText(response, gson.toJson(parties));
 		} else if (action.equals("getCurrentParty")) {
 			state = jsonObject.get("state").getAsInt();
 			participantId = jsonObject.get("participantId").getAsInt();
