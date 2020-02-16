@@ -51,7 +51,7 @@ public class PartyMessageServlet extends HttpServlet {
 
 		if (action.equals("getMsgList")) {
 			partyId = jsonObject.get("partyId").getAsInt();
-			List<PartyMessage> msgList = partyMessageDao.getAllbyParty(partyId);
+			List<PartyMsgInfo> msgList = partyMessageDao.getAllbyParty(partyId);
 			writeText(response, gson.toJson(msgList)); 
 		} else if (action.equals("msgInsert")) {
 			String msgJson = jsonObject.get("message").getAsString();

@@ -31,8 +31,9 @@ public class PartyDaoImpl implements PartyDao {
 		
 		String sql = "select owner_id, party_name, party_start_time, party_end_time, "
 				+ "party_post_time, party_post_end_time, party_location, party_address, longitude, latitude, party_content, "
-				+ "party_count_upper_limit, party_count_lower_limit, party_count_current, party_state, party_distance "
-				+ "from Party "
+				+ "party_count_upper_limit, party_count_lower_limit, party_count_current, party_state, party_distance, "
+				+ "user_name "
+				+ "from Party p join User u on p.owner_id = u.user_id "
 				+ "where party_id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -58,12 +59,13 @@ public class PartyDaoImpl implements PartyDao {
 				int countCurrent = rs.getInt(14);
 				int state = rs.getInt(15);
 				int distance = rs.getInt(16);
+				String ownerName = rs.getString(17);
 				
 				party = new Party(partyId, ownerId, name, startTime, endTime, postTime, postEndTime, 
 						location, address, longitude, latitude, content, 
 						countUpperLimit, countLowerLimit, countCurrent, state, distance);
 		
-				partyInfo = new PartyInfo(party, false, false, false);
+				partyInfo = new PartyInfo(party, ownerName, false, false, false);
 				
 				if (userId != 0) {
 					sql = "select participant_isStaff "

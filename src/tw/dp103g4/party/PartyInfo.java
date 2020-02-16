@@ -2,13 +2,15 @@ package tw.dp103g4.party;
 
 public class PartyInfo {
 	private Party party;
+	private String ownerName;
 	private Boolean isIn;
 	private Boolean	isLike;
 	private Boolean isStaff;
 	
-	public PartyInfo(Party party, Boolean isIn, Boolean isLike, Boolean isStaff) {
+	public PartyInfo(Party party, String ownerName, Boolean isIn, Boolean isLike, Boolean isStaff) {
 		super();
 		this.party = party;
+		this.ownerName = ownerName;
 		this.isIn = isIn;
 		this.isLike = isLike;
 		this.isStaff = isStaff;
@@ -18,6 +20,12 @@ public class PartyInfo {
 	}
 	public void setParty(Party party) {
 		this.party = party;
+	}
+	public String getOwnerName() {
+		return ownerName;
+	}
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
 	}
 	public Boolean getIsIn() {
 		return isIn;
@@ -37,5 +45,9 @@ public class PartyInfo {
 	public void setIsStaff(Boolean isStaff) {
 		this.isStaff = isStaff;
 	}
+	
+
+	
+
 	
 }

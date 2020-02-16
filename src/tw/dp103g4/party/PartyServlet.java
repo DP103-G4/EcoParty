@@ -121,7 +121,7 @@ public class PartyServlet extends HttpServlet {
 			if (action.equals("partyInsert"))
 				count = partyDao.insert(party, coverImg);
 			writeText(response, String.valueOf(count));
-		} else if (action.equals("chagePartyState")) {
+		} else if (action.equals("changePartyState")) {
 			id = jsonObject.get("id").getAsInt();
 			state = jsonObject.get("state").getAsInt();
 			int count = 0;

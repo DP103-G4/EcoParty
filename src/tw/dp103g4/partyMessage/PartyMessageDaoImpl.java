@@ -14,11 +14,13 @@ import java.util.List;
 public class PartyMessageDaoImpl implements PartyMessageDao {
 
 	@Override
-	public List<PartyMessage> getAllbyParty(int partyId) {
-		String sql = "select user_id, party_message_content, party_message_time from Party_message where party_id = ? order by party_message_time";
+	public List<PartyMsgInfo> getAllbyParty(int partyId) {
+		String sql = "select pm.user_id, party_message_content, party_message_time, user_name "
+				+ "from Party_message pm join User u on pm.user_id = u.user_id " 
+				+ "where party_id = ? order by party_message_time";
 		Connection connection = null;
 		PreparedStatement ps = null;
-		List<PartyMessage> msgList = new ArrayList<PartyMessage>();
+		List<PartyMsgInfo> msgList = new ArrayList<PartyMsgInfo>();
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
@@ -28,8 +30,10 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 				int userId = rs.getInt(1);
 				String content= rs.getString(2);
 				Date time = rs.getTimestamp(3);
+				String msgName = rs.getString(4);
 				PartyMessage partyMessage = new PartyMessage(userId, content, time);
-				msgList.add(partyMessage);
+				PartyMsgInfo partyMsgInfo = new PartyMsgInfo(partyMessage, msgName);
+				msgList.add(partyMsgInfo);
 			}
 			return msgList;
 		} catch (SQLException e) {
