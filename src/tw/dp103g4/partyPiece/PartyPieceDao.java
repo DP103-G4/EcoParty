@@ -3,7 +3,7 @@ package tw.dp103g4.partyPiece;
 import java.util.List;
 
 public interface PartyPieceDao {
-	public List<PartyPiece> getAllByParty(int partyId);
+	public List<PieceInfo> getAllByParty(int partyId);
 	
 	public int insert(PartyPiece partyPiece);
 	

@@ -3,12 +3,12 @@ package tw.dp103g4.partyPiece;
 import static tw.dp103g4.main.Common.*;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -24,27 +24,33 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 	}
 
 	@Override
-	public List<PartyPiece> getAllByParty(int partyId) {
-		String sql = "select piece_id, user_id, piece_content, piece_time from Party_piece where party_id = ?;";
-		List<PartyPiece> partyPieceList = new ArrayList<PartyPiece>();
+	public List<PieceInfo> getAllByParty(int partyId) {
+		String sql = "select user_name, piece_id, u.user_id, piece_content, piece_time "
+				+ "from Party_piece pp join User u on pp.user_id = u.user_id "
+				+ "where party_id = ? "
+				+ "order by piece_time desc;";
+		List<PieceInfo> pieceInfoList = new ArrayList<PieceInfo>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
 			ps.setInt(1, partyId);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					int id = rs.getInt(1);
-					int userId = rs.getInt(2);
-					String content = rs.getString(3);
-					Date time = rs.getDate(4);
+					String name = rs.getString(1);
+					int id = rs.getInt(2);
+					int userId = rs.getInt(3);
+					String content = rs.getString(4);
+					Date time = rs.getTimestamp(5);
 					PartyPiece partyPiece = new PartyPiece(id, userId, partyId, content, time);
-					partyPieceList.add(partyPiece);
+					PieceInfo pieceInfo = new PieceInfo(partyPiece, name);
+					
+					pieceInfoList.add(pieceInfo);
 				}
 			}
-			return partyPieceList;
+			return pieceInfoList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return partyPieceList;
+		return pieceInfoList;
 	}
 
 	@Override

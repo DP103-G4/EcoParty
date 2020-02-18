@@ -3,7 +3,7 @@ package tw.dp103g4.pieceImg;
 import java.util.List;
 
 public interface PieceImgDao {
-	public List<PieceImg> getAllByPiece(int PieceId);
+	public List<PieceImg> getAllByPiece(int pieceId);
 	
 	public int insert(PieceImg pieceImg, byte[] data);
 	

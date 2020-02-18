@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 @SuppressWarnings("serial")
@@ -24,7 +25,9 @@ public class PartyPieceServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder()  
+				  .setDateFormat("yyyy-MM-dd HH:mm:ss")  
+				  .create(); 
 		StringBuilder jsonIn = new StringBuilder();
 		BufferedReader br = request.getReader();
 		String line = "";
@@ -38,10 +41,10 @@ public class PartyPieceServlet extends HttpServlet {
 			partyPieceDao = new PartyPieceDaoImpl();
 		}
 		String action = jsonObject.get("action").getAsString();
-		if (action.equals("getAll")) {
+		if (action.equals("getPieceInfoList")) {
 			int partyId = jsonObject.get("partyId").getAsInt();
-			List<PartyPiece> pieces = partyPieceDao.getAllByParty(partyId);
-			writeText(response, gson.toJson(pieces));
+			List<PieceInfo> pieceInfoList = partyPieceDao.getAllByParty(partyId);
+			writeText(response, gson.toJson(pieceInfoList)); 
 		} else if (action.equals("pieceInsert") || action.equals("pieceUpdate")) {
 			String pieceJson = jsonObject.get("piece").getAsString();
 			System.out.println("pieceJson = " + pieceJson);
@@ -72,11 +75,5 @@ public class PartyPieceServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (partyPieceDao == null) {
-			partyPieceDao = new PartyPieceDaoImpl();
-		}
-		List<PartyPiece> partyPieces = new ArrayList<PartyPiece>();
-		partyPieces = partyPieceDao.getAllByParty(3);
-		writeText(response, new Gson().toJson(partyPieces));
-		}
+	}
 }
