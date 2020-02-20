@@ -10,9 +10,9 @@ import java.util.List;
 
 import static tw.dp103g4.main.Common.*;
 
-public class LocationDaoMySql implements LocationDao{
+public class InfoLocationDaoMySql implements InfoLocationDao{
 
-	public LocationDaoMySql() {
+	public InfoLocationDaoMySql() {
 		super();
 		try {
 			Class.forName(CLASS_NAME);
@@ -22,10 +22,10 @@ public class LocationDaoMySql implements LocationDao{
 	}
 
 	@Override
-	public List<Location> getAll(int partyId) {
+	public List<InfoLocation> getAll(int partyId) {
 		String sql = "select location_id, user_id, longitude, latitude, location_name, "
 				+ "location_content from Location where party_id = ?;";
-		List<Location> locationList = new ArrayList<Location>();
+		List<InfoLocation> infoLocationList = new ArrayList<InfoLocation>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);){
 			ps.setInt(1,partyId);
@@ -37,25 +37,25 @@ public class LocationDaoMySql implements LocationDao{
 					Double latitude = rs.getDouble(4);
 					String name = rs.getString(5);
 					String content = rs.getString(6);
-					Location location = new Location(id, partyId, userId, latitude, longitude, name, content);
-					locationList.add(location);
+					InfoLocation infoLocation = new InfoLocation(id, partyId, userId, latitude, longitude, name, content);
+					infoLocationList.add(infoLocation);
 				}
 			}
-			return locationList;
+			return infoLocationList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return locationList;
+		return infoLocationList;
 	}
 
 	@Override
-	public Location getById(int id) {
+	public InfoLocation getById(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int insert(Location location) {
+	public int insert(InfoLocation location) {
 		int count = 0;
 		String sql = "insert into Location (party_id, user_id, longitude, latitude, location_name, location_content)"
 				+ " value (?, ?, ?, ?, ?, ?);";
@@ -81,7 +81,7 @@ public class LocationDaoMySql implements LocationDao{
 	}
 
 	@Override
-	public int update(Location location) {
+	public int update(InfoLocation location) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
