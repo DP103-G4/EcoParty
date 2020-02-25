@@ -23,6 +23,12 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public int insert(User user, byte[] userImg) {
+		//判斷帳號是否重複註冊
+		User checkAccount  = findById(user.getId());
+		if(checkAccount == null) {
+			return -1;
+		}
+		
 		int count = 0;
 		String sql = "INSERT INTO User" + "(user_account, user_password, user_email, user_name, user_img, user_over) "
 				+ "VALUES(?, ?, ?, ?, ?, ?);";
@@ -277,20 +283,22 @@ public class UserDaoImpl implements UserDao {
 
 	// 用Account取Id
 	@Override
-	public int getUserIdByAccount(String account) {
-		int id = 0;
-		String sql = "SELECT user_id FROM User WHERE user_account = ?;";
+	public User getUserByAccount(String account) {
+		User user = null;
+		String sql = "SELECT user_id, user_name FROM User WHERE user_account = ?;";
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = conn.prepareStatement(sql);) {
 			ps.setString(1, account);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) { //如果next有資料就取得id
-				id = rs.getInt(1);
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				user = new User(id, null, null, null, name);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return id;
+		return user;
 	}
 
 }

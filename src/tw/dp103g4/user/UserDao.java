@@ -9,7 +9,7 @@ public interface UserDao {
 	int update(User user, byte[] userImg);
 
 	// 登入後，用帳號取Id
-	int getUserIdByAccount(String account);
+	User getUserByAccount(String account);
 	
 	//判斷登入：布林
 	boolean isLogin(String account, String password);

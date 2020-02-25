@@ -23,7 +23,7 @@ import tw.dp103g4.main.ImageUtil;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	//把userdao宣告為null位置
+	//把userDao宣告為null位置
 	UserDao userDao = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -82,6 +82,7 @@ public class UserServlet extends HttpServlet {
 				// 輸出圖檔的大小
 				response.setContentLength(image.length);
 				os.write(image);
+				System.out.println("GetImage: " + image);
 			}
 		} else if (action.equals("insert") || action.equals("update")) {
 			String userJson = jsonObject.get("user").getAsString();
@@ -117,11 +118,11 @@ public class UserServlet extends HttpServlet {
 			isValid = userDao.isLogin(account, password);
 			writeText(response, String.valueOf(isValid));
 		}
-		else if (action.equals("getUserIdByAccount")) {
-			int id = 0;
+		else if (action.equals("getUserByAccount")) {
+			User user = null;
 			String account = jsonObject.get("account").getAsString();
-			id = userDao.getUserIdByAccount(account);
-			writeText(response, String.valueOf(id));
+			user = userDao.getUserByAccount(account);
+			writeText(response, gson.toJson(user));
 		}
 		//登入：回傳資料
 		else if (action.equals("findById")) {
