@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import tw.dp103g4.main.ImageUtil;
@@ -27,7 +28,9 @@ public class NewsServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder()  
+				  .setDateFormat("yyyy-MM-dd HH:mm:ss")  
+				  .create(); 
 		StringBuilder jsonIn = new StringBuilder();
 		BufferedReader br = request.getReader();
 		String line = "";

@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class NewsDaoMySql implements NewsDao {
 					int id = rs.getInt(1);
 					String title = rs.getString(2);
 					String content = rs.getString(3);
-					Date time = rs.getDate(4);
+					Timestamp time = rs.getTimestamp(4);
 					News news = new News(id, title, content, time);
 					newsList.add(news);
 				}
