@@ -91,9 +91,11 @@ public class NewsDaoMySql implements NewsDao {
 		int count = 0;
 		String sql = "";
 		if (image != null) {
-			sql = "update News set news_title = ?, news_content = ? news_img = ? where news_id = ?;";
+			sql = "update News set news_title = ?, news_content = ?, news_img = ? where news_id = ?;";
 		} else {
 			sql = "update News set news_title = ?, news_content = ? where news_id = ?;";
+			System.out.println("NoImage");
+
 		}
 
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
