@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class NewsDaoMySql implements NewsDao {
 					int id = rs.getInt(1);
 					String title = rs.getString(2);
 					String content = rs.getString(3);
-					Date time = rs.getDate(4);
+					Timestamp time = rs.getTimestamp(4);
 					News news = new News(id, title, content, time);
 					newsList.add(news);
 				}
@@ -90,9 +91,11 @@ public class NewsDaoMySql implements NewsDao {
 		int count = 0;
 		String sql = "";
 		if (image != null) {
-			sql = "update News set news_title = ?, news_content = ? news_img = ? where news_id = ?;";
+			sql = "update News set news_title = ?, news_content = ?, news_img = ? where news_id = ?;";
 		} else {
 			sql = "update News set news_title = ?, news_content = ? where news_id = ?;";
+			System.out.println("NoImage");
+
 		}
 
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);

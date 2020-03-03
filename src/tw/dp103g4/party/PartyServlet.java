@@ -131,6 +131,9 @@ public class PartyServlet extends HttpServlet {
 			int count = 0;
 			count = partyDao.setState(id, state);
 			writeText(response, String.valueOf(count));
+		}else if (action.equals("getPartyCheck")) {
+			List<Party> partyCheck = partyDao.getPartyCheck();
+			writeText(response, gson.toJson(partyCheck));
 		} else {
 			writeText(response, "");
 		}
@@ -149,7 +152,7 @@ public class PartyServlet extends HttpServlet {
 			partyDao = new PartyDaoImpl();
 		}
 		List<Party> parties = new ArrayList<Party>();
-		parties = partyDao.getPartyList(3);
+		parties = partyDao.getPartyCheck();
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		writeText(response, gson.toJson(parties));
 		}

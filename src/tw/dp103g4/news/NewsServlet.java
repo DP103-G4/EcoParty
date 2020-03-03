@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import tw.dp103g4.main.ImageUtil;
@@ -27,14 +28,16 @@ public class NewsServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder()  
+				  .setDateFormat("yyyy-MM-dd HH:mm:ss")  
+				  .create(); 
 		StringBuilder jsonIn = new StringBuilder();
 		BufferedReader br = request.getReader();
 		String line = "";
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (newsDao == null) {
@@ -59,6 +62,7 @@ public class NewsServlet extends HttpServlet {
 			String newsJson = jsonObject.get("news").getAsString();
 			System.out.println("newsJson = " + newsJson);
 			News news = gson.fromJson(newsJson, News.class);
+
 			byte[] image = null;
 			if (jsonObject.get("imageBase64") != null) {
 				String imageBase64 = jsonObject.get("imageBase64").getAsString();
