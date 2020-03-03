@@ -2,24 +2,22 @@ package tw.dp103g4.admin;
 
 import java.util.List;
 
+import tw.dp103g4.user.User;
+
 public interface AdminDao {
 	
-	//增刪改
-	int insert(Admin admin);
-	
-	int update(Admin admin);
-	
-	int delete(int admin_id);
-	
 	//登入後，用帳號取ID
-	Admin getAdminByAccount(String admin_account);
+	Admin getAdminByAccount(String adminAccount);
 	
 	//判斷登入
-	boolean isAdminLogin(String admin_account, String admin_password);
+	boolean isAdminLogin(String adminAccount, String adminPassword);
 	
-	//登入：有相符就回傳
-	Admin findByAdminID(int admin_id);
+	//登入：有相符就回傳 & 取ID和Account顯示在AdminSelf(iOS)
+	Admin findByAdminID(int adminId);
+
 	
 	List<Admin> getAllAdmins();
+	
+	
 
 }

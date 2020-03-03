@@ -1,59 +1,73 @@
 package tw.dp103g4.admin;
 
-
-
-
-
 public class Admin {
 
-	private int admin_id;
-	private String admin_account;
-	private String admin_password;
+	private int adminId;
+	private String adminAccount = "";
+	private String adminPassword = "";
+
 	
-	
-	
-	
-	
-	public Admin(int admin_id, String admin_account, String admin_password) {
+
+	public Admin(int adminId, String adminAccount, String adminPassword) {
 		super();
-		this.admin_id = admin_id;
-		this.admin_account = admin_account;
-		this.admin_password = admin_password;
+		this.adminId = adminId;
+		this.adminAccount = adminAccount;
+		this.adminPassword = adminPassword;
 	}
-	
-	
-	public Admin(int admin_id) {
+
+
+	public Admin(String adminAccount, String adminPassword) {
 		super();
-		this.admin_id = admin_id;
-		
+		this.adminAccount = adminAccount;
+		this.adminPassword = adminPassword;
 	}
+
 	
-	public Admin(int admin_id, String admin_account) {
-		super();
-		this.admin_id = admin_id;
-		this.admin_account = admin_account;
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof Admin)) {
+			return false;
+		} else {
+			Admin admin = (Admin) obj;
+			return this.adminAccount.equals(admin.adminAccount);
+		}
 	}
+
 	
+
 	
-	
-	public int getAdmin_id() {
-		return admin_id;
+
+
+	public int getAdminId() {
+		return adminId;
 	}
-	public void setAdmin_id(int admin_id) {
-		this.admin_id = admin_id;
+
+
+	public void setAdminId(int adminId) {
+		this.adminId = adminId;
 	}
-	public String getAdmin_account() {
-		return admin_account;
+
+
+	public String getAdminAccount() {
+		return adminAccount;
 	}
-	public void setAdmin_account(String admin_account) {
-		this.admin_account = admin_account;
+
+
+	public void setAdminAccount(String adminAccount) {
+		this.adminAccount = adminAccount;
 	}
-	public String getAdmin_password() {
-		return admin_password;
+
+
+	public String getAdminPassword() {
+		return adminPassword;
 	}
-	public void setAdmin_password(String admin_password) {
-		this.admin_password = admin_password;
+
+
+	public void setAdminPassword(String adminPassword) {
+		this.adminPassword = adminPassword;
 	}
-	
+
+
+
 
 }

@@ -20,8 +20,15 @@ public interface UserDao {
 	// 呈現資料列表
 	List<User> getAll();
 
+	//停權列表
+	List<User> getUserOver();
+	
+	
 	// 用String account 去找圖片id(以byte[]回傳)
 	byte[] getUserImg(int id);
+	
+	
+	
 	
 	public User searchUser(String account);
 	

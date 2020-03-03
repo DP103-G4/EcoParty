@@ -23,14 +23,14 @@ import tw.dp103g4.main.ImageUtil;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	//把userDao宣告為null位置
+	// 把userDao宣告為null位置
 	UserDao userDao = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		if (userDao == null) {
-			//把userdao宣告為UserDaoImpl位置
+			// 把userdao宣告為UserDaoImpl位置
 			userDao = new UserDaoImpl();
 		}
 		List<User> users = userDao.getAll();
@@ -63,12 +63,18 @@ public class UserServlet extends HttpServlet {
 		// "action"= getImage 或其他實作項目
 		String action = jsonObject.get("action").getAsString();
 
-//		if (action.equals("getAll")) {
-//			// 建立bookDao去取getAll
-//			List<User> users = userDao.getAll();
-//			writeText(response, gson.toJson(users));
-//	}else
-		if (action.equals("getImage")) {
+		if (action.equals("getAll")) {
+			// 建立userDao去取getAll
+			List<User> users = userDao.getAll();
+			writeText(response, gson.toJson(users));
+			
+		} else if (action.equals("getUserOver")) {
+			List<User> users = userDao.getUserOver();
+			writeText(response, gson.toJson(users));
+		}
+		
+		
+		else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("id").getAsInt();
 			//
@@ -110,31 +116,30 @@ public class UserServlet extends HttpServlet {
 			}
 			writeText(response, String.valueOf(count));
 		}
-		//判斷登入
+		// 判斷登入
 		else if (action.equals("isLogin")) {
 			boolean isValid = false;
 			String account = jsonObject.get("account").getAsString();
 			String password = jsonObject.get("password").getAsString();
 			isValid = userDao.isLogin(account, password);
 			writeText(response, String.valueOf(isValid));
-		}
-		else if (action.equals("getUserByAccount")) {
+		} else if (action.equals("getUserByAccount")) {
 			User user = null;
 			String account = jsonObject.get("account").getAsString();
 			user = userDao.getUserByAccount(account);
 			writeText(response, gson.toJson(user));
 		}
-		//登入：回傳資料
+		// 登入：回傳資料
 		else if (action.equals("findById")) {
 			int id = jsonObject.get("id").getAsInt();
 			User user = userDao.findById(id);
 			writeText(response, gson.toJson(user));
-			
-		}else if (action.equals("searchUser")) {
+
+		} else if (action.equals("searchUser")) {
 			String account = jsonObject.get("account").getAsString();
 			User user = userDao.searchUser(account);
 			writeText(response, gson.toJson(user));
-			
+
 		} else if (action.equals("changePassword")) {
 			int count = 0;
 			int id = jsonObject.get("id").getAsInt();
@@ -148,7 +153,7 @@ public class UserServlet extends HttpServlet {
 			}
 			writeText(response, String.valueOf(count));
 		} else {
-		writeText(response, "");
+			writeText(response, "");
 		}
 
 	}
