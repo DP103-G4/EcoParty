@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import tw.dp103g4.main.ImageUtil;
-import tw.dp103g4.party.PartyDaoImpl;
 
 
 
@@ -65,10 +64,11 @@ public class ReviewImgServlet extends HttpServlet {
 		
 		String action = jsonObject.get("action").getAsString();
 		if(action.equals("getAllByParty")) {
+			List<byte[]> imgList = new ArrayList<byte[]>();
 			partyId = jsonObject.get("partyId").getAsInt();
 			List<ReviewImg> reviewImgsId = reviewImgDao.getAllByParty(partyId);
-			for(int i = 0; i <= reviewImgsId.size(); i++) {
-				os = response.getOutputStream();
+//			os = response.getOutputStream();
+			for(int i = 0; i < reviewImgsId.size(); i++) {
 				id = reviewImgsId.get(i).getId();
 				imageSize = jsonObject.get("imageSize").getAsInt();
 				byte[] reviewImg = reviewImgDao.getImage(id);
@@ -76,22 +76,23 @@ public class ReviewImgServlet extends HttpServlet {
 					reviewImg = ImageUtil.shrink(reviewImg, imageSize);
 					response.setContentType("image/jpeg");
 					response.setContentLength(reviewImg.length);
-					os.write(reviewImg);
+					imgList.add(reviewImg);
+//					os.write(reviewImg);
 				}
-			}
-		}else if (action.equals("insertReviewImg")) {
-			partyId = jsonObject.get("partyId").getAsInt();
-			byte[] image = null;
-			int count = 0;
-			if (jsonObject.get("imageBase64") != null) {
-				String imageBase64 = jsonObject.get("imageBase64").getAsString();
-				if (imageBase64 != null && !imageBase64.isEmpty()) {
-					image = Base64.getMimeDecoder().decode(imageBase64);
-					count = reviewImgDao.insert(partyId, image);
+			}		
+			writeText(response, gson.toJson(imgList));
+
+		}else if (action.equals("getImage")) {
+			os = response.getOutputStream();
+			id = jsonObject.get("id").getAsInt();
+			imageSize = jsonObject.get("imageSize").getAsInt();
+			byte[] image = reviewImgDao.getImage(id);
+			if (image != null) {
+				image = ImageUtil.shrink(image, imageSize);
+				response.setContentType("image/jpeg");
+				response.setContentLength(image.length);
+				os.write(image);
 				}
-			}
-			writeText(response, String.valueOf(count));
-			
 		}else if (action.equals("deleteReviewImg")) {
 			id = jsonObject.get("id").getAsInt();
 			int count = reviewImgDao.delete(id);
@@ -106,6 +107,7 @@ public class ReviewImgServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
+		
 		// 將輸出資料列印出來除錯用
 		System.out.println("output: " + outText);
 	}
