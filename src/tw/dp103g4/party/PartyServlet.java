@@ -123,10 +123,7 @@ public class PartyServlet extends HttpServlet {
 				response.setContentLength(afterImg.length);
 				os.write(afterImg);
 			}
-<<<<<<< HEAD
-			
-		} else if (action.equals("partyInsert") || action.equals("partyUpdate")) {
-=======
+
 		} else if (action.equals("partyInsert")) {
 			partyJson = jsonObject.get("party").getAsString();
 			System.out.println("partyJson = " + partyJson);
@@ -157,7 +154,6 @@ public class PartyServlet extends HttpServlet {
 			count = partyDao.insert(party, coverImg);
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("partyUpdate")) {
->>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
 			partyJson = jsonObject.get("party").getAsString();
 			System.out.println("partyJson = " + partyJson);
 			party = gson.fromJson(partyJson, Party.class);
@@ -179,9 +175,7 @@ public class PartyServlet extends HttpServlet {
 			int count = 0;
 			count = partyDao.setState(id, state);
 			writeText(response, String.valueOf(count));
-<<<<<<< HEAD
-			
-=======
+
 		} else if (action.equals("setAfterImg")) {
 			afterImg = null;
 			id = jsonObject.get("id").getAsInt();
@@ -195,7 +189,6 @@ public class PartyServlet extends HttpServlet {
 			int count = 0;
 			count = partyDao.setAfterImg(id, afterImg);
 			writeText(response, String.valueOf(count));
->>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
 		}else if (action.equals("getPartyCheck")) {
 			List<Party> partyCheck = partyDao.getPartyCheck();
 			writeText(response, gson.toJson(partyCheck));

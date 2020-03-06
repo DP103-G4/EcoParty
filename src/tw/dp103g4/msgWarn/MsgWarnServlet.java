@@ -65,13 +65,7 @@ public class MsgWarnServlet extends HttpServlet {
 			MsgWarn msgWarn = gson.fromJson(msgWarnJson, MsgWarn.class);
 			int count=0;
 			count = msgWarnDao.insert(msgWarn);
-<<<<<<< HEAD
-			
 		}else if (action.equals("warnDelete")) {
-=======
-			writeText(response, String.valueOf(count));
-		}else if (action.equals("msgWarnDelete")) {
->>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
 			Integer id = jsonObject.get("id").getAsInt();
 			int count = msgWarnDao.delete(id);
 			writeText(response, String.valueOf(count));
