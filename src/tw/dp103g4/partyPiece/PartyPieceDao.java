@@ -5,6 +5,8 @@ import java.util.List;
 public interface PartyPieceDao {
 	public List<PieceInfo> getAllByParty(int partyId);
 	
+	public PartyPiece getOneById(int pieceMsgId);
+	
 	public int insert(PartyPiece partyPiece);
 	
 	public int update(PartyPiece partyPiece);

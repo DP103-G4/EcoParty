@@ -26,8 +26,10 @@ public class PieceWarnDaoMySql implements PieceWarnDao {
 
 	@Override
 	public List<PieceWarn> getAll() {
-		String sql = "SELECT piece_warn_id, piece_id, piece_warn_user_id, piece_warn_time, piece_warn_content "
-				+ "FROM Piece_warn ORDER BY piece_warn_time ASC;";
+		String sql = "SELECT piece_warn_id, piece_id, piece_warn_user_id, piece_warn_time, piece_warn_content, b.user_account " + 
+				"FROM Piece_warn a " + 
+				"LEFT JOIN User b on b.user_id = a.piece_warn_user_id " + 
+				"ORDER BY piece_warn_time;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<PieceWarn> pieceWarnList = new ArrayList<PieceWarn>();
@@ -41,7 +43,8 @@ public class PieceWarnDaoMySql implements PieceWarnDao {
 				int userId = resultSet.getInt(3);
 				Date time = resultSet.getDate(4);
 				String content = resultSet.getString(5);
-				PieceWarn pieceWarn = new PieceWarn(id, pieceId, userId, time, content);
+				String account = resultSet.getString(6);
+				PieceWarn pieceWarn = new PieceWarn(id, pieceId, userId, time, content, account);
 				pieceWarnList.add(pieceWarn);
 			}
 			return pieceWarnList;

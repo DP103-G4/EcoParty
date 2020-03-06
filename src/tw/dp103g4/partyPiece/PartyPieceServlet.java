@@ -44,7 +44,8 @@ public class PartyPieceServlet extends HttpServlet {
 		if (action.equals("getPieceInfoList")) {
 			int partyId = jsonObject.get("partyId").getAsInt();
 			List<PieceInfo> pieceInfoList = partyPieceDao.getAllByParty(partyId);
-			writeText(response, gson.toJson(pieceInfoList)); 
+			writeText(response, gson.toJson(pieceInfoList));
+			
 		} else if (action.equals("pieceInsert") || action.equals("pieceUpdate")) {
 			String pieceJson = jsonObject.get("piece").getAsString();
 			System.out.println("pieceJson = " + pieceJson);
@@ -57,11 +58,22 @@ public class PartyPieceServlet extends HttpServlet {
 				count = partyPieceDao.update(partyPiece);
 			}
 			writeText(response, String.valueOf(count));
+			
 		} else if (action.equals("pieceDelete")) {
 			int pieceId = jsonObject.get("pieceId").getAsInt();
 			int count = partyPieceDao.delete(pieceId);
 			writeText(response, String.valueOf(count));
-		} else {
+			
+		}else if (action.equals("deleteById")) {
+			int pieceId = jsonObject.get("id").getAsInt();
+			int count = partyPieceDao.delete(pieceId);
+			writeText(response, String.valueOf(count));
+			
+		} else if (action.equals("getOneById")) {
+			Integer id = jsonObject.get("id").getAsInt();
+			PartyPiece partyPiece = partyPieceDao.getOneById(id);
+			writeText(response, gson.toJson(partyPiece));
+		}else {
 			writeText(response, "");
 		}
 	}

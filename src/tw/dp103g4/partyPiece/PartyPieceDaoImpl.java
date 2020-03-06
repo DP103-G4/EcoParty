@@ -99,4 +99,31 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 		return count;
 	}
 
+	@Override
+	public PartyPiece getOneById(int pieceMsgId) {
+		String sql = "select user_account, u.user_id, piece_content, piece_time " + 
+				"from Party_piece pp " + 
+				"join User u on pp.user_id = u.user_id " + 
+				"where piece_id = ?;";
+		PartyPiece partyPiece = null;
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, pieceMsgId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					String account = rs.getString(1);
+					int userId = rs.getInt(2);
+					String content = rs.getString(3);
+					Date time = rs.getTimestamp(4);
+					partyPiece = new PartyPiece(userId ,content, time, account);
+					
+				}
+			}
+			return partyPiece;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return partyPiece;
+	}
+
 }

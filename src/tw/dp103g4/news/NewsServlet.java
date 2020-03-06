@@ -37,7 +37,7 @@ public class NewsServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-//		System.out.println("input: " + jsonIn);
+		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (newsDao == null) {
