@@ -9,6 +9,15 @@ public class PartyPiece {
 	private String content;
 	private Date time;
 	
+	
+	
+	public PartyPiece(int userId, int partyId, String content) {
+		super();
+		this.userId = userId;
+		this.partyId = partyId;
+		this.content = content;
+	}
+
 	public PartyPiece(int id, int userId, int partyId, String content, Date time) {
 		super();
 		this.id = id;

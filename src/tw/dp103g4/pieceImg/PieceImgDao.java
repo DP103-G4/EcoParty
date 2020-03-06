@@ -5,10 +5,10 @@ import java.util.List;
 public interface PieceImgDao {
 	public List<PieceImg> getAllByPiece(int pieceId);
 	
-	public int insert(PieceImg pieceImg, byte[] data);
+	public int insert(int pieceId, byte[] data);
 	
 	public int delete(int id);
 	
-	public byte[] getData(int id);
+	public byte[] getImage(int id);
 	
 }

@@ -59,9 +59,9 @@ public class PieceWarnServlet extends HttpServlet {
 			String pieceWarnJson = jsonObject.get("pieceWarn").getAsString();
 			System.out.println("pieceWarnJson = " + pieceWarnJson);
 			PieceWarn pieceWarn = gson.fromJson(pieceWarnJson, PieceWarn.class);
-			int count=0;
+			int count = 0;
 			count = pieceWarnDao.insert(pieceWarn);
-			
+			writeText(response, String.valueOf(count));
 		}else if (action.equals("pieceWarnDelete")) {
 			Integer id = jsonObject.get("id").getAsInt();
 			int count = pieceWarnDao.delete(id);

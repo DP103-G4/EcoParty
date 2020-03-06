@@ -23,6 +23,8 @@ public interface PartyDao {
 		
 	public int setImg(int id, byte[] beforeImg, byte[] afterImg);
 	
+	public int setAfterImg(int id, byte[] afterImg);
+	
 	public byte[] getCoverImg(int id);
 	
 	public byte[] getBeforeImg(int id);
