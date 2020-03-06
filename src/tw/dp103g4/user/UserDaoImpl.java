@@ -25,12 +25,12 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public int insert(User user, byte[] userImg) {
-		//判斷帳號是否重複註冊
-		User checkAccount  = findById(user.getId());
-		if(checkAccount == null) {
+		// 判斷帳號是否重複註冊
+		User checkAccount = findById(user.getId());
+		if (checkAccount == null) {
 			return -1;
 		}
-		
+
 		int count = 0;
 		String sql = "INSERT INTO User" + "(user_account, user_password, user_email, user_name, user_img, user_over) "
 				+ "VALUES(?, ?, ?, ?, ?, ?);";
@@ -183,13 +183,12 @@ public class UserDaoImpl implements UserDao {
 				e.printStackTrace();
 			}
 		}
-		return userList ;
+		return userList;
 	}
-	
-	
+
 	@Override
 	public List<User> getUserOver() {
-		String sql = "SELECT user_id, user_account, user_password, user_email, user_name, user_over FROM User where user_over = 1 ORDER BY user_id ;";
+		String sql = "SELECT user_id, user_account, user_password, user_email, user_name, user_over FROM User WHERE user_over = 1 ORDER BY user_id ;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<User> userList = new ArrayList<User>();
@@ -225,7 +224,7 @@ public class UserDaoImpl implements UserDao {
 				e.printStackTrace();
 			}
 		}
-		return userList ;
+		return userList;
 	}
 
 	@Override
@@ -259,6 +258,7 @@ public class UserDaoImpl implements UserDao {
 		}
 		return image;
 	}
+
 //判斷登入
 	@Override
 	public boolean isLogin(String account, String password) {
@@ -294,7 +294,7 @@ public class UserDaoImpl implements UserDao {
 		}
 		return isValid && !isOver;
 	}
-	
+
 	@Override
 	public User searchUser(String account) {
 		String sql = "SELECT user_id, user_account FROM User WHERE user_account = ?;";
@@ -309,7 +309,7 @@ public class UserDaoImpl implements UserDao {
 			if (rs.next()) {
 				int userId = rs.getInt(1);
 				String reAccount = rs.getString(2);
-				user = new User(userId, reAccount);				
+				user = new User(userId, reAccount);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -337,7 +337,7 @@ public class UserDaoImpl implements UserDao {
 				PreparedStatement ps = conn.prepareStatement(sql);) {
 			ps.setString(1, account);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) { //如果next有資料就取得id
+			if (rs.next()) { // 如果next有資料就取得id
 				int id = rs.getInt(1);
 				String name = rs.getString(2);
 				user = new User(id, null, null, null, name);
@@ -348,8 +348,64 @@ public class UserDaoImpl implements UserDao {
 		return user;
 	}
 
-	
+	// 選取停權後，會員進到停權名單
+	@Override
+	public int userOver(int id) {
+		int count = 0;
+		String sql = "";
+		sql = "UPDATE User SET user_over = 1  WHERE user_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
 
-	
+	// 選取復權後，會員進到一般名單
+	@Override
+	public int userBack(int id) {
+		int count = 0;
+		String sql = "";
+		sql = "UPDATE User SET user_over = 0 WHERE user_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
 
 }

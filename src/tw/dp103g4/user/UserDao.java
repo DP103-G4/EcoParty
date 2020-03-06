@@ -29,6 +29,14 @@ public interface UserDao {
 	
 	
 	
+	//選取停權後，會員進到停權名單
+	int userOver(int id);
+	//選取復權後，會員進到一般名單
+	int userBack(int id);
+	
+	
+	
+	
 	
 	public User searchUser(String account);
 	

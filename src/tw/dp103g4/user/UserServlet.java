@@ -63,18 +63,32 @@ public class UserServlet extends HttpServlet {
 		// "action"= getImage 或其他實作項目
 		String action = jsonObject.get("action").getAsString();
 
+		//取得一般會員名單
 		if (action.equals("getAll")) {
 			// 建立userDao去取getAll
 			List<User> users = userDao.getAll();
 			writeText(response, gson.toJson(users));
-			
+
+			//取得停權會員名單
 		} else if (action.equals("getUserOver")) {
 			List<User> users = userDao.getUserOver();
 			writeText(response, gson.toJson(users));
-		}
-		
-		
-		else if (action.equals("getImage")) {
+
+			//停權
+		} else if (action.equals("userOver")) {
+			int overId = jsonObject.get("id").getAsInt();
+			int count = 0;
+			count = userDao.userOver(overId);
+			writeText(response, String.valueOf(count));
+			
+			//復權
+		} else if (action.equals("userBack")) {
+			int backId = jsonObject.get("id").getAsInt();
+			int count = 0;
+			count = userDao.userBack(backId);
+			writeText(response, String.valueOf(count));
+
+		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("id").getAsInt();
 			//

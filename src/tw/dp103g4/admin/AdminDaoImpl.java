@@ -144,7 +144,6 @@ public class AdminDaoImpl implements AdminDao {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				System.out.println("Peter is good");
 				int admin_Id = rs.getInt(1);
 				String admin_Account = rs.getString(2);
 				admin = new Admin(admin_Id, admin_Account, null);
@@ -205,9 +204,11 @@ public class AdminDaoImpl implements AdminDao {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				int admin_Id = rs.getInt(1);
-				String admin_Account = rs.getString(2);
-				admin = new Admin(admin_Id, admin_Account, null);
+//				int admin_Id = rs.getInt(1);
+//				String admin_Account = rs.getString(2);
+				adminId = rs.getInt(1);
+				String adminAccount = rs.getString(2);
+				admin = new Admin(adminId, adminAccount, null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
