@@ -48,6 +48,13 @@ public class User {
 		this.password = password;
 	}
 	
+	public User(String account, String password, boolean isOver) {
+		super();
+		this.account = account;
+		this.password = password;
+		this.isOver = isOver;
+	}
+	
 	public User(int id, String account) {
 		super();
 		this.id = id;
