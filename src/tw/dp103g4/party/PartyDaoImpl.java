@@ -584,5 +584,36 @@ public class PartyDaoImpl implements PartyDao {
 		
 		return count;
 	}
+	//審核
+	@Override
+	public List<Party> getPartyCheck() {
+			String sql = "select a.party_id, a.owner_id, a.party_address, a.party_content, a.party_count_upper_limit, a.party_start_time, a.party_name, b.user_name from Party a " + 
+					"left join User b on a.owner_id = b.user_id " + 
+					"where party_state = 0 order by party_post_time desc;";
+			
+			List<Party> partyList = new ArrayList<Party>();
+			try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+					PreparedStatement ps = connection.prepareStatement(sql);) {
+				try (ResultSet rs = ps.executeQuery();) {
+					while (rs.next()) {
+						int id = rs.getInt(1);
+						int ownerId = rs.getInt(2);
+						String address = rs.getString(3);
+						String content = rs.getString(4);
+						int countUpperLimit = rs.getInt(5);
+						Date startTime = rs.getDate(6);
+						String name = rs.getString(7);
+						String ownerName = rs.getString(8);
+						Party party = new Party(id, ownerId, name, startTime, countUpperLimit, address, content, ownerName);
+						partyList.add(party);
+					}
+				}
+				return partyList;
+			
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return partyList;
+		}
 
 }

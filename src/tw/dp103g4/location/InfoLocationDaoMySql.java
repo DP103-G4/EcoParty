@@ -10,9 +10,9 @@ import java.util.List;
 
 import static tw.dp103g4.main.Common.*;
 
-public class LocationDaoMySql implements LocationDao{
+public class InfoLocationDaoMySql implements InfoLocationDao{
 
-	public LocationDaoMySql() {
+	public InfoLocationDaoMySql() {
 		super();
 		try {
 			Class.forName(CLASS_NAME);
@@ -22,10 +22,10 @@ public class LocationDaoMySql implements LocationDao{
 	}
 
 	@Override
-	public List<Location> getAll(int partyId) {
+	public List<InfoLocation> getAll(int partyId) {
 		String sql = "select location_id, user_id, longitude, latitude, location_name, "
 				+ "location_content from Location where party_id = ?;";
-		List<Location> locationList = new ArrayList<Location>();
+		List<InfoLocation> infoLocationList = new ArrayList<InfoLocation>();
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);){
 			ps.setInt(1,partyId);
@@ -37,51 +37,82 @@ public class LocationDaoMySql implements LocationDao{
 					Double latitude = rs.getDouble(4);
 					String name = rs.getString(5);
 					String content = rs.getString(6);
-					Location location = new Location(id, partyId, userId, latitude, longitude, name, content);
-					locationList.add(location);
+					InfoLocation location = new InfoLocation(id, partyId, userId, latitude, longitude, name, content);
+					infoLocationList.add(location);
 				}
 			}
-			return locationList;
+			return infoLocationList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return locationList;
+		return infoLocationList;
 	}
 
 	@Override
-	public Location getById(int id) {
+	public InfoLocation getById(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int insert(Location location) {
+	public int insert(InfoLocation location) {
 		int count = 0;
 		String sql = "insert into Location (party_id, user_id, longitude, latitude, location_name, location_content)"
 				+ " value (?, ?, ?, ?, ?, ?);";
 		//查詢下⼀個準備產⽣的號碼
-		String idSql = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'EcoParty' AND TABLE_NAME = 'Location';";
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement psId = connection.prepareStatement(idSql);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
-			ResultSet rs = psId.executeQuery();
-			if (rs.next()) {
-				ps.setInt(1, location.getPartyId());
-				ps.setInt(2, location.getUserId());
-				ps.setDouble(3, location.getLongitude());
-				ps.setDouble(4, location.getLatitude());
-				ps.setString(5, location.getName());
-				ps.setString(6, location.getContent());
-				count = ps.executeUpdate() == 0 ? 0 : rs.getInt(1);
+		String idSql = "SELECT last_insert_id();";
+		Connection connection = null;
+		PreparedStatement psId = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			connection.setAutoCommit(false);
+			psId = connection.prepareStatement(idSql);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, location.getPartyId());
+			ps.setInt(2, location.getUserId());
+			ps.setDouble(3, location.getLongitude());
+			ps.setDouble(4, location.getLatitude());
+			ps.setString(5, location.getName());
+			ps.setString(6, location.getContent());
+			count = ps.executeUpdate();
+			if (count == 0) {
+				connection.rollback();
+				return count;
+			} else {
+				ResultSet rs = psId.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1);
+					connection.commit();
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try {
+				if (connection != null) {
+					connection.close();
+				}
+				if (ps != null) {
+					ps.cancel();
+				}
+				if (psId != null) {
+					psId.cancel();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return count;
 	}
 
 	@Override
-	public int update(Location location) {
+	public int update(InfoLocation location) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

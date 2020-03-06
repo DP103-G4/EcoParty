@@ -48,7 +48,7 @@ public class SocketServer {
 		if (receiverSession != null && receiverSession.isOpen()) {
 			receiverSession.getAsyncRemote().sendText(message);
 		}else {
-			sessionMap.remove("receiver");
+			sessionMap.remove(receiver);
 		}
 		System.out.println("Message received: " + message);
 	}

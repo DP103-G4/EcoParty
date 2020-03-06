@@ -182,12 +182,13 @@ public class FriendShipDaoMySql implements FriendShipDao {
 	
 	@Override
 	public FriendShip isInviteById(int idOne, int idTwo) {
-		String sql = "Select isinvite from Friendship WHERE userone_id = ? and usertwo_id = ?;";
+		String sql = "Select usertwo_id, isinvite from Friendship WHERE userone_id = ? and usertwo_id = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		FriendShip friendShip = null;
 		boolean isInvite = false;
 		boolean noInsert = false;
+		int receiver = -1;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
@@ -201,12 +202,12 @@ public class FriendShipDaoMySql implements FriendShipDao {
 				if (!resultSet.next()) {
 					noInsert = true;
 				}
-			}
+			}		
 			if (!noInsert) {
-				isInvite = resultSet.getBoolean(1);
+				receiver = resultSet.getInt(1);
+				isInvite = resultSet.getBoolean(2);
 			}
-			friendShip = new FriendShip(noInsert, isInvite);
-			System.out.println("hi:"+friendShip);
+			friendShip = new FriendShip(noInsert, isInvite, receiver);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -1,6 +1,6 @@
 package tw.dp103g4.location;
 
-public class Location {
+public class InfoLocation {
 	private int id;
 	private int partyId;
 	private int userId;
@@ -9,7 +9,7 @@ public class Location {
 	private String name;
 	private String content;
 	
-	public Location(int id, int partyId, int userId, double latitude, double longitude, String name, String content) {
+	public InfoLocation(int id, int partyId, int userId, double latitude, double longitude, String name, String content) {
 		super();
 		this.id = id;
 		this.partyId = partyId;
@@ -44,7 +44,7 @@ public class Location {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Location other = (Location) obj;
+		InfoLocation other = (InfoLocation) obj;
 		if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
 			return false;
 		if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
