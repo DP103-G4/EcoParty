@@ -8,14 +8,46 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import tw.dp103g4.main.Common;
+
+
 public class ReviewImgDaoImpl implements ReviewImgDao {
+	
+	public ReviewImgDaoImpl() {
+		try {
+			Class.forName(Common.CLASS_NAME);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public List<ReviewImg> getAllByParty(int partyId) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT review_img_id FROM Review_img WHERE party_id = ?;";
+		
+		List<ReviewImg> reviewList = new ArrayList<ReviewImg>();
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+				ps.setInt(1, partyId);
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					int review_id = rs.getInt(1);				
+					ReviewImg reviewImg = new ReviewImg(review_id);
+					reviewList.add(reviewImg);
+				}
+			}
+			return reviewList;
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return reviewList;
 	}
 
 	@Override
@@ -46,21 +78,41 @@ public class ReviewImgDaoImpl implements ReviewImgDao {
 				e.printStackTrace();
 			}
 		}
-		
 		return count;
-		
 	}
 
 	@Override
 	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		String sql = "delete from Review_img where review_img_id = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 	@Override
-	public byte[] getData(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public byte[] getImage(int id) {
+		byte[] image = null;
+		String sql = "select review_img_data from Review_img where review_img_id = ?;";
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return image;
 	}
 
 

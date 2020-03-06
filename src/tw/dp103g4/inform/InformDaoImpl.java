@@ -70,12 +70,26 @@ public class InformDaoImpl implements InformDao {
 	}
 
 	@Override
-	public int setRead(int receiverId) {
+	public int setAllRead(int receiverId) {
 		int count = 0;
 		String sql = "update Inform set Inform_isRead = 1 where user_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
 			ps.setInt(1, receiverId);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	@Override
+	public int setRead(int id) {
+		int count = 0;
+		String sql = "update Inform set Inform_isRead = 1 where inform_id = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, id);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

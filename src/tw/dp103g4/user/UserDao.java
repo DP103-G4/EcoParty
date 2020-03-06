@@ -9,7 +9,7 @@ public interface UserDao {
 	int update(User user, byte[] userImg);
 
 	// 登入後，用帳號取Id
-	int getUserIdByAccount(String account);
+	User getUserByAccount(String account);
 	
 	//判斷登入：布林
 	boolean isLogin(String account, String password);
@@ -20,8 +20,23 @@ public interface UserDao {
 	// 呈現資料列表
 	List<User> getAll();
 
+	//停權列表
+	List<User> getUserOver();
+	
+	
 	// 用String account 去找圖片id(以byte[]回傳)
 	byte[] getUserImg(int id);
+	
+	
+	
+	//選取停權後，會員進到停權名單
+	int userOver(int id);
+	//選取復權後，會員進到一般名單
+	int userBack(int id);
+	
+	
+	
+	
 	
 	public User searchUser(String account);
 	

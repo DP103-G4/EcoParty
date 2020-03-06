@@ -9,6 +9,6 @@ public interface ReviewImgDao {
 	
 	public int delete(int id);
 	
-	public byte[] getData(int id);
+	public byte[] getImage(int id);
 
 }

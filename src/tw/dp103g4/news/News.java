@@ -1,14 +1,14 @@
 package tw.dp103g4.news;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class News {
 	private int id;
 	private String title;
 	private String content;
-	private Date time;
+	private Timestamp time;
 
-	public News(int id, String title, String content, Date time) {
+	public News(int id, String title, String content, Timestamp time) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -40,11 +40,11 @@ public class News {
 		this.content = content;
 	}
 
-	public Date getTime() {
+	public Timestamp getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(Timestamp time) {
 		this.time = time;
 	}
 
