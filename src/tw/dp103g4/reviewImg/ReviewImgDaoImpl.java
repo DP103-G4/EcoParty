@@ -61,9 +61,6 @@ public class ReviewImgDaoImpl implements ReviewImgDao {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-		String sql = "insert into Review_img (party_id, review_img_data) value (?, ?);";
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
 			ps.setInt(1, partyId);
 			ps.setBytes(2, data);
 			count = ps.executeUpdate();
@@ -80,10 +77,6 @@ public class ReviewImgDaoImpl implements ReviewImgDao {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
-		
-		return count;
-		
 		}
 		return count;
 	}
