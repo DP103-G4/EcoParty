@@ -1,6 +1,5 @@
 package tw.dp103g4.news;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class News {
