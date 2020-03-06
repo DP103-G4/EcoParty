@@ -61,7 +61,7 @@ public class MsgWarnServlet extends HttpServlet {
 			MsgWarn msgWarn = gson.fromJson(msgWarnJson, MsgWarn.class);
 			int count=0;
 			count = msgWarnDao.insert(msgWarn);
-			
+			writeText(response, String.valueOf(count));
 		}else if (action.equals("msgWarnDelete")) {
 			Integer id = jsonObject.get("id").getAsInt();
 			int count = msgWarnDao.delete(id);

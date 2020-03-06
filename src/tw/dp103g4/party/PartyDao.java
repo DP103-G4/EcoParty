@@ -20,8 +20,12 @@ public interface PartyDao {
 	public List<Party> getPartyList(int state);
 	
 	public List<Party> getPieceList (int state);
+	//審核
+	public List<Party> getPartyCheck ();
 		
 	public int setImg(int id, byte[] beforeImg, byte[] afterImg);
+	
+	public int setAfterImg(int id, byte[] afterImg);
 	
 	public byte[] getCoverImg(int id);
 	

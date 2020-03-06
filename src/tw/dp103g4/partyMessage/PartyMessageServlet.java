@@ -60,10 +60,13 @@ public class PartyMessageServlet extends HttpServlet {
 			int count = 0;
 			if (action.equals("msgInsert")) {
 				count = partyMessageDao.insert(message);
-				System.out.println(count);
+				writeText(response, gson.toJson(count)); 
 			}
-		} else if (action.equals("deleteMsg")) {
-		//
+		} else if (action.equals("msgDelete")) {
+			id = jsonObject.get("id").getAsInt();
+			int count = 0;
+			count = partyMessageDao.delete(id);
+			writeText(response, gson.toJson(count)); 
 		} else {
 			writeText(response, "");
 		}

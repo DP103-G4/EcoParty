@@ -8,6 +8,15 @@ public class PieceWarn {
 	private int userId;
 	private Date time;
 	private String content;
+	
+	
+
+	public PieceWarn(int pieceId, int userId, String content) {
+		super();
+		this.pieceId = pieceId;
+		this.userId = userId;
+		this.content = content;
+	}
 
 	public PieceWarn(int id, int pieceId, int userId, Date time, String content) {
 		super();

@@ -37,7 +37,7 @@ public class NewsServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (newsDao == null) {
@@ -62,6 +62,7 @@ public class NewsServlet extends HttpServlet {
 			String newsJson = jsonObject.get("news").getAsString();
 			System.out.println("newsJson = " + newsJson);
 			News news = gson.fromJson(newsJson, News.class);
+
 			byte[] image = null;
 			if (jsonObject.get("imageBase64") != null) {
 				String imageBase64 = jsonObject.get("imageBase64").getAsString();
