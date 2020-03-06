@@ -69,13 +69,13 @@ public class Party {
 		this.distance = distance;
 	}
 	
-	public Party(int id, int ownerId, String name, Date startTime, String address, int state) {
+	public Party(int id, int ownerId, String name, Date startTime, String location, int state) {
 		super();
 		this.id = id;
 		this.ownerId = ownerId;
 		this.name = name;
 		this.startTime = startTime;
-		this.address = address;
+		this.location = location;
 		this.state = state;
 	}
 

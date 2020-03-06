@@ -11,6 +11,13 @@ public class MsgWarn {
 	private String account;
 	
 	
+	public MsgWarn(int messageId, int userId, String content) {
+		super();
+		this.messageId = messageId;
+		this.userId = userId;
+		this.content = content;
+	}
+
 	public MsgWarn(int id,int messageId,int userId,Date time,String content) {
 		super();
 		this.id = id;

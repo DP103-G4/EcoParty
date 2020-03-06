@@ -8,7 +8,19 @@ public class PieceWarn {
 	private int userId;
 	private Date time;
 	private String content;
+<<<<<<< HEAD
 	private String account;
+=======
+	
+	
+
+	public PieceWarn(int pieceId, int userId, String content) {
+		super();
+		this.pieceId = pieceId;
+		this.userId = userId;
+		this.content = content;
+	}
+>>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
 
 	public PieceWarn(int id, int pieceId, int userId, Date time, String content) {
 		super();

@@ -178,7 +178,7 @@ public class PartyDaoImpl implements PartyDao {
 	public int update(Party party, byte[] coverImg) {
 		int count = 0;
 		String sql = "UPDATE Party SET" + "	owner_id = ?, party_name = ?,"
-				+ " party_start_time = ?, party_end_time = ?, party_post_end_time = ?,"
+				+ " party_start_time = ?, party_end_time = ?, party_post_time = ?, party_post_end_time = ?,"
 				+ " party_location = ?, party_address = ?, longitude = ?, latitude = ?, party_content = ?,"
 				+ " party_count_upper_limit = ?, party_count_lower_limit = ?, party_count_current = ?,"
 				+ " party_state = ?, party_distance = ?";
@@ -210,13 +210,15 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setInt(15, party.getState());
 			ps.setInt(16, party.getDistance());
 
-			count = ps.executeUpdate();
 			if (coverImg != null) {
 				ps.setBytes(17, coverImg);
 				ps.setInt(18, party.getId());
 			} else {
 				ps.setInt(17, party.getId());
 			}
+			
+			count = ps.executeUpdate();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -237,7 +239,7 @@ public class PartyDaoImpl implements PartyDao {
 
 	@Override
 	public List<Party> getPartyList(int state) {
-		String sql = "select party_id, owner_id, party_address, party_start_time, party_name from Party "
+		String sql = "select party_id, owner_id, party_name, party_start_time, party_location from Party "
 				+ "where party_state = ? order by party_post_time desc;";
 		
 		List<Party> partyList = new ArrayList<Party>();
@@ -248,10 +250,10 @@ public class PartyDaoImpl implements PartyDao {
 				while (rs.next()) {
 					int id = rs.getInt(1);
 					int ownerId = rs.getInt(2);
-					String address = rs.getString(3);
+					String name = rs.getString(3);
 					Date startTime = rs.getDate(4);
-					String name = rs.getString(5);
-					Party party = new Party(id, ownerId, name, startTime, address, state);
+					String location = rs.getString(5);
+					Party party = new Party(id, ownerId, name, startTime, location, state);
 					partyList.add(party);
 				}
 			}
@@ -359,6 +361,37 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setBytes(1, beforeImg);
 			ps.setBytes(2, afterImg);
 			ps.setInt(3, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	}
+	
+	@Override
+	public int setAfterImg(int id, byte[] afterImg) {
+		int count = 0;
+		String sql = "UPDATE Party SET party_after_img = ?"
+				+ "where party_id = ?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setBytes(1, afterImg);
+			ps.setInt(2, id);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -497,6 +530,8 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setInt(1, countCurrent);
 			ps.setInt(2, partyId);
 			count = ps.executeUpdate();
+			if (count == 0)
+				countCurrent = 0;
 			
 			
 		} catch (SQLException e) {
@@ -514,7 +549,7 @@ public class PartyDaoImpl implements PartyDao {
 			}
 		}
 		
-		return count;
+		return countCurrent;
 	}
 
 	@Override
