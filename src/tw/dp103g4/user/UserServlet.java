@@ -137,7 +137,6 @@ public class UserServlet extends HttpServlet {
 			String password = jsonObject.get("password").getAsString();
 			isValid = userDao.isLogin(account, password);
 			writeText(response, String.valueOf(isValid));
-			String account = jsonObject.get("account").getAsString();
 		}
 		// 登入：回傳資料
 		else if (action.equals("findById")) {
