@@ -92,7 +92,6 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 	@Override
 	public int delete(int id) {
 		int count = 0;
-<<<<<<< HEAD
 		String sql = "delete from Party_message where party_message_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -111,15 +110,10 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 				+ "where party_message_id = ?;";
 		Connection connection = null;
 		PartyMessage partyMessage = null;
-=======
-		String sql = "delete from Msg_warn where message_id = ?";
-		Connection connection = null;
->>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-<<<<<<< HEAD
 			ps.setInt(1, partyMsgId);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
@@ -130,17 +124,7 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 				partyMessage = new PartyMessage(userId, content, time, account);
 			}
 			return partyMessage;
-=======
-			ps.setInt(1, id);
-			ps.executeUpdate();
-			
-			sql = "delete from Party_message where party_message_id = ?";
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
-			count = ps.executeUpdate();
-		
-							
->>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
+						
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -155,14 +139,8 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 				e.printStackTrace();
 			}
 		}
-<<<<<<< HEAD
 		return partyMessage;
-=======
-		return count;
-		
-		
-		
->>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
+
 	}
 
 

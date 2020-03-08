@@ -63,7 +63,6 @@ public class PartyMessageServlet extends HttpServlet {
 				count = partyMessageDao.insert(message);
 				writeText(response, gson.toJson(count)); 
 			}
-<<<<<<< HEAD
 			
 		} else if (action.equals("deleteWarnById")) {
 			int pieceId = jsonObject.get("id").getAsInt();
@@ -81,14 +80,6 @@ public class PartyMessageServlet extends HttpServlet {
 			writeText(response, String.valueOf(count));
 			
 		}else {
-=======
-		} else if (action.equals("msgDelete")) {
-			id = jsonObject.get("id").getAsInt();
-			int count = 0;
-			count = partyMessageDao.delete(id);
-			writeText(response, gson.toJson(count)); 
-		} else {
->>>>>>> 9a2698cc5007c801503d03110be6aa06d0a2ec5a
 			writeText(response, "");
 		}
 	}
