@@ -124,7 +124,6 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 				partyMessage = new PartyMessage(userId, content, time, account);
 			}
 			return partyMessage;
-						
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -140,8 +139,8 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 			}
 		}
 		return partyMessage;
-
 	}
+
 
 
 
