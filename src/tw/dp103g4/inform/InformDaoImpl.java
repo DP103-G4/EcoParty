@@ -51,14 +51,24 @@ public class InformDaoImpl implements InformDao {
 
 	@Override
 	public int insert(Inform inform) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		String sql = "INSERT INTO Inform (`user_id`, `party_id`, `inform_content`) VALUES (?, ?, ?);";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, inform.getUserId());
+			ps.setInt(2, inform.getPartyId());
+			ps.setString(3, inform.getContent());
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 
 	@Override
 	public int delete(int id) {
 		int count = 0;
-		String sql = "delete from Inform where inform_id;";
+		String sql = "delete from Inform where inform_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
 			ps.setInt(1, id);

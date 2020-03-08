@@ -86,7 +86,7 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 	}
 
 	@Override
-	public int delete(int id) {
+	public int deleteOne(int id) {
 		int count = 0;
 		String sql = "delete from Party_piece where piece_id = ?;";
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -124,6 +124,12 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 			e.printStackTrace();
 		}
 		return partyPiece;
+	}
+
+	@Override
+	public int delete(int id) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
