@@ -118,7 +118,7 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 	}
 
 	@Override
-	public int delete(int id) {
+	public int deleteOne(int id) {
 		int count = 0;
 		String sql = "delete from Piece_warn where piece_id = ?";
 		Connection connection = null;
@@ -182,6 +182,12 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 			e.printStackTrace();
 		}
 		return partyPiece;
+	}
+
+	@Override
+	public int delete(int id) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

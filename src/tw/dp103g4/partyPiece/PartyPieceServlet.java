@@ -102,6 +102,12 @@ public class PartyPieceServlet extends HttpServlet {
 			Integer id = jsonObject.get("id").getAsInt();
 			PartyPiece partyPiece = partyPieceDao.getOneById(id);
 			writeText(response, gson.toJson(partyPiece));
+			
+		}else if (action.equals("deleteWarnById")) {
+			int pieceId = jsonObject.get("id").getAsInt();
+			int count = partyPieceDao.deleteOne(pieceId);
+			writeText(response, String.valueOf(count));
+			
 		}else {
 			writeText(response, "");
 		}

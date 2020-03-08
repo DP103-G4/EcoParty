@@ -11,6 +11,8 @@ public interface PartyPieceDao {
 	
 	public int update(PartyPiece partyPiece);
 	
+	public int deleteOne(int id);
+	
 	public int delete(int id);
 	
 	
