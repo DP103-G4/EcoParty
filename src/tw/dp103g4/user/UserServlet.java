@@ -102,7 +102,7 @@ public class UserServlet extends HttpServlet {
 				// 輸出圖檔的大小
 				response.setContentLength(image.length);
 				os.write(image);
-				System.out.println("GetImage: " + image);
+//				System.out.println("GetImage: " + image);
 			}
 		} else if (action.equals("insert") || action.equals("update")) {
 			String userJson = jsonObject.get("user").getAsString();

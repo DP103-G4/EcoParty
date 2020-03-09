@@ -79,10 +79,8 @@ public class ParticipantServlet extends HttpServlet {
 				count = partyDao.setCountCurrent(participant.getPartyId(), participant.getCount());
 			} else if (action.equals("participantDelete")) {
 				count = iccTableDao.delete(participant.getId(), participant.getPartyId());
-				if (count == 1) {
-					count = participantDao.delete(participant);
-					count = partyDao.setCountCurrent(participant.getPartyId(), ((-1)*count));
-				}
+				count = participantDao.delete(participant);
+				count = partyDao.setCountCurrent(participant.getPartyId(), ((-1)*count));
 			}
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("isIn")) {

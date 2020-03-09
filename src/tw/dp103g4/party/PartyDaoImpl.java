@@ -531,7 +531,7 @@ public class PartyDaoImpl implements PartyDao {
 			ps.setInt(2, partyId);
 			count = ps.executeUpdate();
 			if (count == 0)
-				countCurrent = 0;
+				countCurrent = -1;
 			
 			
 		} catch (SQLException e) {
