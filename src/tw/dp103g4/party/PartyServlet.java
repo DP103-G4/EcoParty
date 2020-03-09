@@ -141,6 +141,8 @@ public class PartyServlet extends HttpServlet {
 			List<String> imagesBase64 = gson.fromJson(imgsJson, new TypeToken<List<String>>() {}.getType());
 
 			int count = 0;
+			count = partyDao.insert(party, coverImg);
+			
 			byte[] image = null;
 			if (jsonObject.get("imagesBase64") != null) {
 				for (String imgBase64: imagesBase64) {
@@ -151,7 +153,6 @@ public class PartyServlet extends HttpServlet {
 				}
 			} 
 			
-			count = partyDao.insert(party, coverImg);
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("partyUpdate")) {
 			partyJson = jsonObject.get("party").getAsString();
