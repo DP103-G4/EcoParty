@@ -152,7 +152,7 @@ public class TalkDaoMySql implements TalkDao {
 	@Override
 	public List<NewestTalk> getNewestTalk(int userId) {
 		List<NewestTalk> newestTalksList = new ArrayList<NewestTalk>();
-		String sql = "SELECT a.tk_receiver_id, a.tk_sender_id, a.talk_content, b.MaxTime, c.user_account, (d.user_account) as NoMy "
+		String sql = "SELECT a.tk_receiver_id, a.tk_sender_id, a.talk_content, b.MaxTime, c.user_name, (d.user_name) as NoMy "
 				+ "FROM ( select tk_receiver_id, tk_sender_id, Max(talk_time) as MaxTime From Talk where tk_receiver_id = ? or tk_sender_id = ? group by tk_sender_id, tk_receiver_id ) b "
 				+ "inner join Talk a on a.tk_sender_id = b.tk_sender_id and a.talk_time = b.MaxTime "
 				+ "left join User c on a.tk_sender_id = c.user_id "
