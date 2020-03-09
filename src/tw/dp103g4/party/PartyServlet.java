@@ -136,22 +136,27 @@ public class PartyServlet extends HttpServlet {
 					coverImg = Base64.getMimeDecoder().decode(coverImgBase64);
 				}
 			}
-			
-			String imgsJson = jsonObject.get("imagesBase64").getAsString();
-			List<String> imagesBase64 = gson.fromJson(imgsJson, new TypeToken<List<String>>() {}.getType());
-
 			int count = 0;
-			byte[] image = null;
-			if (jsonObject.get("imagesBase64") != null) {
-				for (String imgBase64: imagesBase64) {
-					if (imgBase64 != null && !imgBase64.isEmpty()) {
-						image = Base64.getMimeDecoder().decode(imgBase64);
-						count = reviewImgDao.insert(party.getId(), image);
-					}
-				}
-			} 
+			int ai = 0;
+
+			ai = partyDao.insert(party, coverImg);
 			
-			count = partyDao.insert(party, coverImg);
+			if (ai != 0) {
+				
+				String imgsJson = jsonObject.get("imagesBase64").getAsString();
+				List<String> imagesBase64 = gson.fromJson(imgsJson, new TypeToken<List<String>>() {}.getType());
+			
+				byte[] image = null;
+				if (jsonObject.get("imagesBase64") != null) {
+					for (String imgBase64: imagesBase64) {
+						if (imgBase64 != null && !imgBase64.isEmpty()) {
+							image = Base64.getMimeDecoder().decode(imgBase64);
+							count = reviewImgDao.insert(ai, image);
+						}
+					}
+				} 
+			}
+			
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("partyUpdate")) {
 			partyJson = jsonObject.get("party").getAsString();

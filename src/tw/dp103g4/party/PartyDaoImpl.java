@@ -156,6 +156,19 @@ public class PartyDaoImpl implements PartyDao {
 				ps.setBytes(17, coverImg);
 
 			count = ps.executeUpdate();
+			
+			if (count != 0) {
+				sql = "SELECT LAST_INSERT_ID() " + 
+						"	FROM  INFORMATION_SCHEMA.TABLES  " + 
+						"	WHERE TABLE_SCHEMA = 'EcoParty'  " + 
+						"		AND   TABLE_NAME   = 'Party';";
+				ps = connection.prepareStatement(sql);
+				
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
