@@ -54,7 +54,7 @@ public class ReviewImgDaoImpl implements ReviewImgDao {
 	public int insert(int partyId, byte[] data) {
 		int count = 0;
 		String sql;
-		sql = "INSERT INTO Review_img(review_img_id, review_img_data) VALUES(?, ?);";
+		sql = "INSERT INTO Review_img(party_id, review_img_data) VALUES(?, ?);";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		

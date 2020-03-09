@@ -106,7 +106,7 @@ public class FriendShipDaoMySql implements FriendShipDao {
 				if (isInvite) {
 					if (userId == userOne) {
 						friendId = userTwo;
-						sql = "SELECT user_account FROM Friendship a LEFT join User b "
+						sql = "SELECT user_name FROM Friendship a LEFT join User b "
 								+ "on a.usertwo_id = b.user_id WHERE userone_id = ? and usertwo_id = ? and isInvite = true;";
 						ps = connection.prepareStatement(sql);
 						ps.setInt(1, userOne);
@@ -114,7 +114,7 @@ public class FriendShipDaoMySql implements FriendShipDao {
 
 					} else {
 						friendId = userOne;
-						sql = "SELECT user_account FROM Friendship a " + "LEFT join User b on a.userone_id = b.user_id "
+						sql = "SELECT user_name FROM Friendship a " + "LEFT join User b on a.userone_id = b.user_id "
 								+ "WHERE usertwo_id = ? and userone_id = ? and isInvite = true;";
 						ps = connection.prepareStatement(sql);
 						ps.setInt(1, userTwo);

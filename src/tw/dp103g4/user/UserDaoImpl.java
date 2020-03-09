@@ -408,4 +408,23 @@ public class UserDaoImpl implements UserDao {
 		return count;
 	}
 
+	@Override
+	public User searchUserById(int id) {
+		User user = null;
+		String sql = "SELECT user_account, user_name FROM User WHERE user_id = ?;";
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = conn.prepareStatement(sql);) {
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) { // 如果next有資料就取得id
+				String account = rs.getString(1);
+				String name = rs.getString(2);
+				user = new User(id, account, null, null, name);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+
 }
