@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import tw.dp103g4.party.Party;
+import tw.dp103g4.party.PartyInfo;
+
 
 public class PartyPieceDaoImpl implements PartyPieceDao {
 
@@ -56,15 +59,44 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 	@Override
 	public int insert(PartyPiece partyPiece) {
 		int count = 0;
+		int ai = 0;
 		String sql = "insert into Party_piece (user_id, party_id, piece_content) value (?, ?, ?);";
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql);) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, partyPiece.getUserId());
 			ps.setInt(2, partyPiece.getPartyId());
 			ps.setString(3, partyPiece.getContent());
 			count = ps.executeUpdate();
+			if (count != 0) {
+				sql = "SELECT LAST_INSERT_ID() " + 
+						"	FROM  INFORMATION_SCHEMA.TABLES  " + 
+						"	WHERE TABLE_SCHEMA = 'EcoParty'  " + 
+						"		AND   TABLE_NAME   = 'Party_piece';";
+				ps = connection.prepareStatement(sql);
+				
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return count;
 	}
@@ -86,17 +118,76 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 	}
 
 	@Override
-	public int delete(int id) {
+	public int deleteOne(int id) {
 		int count = 0;
-		String sql = "delete from Party_piece where piece_id = ?;";
-		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-				PreparedStatement ps = connection.prepareStatement(sql)) {
+		String sql = "delete from Piece_warn where piece_id = ?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			
+			sql = "delete from Piece_img where piece_id = ?";
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			count = ps.executeUpdate();
+			
+			sql = "delete from Party_piece where piece_id = ?";
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		
+							
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+
+	@Override
+	public PartyPiece getOneById(int pieceMsgId) {
+		String sql = "select user_account, u.user_id, piece_content, piece_time " + 
+				"from Party_piece pp " + 
+				"join User u on pp.user_id = u.user_id " + 
+				"where piece_id = ?;";
+		PartyPiece partyPiece = null;
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql);) {
+			ps.setInt(1, pieceMsgId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					String account = rs.getString(1);
+					int userId = rs.getInt(2);
+					String content = rs.getString(3);
+					Date time = rs.getTimestamp(4);
+					partyPiece = new PartyPiece(userId ,content, time, account);
+					
+				}
+			}
+			return partyPiece;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		return partyPiece;
+	}
+
+	@Override
+	public int delete(int id) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

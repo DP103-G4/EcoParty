@@ -20,6 +20,7 @@ public class Party {
 	private int countCurrent;
 	private int state;
 	private int distance;
+	private String ownerName;
 
 	
 	
@@ -223,6 +224,27 @@ public class Party {
 
 	public void setDistance(int distance) {
 		this.distance = distance;
+	}
+	
+	//審核
+	public Party(int id, int ownerId, String name, Date startTime, int countUpperLimit, String address, String content, String ownerName) {
+		super();
+		this.id = id;
+		this.ownerId = ownerId;
+		this.name = name;
+		this.startTime = startTime;
+		this.countUpperLimit = countUpperLimit;
+		this.address = address;
+		this.content = content;
+		this.ownerName = ownerName;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
 	}
 	
 	

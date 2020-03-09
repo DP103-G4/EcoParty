@@ -15,6 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import tw.dp103g4.iccTable.IccTable;
+import tw.dp103g4.iccTable.IccTableDao;
+import tw.dp103g4.iccTable.IccTableDaoImpl;
 import tw.dp103g4.party.Party;
 import tw.dp103g4.party.PartyDao;
 import tw.dp103g4.party.PartyDaoImpl;
@@ -26,10 +29,13 @@ public class ParticipantServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	ParticipantDao participantDao = null;
 	PartyDao partyDao = null;
+	IccTableDao iccTableDao = null;
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int partyId;
+		int partyId, userId;
+		boolean isArrival, isStaff;
 		Participant participant;
+		IccTable iccTable;
 		String participantJson;
 		request.setCharacterEncoding("utf-8");
 		
@@ -43,34 +49,65 @@ public class ParticipantServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 //		將輸入資料列印出來除錯用
-//		System.out.println("input: " + jsonIn);
+		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (participantDao == null) {
 			participantDao = new ParticipantDaoImpl();
 		}
+		if (iccTableDao == null) {
+			iccTableDao = new IccTableDaoImpl();
+		}
 
 		String action = jsonObject.get("action").getAsString();
 
-		if (action.equals("getParticipantList")) {
+		if (action.equals("getParticipantInfos")) {
 			partyId = jsonObject.get("partyId").getAsInt();
-			List<Participant> participants = participantDao.getAllByParty(partyId);
-			writeText(response, gson.toJson(participants));
+			List<ParticipantInfo> participantInfos = participantDao.getAllByParty(partyId);
+			writeText(response, gson.toJson(participantInfos));
 		} else if (action.equals("participantInsert") || action.equals("participantDelete")) {
 			participantJson = jsonObject.get("participant").getAsString();
 			System.out.println("participantJson = " + participantJson);
 			participant = gson.fromJson(participantJson, Participant.class);
 
-			int count = 0;
+			int count = 0, deleted = 0;
 			if (partyDao == null) {
 				partyDao = new PartyDaoImpl();
 			}
 			if (action.equals("participantInsert")) {
-				participantDao.insert(participant);
+				count = participantDao.insert(participant);
 				count = partyDao.setCountCurrent(participant.getPartyId(), participant.getCount());
 			} else if (action.equals("participantDelete")) {
-				participantDao.delete(participant);
-				count = partyDao.setCountCurrent(participant.getPartyId(), ((-1)*participant.getCount()));
+				count = iccTableDao.delete(participant.getId(), participant.getPartyId());
+				count = participantDao.delete(participant);
+				count = partyDao.setCountCurrent(participant.getPartyId(), ((-1)*count));
+			}
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("isIn")) {
+			userId = jsonObject.get("userId").getAsInt();
+			partyId = jsonObject.get("partyId").getAsInt();
+			int count = 0;
+			count = participantDao.isIn(userId, partyId);
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("setArrival")) {
+			isArrival = jsonObject.get("isArrival").getAsBoolean();
+			userId = jsonObject.get("userId").getAsInt();
+			partyId = jsonObject.get("partyId").getAsInt();
+			int count = 0;
+			count = participantDao.setArrival(userId, partyId, isArrival);
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("setStaff")) {
+			isStaff = jsonObject.get("isStaff").getAsBoolean();
+			userId = jsonObject.get("userId").getAsInt();
+			partyId = jsonObject.get("partyId").getAsInt();
+			int count = 0;
+			count = participantDao.setStaff(userId, partyId, isStaff);
+			if (count == 1 && isStaff) {
+				count = iccTableDao.insert(userId, partyId);
+			} else if (count == 1 && !isStaff) {
+				count = iccTableDao.delete(userId, partyId);
+			} else {
+				count = 0;
 			}
 			writeText(response, String.valueOf(count));
 		} else {
