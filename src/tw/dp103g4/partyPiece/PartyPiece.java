@@ -6,7 +6,7 @@ public class PartyPiece {
 	private int id;
 	private int userId;
 	private int partyId;
-	private String content;
+	private String content, account;
 	private Date time;
 	
 	
@@ -25,6 +25,13 @@ public class PartyPiece {
 		this.partyId = partyId;
 		this.content = content;
 		this.time = time;
+	}
+	public PartyPiece(int userId, String content, Date time, String account) {
+		super();
+		this.userId = userId;
+		this.content = content;
+		this.time = time;
+		this.account = account;
 	}
 
 	public int getId() {
@@ -65,5 +72,13 @@ public class PartyPiece {
 
 	public void setTime(Date time) {
 		this.time = time;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
 }

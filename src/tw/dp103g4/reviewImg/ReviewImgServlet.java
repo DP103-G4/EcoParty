@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -64,23 +66,21 @@ public class ReviewImgServlet extends HttpServlet {
 		
 		String action = jsonObject.get("action").getAsString();
 		if(action.equals("getAllByParty")) {
-			List<byte[]> imgList = new ArrayList<byte[]>();
+//			List<String> imgList = new ArrayList<String>();
 			partyId = jsonObject.get("partyId").getAsInt();
 			List<ReviewImg> reviewImgsId = reviewImgDao.getAllByParty(partyId);
-//			os = response.getOutputStream();
-			for(int i = 0; i < reviewImgsId.size(); i++) {
-				id = reviewImgsId.get(i).getId();
-				imageSize = jsonObject.get("imageSize").getAsInt();
-				byte[] reviewImg = reviewImgDao.getImage(id);
-				if (reviewImg != null) {
-					reviewImg = ImageUtil.shrink(reviewImg, imageSize);
-					response.setContentType("image/jpeg");
-					response.setContentLength(reviewImg.length);
-					imgList.add(reviewImg);
-//					os.write(reviewImg);
-				}
-			}		
-			writeText(response, gson.toJson(imgList));
+//			for(int i = 0; i < reviewImgsId.size(); i++) {
+//				id = reviewImgsId.get(i).getId();
+//				imageSize = jsonObject.get("imageSize").getAsInt();
+//				byte[] reviewImg = reviewImgDao.getImage(id);
+//				if (reviewImg != null) {
+//					reviewImg = ImageUtil.shrink(reviewImg, imageSize);
+//					response.setContentType("image/jpeg");
+//					response.setContentLength(reviewImg.length);
+//					imgList.add(String.valueOf(reviewImg));
+//				}
+//			}		
+			writeText(response, gson.toJson(reviewImgsId));
 
 		}else if (action.equals("getImage")) {
 			os = response.getOutputStream();

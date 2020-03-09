@@ -8,6 +8,7 @@ public class MsgWarn {
 	private int userId;
 	private Date time;
 	private String content;
+	private String account;
 	
 	
 	public MsgWarn(int messageId, int userId, String content) {
@@ -26,7 +27,15 @@ public class MsgWarn {
 		this.content = content;
 		
 		}
-	
+	public MsgWarn(int id, int messageId, int userId, Date time, String content, String account) {
+		super();
+		this.id = id;
+		this.messageId = messageId;
+		this.userId = userId;
+		this.time = time;
+		this.content = content;
+		this.account = account;
+	}
 	@Override
 	public String toString() {
 		String text = "ID"+id+"\n content"+ content;
@@ -63,6 +72,12 @@ public class MsgWarn {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getAccount() {
+		return account;
+	}
+	public void setAccount(String account) {
+		this.account = account;
 	}
 	
 	

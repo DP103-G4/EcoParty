@@ -77,7 +77,7 @@ public class TalkDaoMySql implements TalkDao {
 		int count = 0;
 		String sql = "";
 		int partyId = talk.getPartyId();
-		if (partyId != -1) {
+		if (partyId != 0) {
 			sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,party_id,talk_content) " + "VALUES (?,?,?,?);";
 		} else {
 			sql = "INSERT INTO Talk " + "(tk_receiver_id,tk_sender_id,talk_content) " + "VALUES (?,?,?);";
@@ -89,7 +89,7 @@ public class TalkDaoMySql implements TalkDao {
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, talk.getReceiverId());
 			ps.setInt(2, talk.getSenderId());
-			if (partyId != -1) {
+			if (partyId != 0) {
 				ps.setInt(3, partyId);
 				ps.setString(4, talk.getContent());
 			} else {

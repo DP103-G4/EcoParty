@@ -27,7 +27,10 @@ public class MsgWarnDaoMySql implements MsgWarnDao {
 
 	@Override
 	public List<MsgWarn> getAll() {
-		String sql = "SELECT msg_warn_id, message_id, msg_warn_user_id, msg_warn_time, msg_warn_content " + "FROM Msg_warn ORDER BY msg_warn_time ASC;";
+		String sql = "SELECT msg_warn_id, message_id, msg_warn_user_id, msg_warn_time, msg_warn_content, b.user_account " + 
+				"FROM Msg_warn a " + 
+				"LEFT JOIN User b on b.user_id = a.msg_warn_user_id " + 
+				"ORDER BY msg_warn_time;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<MsgWarn> msgWarnList = new ArrayList<MsgWarn>();
@@ -41,7 +44,8 @@ public class MsgWarnDaoMySql implements MsgWarnDao {
 				int userId = resultSet.getInt(3);
 				Date time = resultSet.getDate(4);
 				String content = resultSet.getString(5);
-				MsgWarn msgWarn = new MsgWarn(id, messageId, userId, time, content);
+				String account = resultSet.getString(6);
+				MsgWarn msgWarn = new MsgWarn(id, messageId, userId, time, content, account);
 				msgWarnList.add(msgWarn);
 			}
 			return msgWarnList;
@@ -61,9 +65,6 @@ public class MsgWarnDaoMySql implements MsgWarnDao {
 		}
 		return msgWarnList;
 	}
-
-
-	
 
 	@Override
 	public int insert(MsgWarn msgWarn) {

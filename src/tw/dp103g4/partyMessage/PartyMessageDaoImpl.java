@@ -92,21 +92,38 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 	@Override
 	public int delete(int id) {
 		int count = 0;
-		String sql = "delete from Msg_warn where message_id = ?";
+		String sql = "delete from Party_message where party_message_id = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	@Override
+	public PartyMessage getOneById(int partyMsgId) {
+		String sql = "select pm.user_id, party_message_content, party_message_time, u.user_account "
+				+ "from Party_message pm join User u on pm.user_id = u.user_id " 
+				+ "where party_message_id = ?;";
 		Connection connection = null;
+		PartyMessage partyMessage = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
-			ps.executeUpdate();
-			
-			sql = "delete from Party_message where party_message_id = ?";
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
-			count = ps.executeUpdate();
-		
-							
+			ps.setInt(1, partyMsgId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				int userId = rs.getInt(1);
+				String content= rs.getString(2);
+				Date time = rs.getTimestamp(3);
+				String account = rs.getString(4);
+				partyMessage = new PartyMessage(userId, content, time, account);
+			}
+			return partyMessage;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -121,11 +138,9 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 				e.printStackTrace();
 			}
 		}
-		return count;
-		
-		
-		
+		return partyMessage;
 	}
+
 
 
 
