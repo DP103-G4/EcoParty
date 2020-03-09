@@ -23,21 +23,17 @@ public interface UserDao {
 	//停權列表
 	List<User> getUserOver();
 	
-	
 	// 用String account 去找圖片id(以byte[]回傳)
 	byte[] getUserImg(int id);
 	
-	
-	
 	//選取停權後，會員進到停權名單
 	int userOver(int id);
+	
 	//選取復權後，會員進到一般名單
 	int userBack(int id);
 	
-	
-	
-	
-	
 	public User searchUser(String account);
+	
+	public User searchUserById(int id);
 	
 }
