@@ -239,7 +239,6 @@ public class PartyDaoImpl implements PartyDao {
 
 	@Override
 	public List<Party> getPartyList(int state) {
-		String sql = "select party_id, owner_id, party_location, party_start_time, party_name from Party "
 		String sql = "select party_id, owner_id, party_name, party_start_time, party_location from Party "
 				+ "where party_state = ? order by party_post_time desc;";
 		
@@ -254,9 +253,6 @@ public class PartyDaoImpl implements PartyDao {
 					String location = rs.getString(3);
 					Date startTime = rs.getDate(4);
 					String name = rs.getString(5);
-					String name = rs.getString(3);
-					Date startTime = rs.getDate(4);
-					String location = rs.getString(5);
 					Party party = new Party(id, ownerId, name, startTime, location, state);
 					partyList.add(party);
 				}
