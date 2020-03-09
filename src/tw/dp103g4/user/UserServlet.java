@@ -166,7 +166,12 @@ public class UserServlet extends HttpServlet {
 				count = userDao.update(user, null);
 			}
 			writeText(response, String.valueOf(count));
-		} else {
+		} else if (action.equals("searchUserById")) {
+			int id = jsonObject.get("id").getAsInt();
+			User user = userDao.searchUserById(id);
+			writeText(response, gson.toJson(user));
+
+		}else {
 			writeText(response, "");
 		}
 
