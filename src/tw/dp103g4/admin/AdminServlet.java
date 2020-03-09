@@ -22,6 +22,7 @@ public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final static String CONTENT_TYPE = "text/html; charset=UTF-8";
 	AdminDao adminDao = null;
+	private Set<Admin> admins = new HashSet<>();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -49,6 +50,18 @@ public class AdminServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 		System.out.println("input: " + jsonIn);
+		
+		
+		Admin adminGson = gson.fromJson(jsonIn.toString(), Admin.class);
+		JsonObject result = new JsonObject();
+		if (admins.contains(adminGson)) {
+			result.addProperty("adminLogin", true);
+		} else {
+			result.addProperty("adminLogin", false);
+		}
+		
+		
+		
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (adminDao == null) {
 			adminDao = new AdminDaoImpl();
