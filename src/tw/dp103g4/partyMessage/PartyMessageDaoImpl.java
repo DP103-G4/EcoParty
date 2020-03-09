@@ -15,7 +15,7 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 
 	@Override
 	public List<PartyMsgInfo> getAllbyParty(int partyId) {
-		String sql = "select pm.user_id, party_message_content, party_message_time, user_name "
+		String sql = "select party_message_id, pm.user_id, party_message_content, party_message_time, user_name "
 				+ "from Party_message pm join User u on pm.user_id = u.user_id " 
 				+ "where party_id = ? order by party_message_time";
 		Connection connection = null;
@@ -27,11 +27,12 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 			ps.setInt(1, partyId);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				int userId = rs.getInt(1);
-				String content= rs.getString(2);
-				Date time = rs.getTimestamp(3);
-				String msgName = rs.getString(4);
-				PartyMessage partyMessage = new PartyMessage(userId, content, time);
+				int id = rs.getInt(1);
+				int userId = rs.getInt(2);
+				String content= rs.getString(3);
+				Date time = rs.getTimestamp(4);
+				String msgName = rs.getString(5);
+				PartyMessage partyMessage = new PartyMessage(id, userId, partyId, content, time);
 				PartyMsgInfo partyMsgInfo = new PartyMsgInfo(partyMessage, msgName);
 				msgList.add(partyMsgInfo);
 			}
@@ -90,9 +91,56 @@ public class PartyMessageDaoImpl implements PartyMessageDao {
 
 	@Override
 	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		String sql = "delete from Party_message where party_message_id = ?;";
+		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
+
+	@Override
+	public PartyMessage getOneById(int partyMsgId) {
+		String sql = "select pm.user_id, party_message_content, party_message_time, u.user_account "
+				+ "from Party_message pm join User u on pm.user_id = u.user_id " 
+				+ "where party_message_id = ?;";
+		Connection connection = null;
+		PartyMessage partyMessage = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, partyMsgId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				int userId = rs.getInt(1);
+				String content= rs.getString(2);
+				Date time = rs.getTimestamp(3);
+				String account = rs.getString(4);
+				partyMessage = new PartyMessage(userId, content, time, account);
+			}
+			return partyMessage;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return partyMessage;
+	}
+
 
 
 

@@ -3,9 +3,11 @@ package tw.dp103g4.iccTable;
 import java.util.List;
 
 public interface IccTableDao {
-	public List<IccTable> getAllByParty(int partyId);
+	public List<IccTableInfo> getAllByParty(int partyId);
 	
-	public int insert(IccTable iccTable);
+	public IccTableInfo findById(int userId, int partyId);
+	
+	public int insert(int userId, int partyId);
 	
 	public int update(IccTable iccTable);
 

@@ -6,8 +6,9 @@ public class PartyMessage {
 	private int id;
 	private int userId;
 	private int partyId;
-	private String content;
+	private String content,account;
 	private Date time;
+	
 	public PartyMessage(int id, int userId, int partyId, String content, Date time) {
 		super();
 		this.id = id;
@@ -31,6 +32,15 @@ public class PartyMessage {
 		this.content = content;
 		this.time = time;
 	}
+	
+	public PartyMessage(int userId, String content, Date time, String account) {
+		super();
+		this.userId = userId;
+		this.content = content;
+		this.time = time;
+		this.account = account;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -60,6 +70,14 @@ public class PartyMessage {
 	}
 	public void setTime(Date time) {
 		this.time = time;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
 	
 	

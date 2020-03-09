@@ -102,7 +102,7 @@ public class UserServlet extends HttpServlet {
 				// 輸出圖檔的大小
 				response.setContentLength(image.length);
 				os.write(image);
-				System.out.println("GetImage: " + image);
+//				System.out.println("GetImage: " + image);
 			}
 		} else if (action.equals("insert") || action.equals("update")) {
 			String userJson = jsonObject.get("user").getAsString();
@@ -166,7 +166,12 @@ public class UserServlet extends HttpServlet {
 				count = userDao.update(user, null);
 			}
 			writeText(response, String.valueOf(count));
-		} else {
+		} else if (action.equals("searchUserById")) {
+			int id = jsonObject.get("id").getAsInt();
+			User user = userDao.searchUserById(id);
+			writeText(response, gson.toJson(user));
+
+		}else {
 			writeText(response, "");
 		}
 

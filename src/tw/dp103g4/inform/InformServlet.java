@@ -44,7 +44,7 @@ public class InformServlet extends HttpServlet {
 			List<Inform> informs = informDao.getAllbyReceiver(receiverId);
 			writeText(response, gson.toJson(informs));
 		}  else if (action.equals("informInsert")) {
-			String informJson = jsonObject.get("news").getAsString();
+			String informJson = jsonObject.get("inform").getAsString();
 			System.out.println("newsJson = " + informJson);
 			Inform inform = gson.fromJson(informJson, Inform.class);
 			int count = 0;
@@ -54,11 +54,15 @@ public class InformServlet extends HttpServlet {
 			int informId = jsonObject.get("informId").getAsInt();
 			int count = informDao.delete(informId);
 			writeText(response, String.valueOf(count));
-		} else if (action.equals("setRead")) {
+		} else if (action.equals("setAllRead")) {
 			int receiverId = jsonObject.get("receiverId").getAsInt();
-			int count = informDao.setRead(receiverId);
+			int count = informDao.setAllRead(receiverId);
 			writeText(response, String.valueOf(count));
-		} else {
+		} else if (action.equals("setRead")) {
+			int id = jsonObject.get("id").getAsInt();
+			int count = informDao.setRead(id);
+			writeText(response, String.valueOf(count));
+		}else {
 			writeText(response, "");
 		}
 	}

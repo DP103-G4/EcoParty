@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 @WebServlet("/MsgWarnServlet")
@@ -39,7 +40,9 @@ public class MsgWarnServlet extends HttpServlet {
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder()  
+				  .setDateFormat("yyyy-MM-dd HH:mm:ss")  
+				  .create(); 
 		BufferedReader br = request.getReader();
 		StringBuilder jsonIn = new StringBuilder();
 		String line = null;
@@ -54,15 +57,15 @@ public class MsgWarnServlet extends HttpServlet {
 		
 		if (action.equals("getAll")) {
 			List<MsgWarn> msgWarns = msgWarnDao.getAll();
-			writeText(response, gson.toJson(msgWarns));			
+			writeText(response, gson.toJson(msgWarns));	
+			
 		} else if (action.equals("msgWarnInsert")) {
 			String msgWarnJson = jsonObject.get("msgWarn").getAsString();
 			System.out.println("msgWarnJson = " + msgWarnJson);
 			MsgWarn msgWarn = gson.fromJson(msgWarnJson, MsgWarn.class);
 			int count=0;
 			count = msgWarnDao.insert(msgWarn);
-			
-		}else if (action.equals("msgWarnDelete")) {
+		}else if (action.equals("warnDelete")) {
 			Integer id = jsonObject.get("id").getAsInt();
 			int count = msgWarnDao.delete(id);
 			writeText(response, String.valueOf(count));
