@@ -26,8 +26,8 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public int insert(User user, byte[] userImg) {
 		// 判斷帳號是否重複註冊
-		User checkAccount = findById(user.getId());
-		if (checkAccount == null) {
+		User checkAccount = getUserByAccount(user.getAccount());
+		if (checkAccount != null) {
 			return -1;
 		}
 
