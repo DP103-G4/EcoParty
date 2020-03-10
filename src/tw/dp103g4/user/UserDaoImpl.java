@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.standard.MediaSize.ISO;
-
 public class UserDaoImpl implements UserDao {
 
 	public UserDaoImpl() {
@@ -186,6 +184,7 @@ public class UserDaoImpl implements UserDao {
 		return userList;
 	}
 
+	//停權的會員
 	@Override
 	public List<User> getUserOver() {
 		String sql = "SELECT user_id, user_account, user_password, user_email, user_name, user_over FROM User WHERE user_over = 1 ORDER BY user_id ;";
@@ -261,7 +260,7 @@ public class UserDaoImpl implements UserDao {
 
 //判斷登入
 	@Override
-	public boolean isLogin(String account, String password) {
+	public int isLogin(String account, String password) {
 		boolean isValid = false;
 		boolean isOver = false;
 		String sql = "SELECT user_password, user_over FROM `user` WHERE user_account = ?;";
@@ -292,7 +291,14 @@ public class UserDaoImpl implements UserDao {
 				e.printStackTrace();
 			}
 		}
-		return isValid && !isOver;
+		if (!isValid) {
+			return 0;//沒註冊
+		} else {
+			if (!isOver)
+				return 1;//登入成功
+			else 
+				return 2;//停權
+		}
 	}
 
 	@Override
@@ -332,7 +338,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User getUserByAccount(String account) {
 		User user = null;
-		String sql = "SELECT user_id, user_name FROM User WHERE user_account = ?;";
+		String sql = "SELECT user_id, user_name, user_over FROM User WHERE user_account = ?;";
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = conn.prepareStatement(sql);) {
 			ps.setString(1, account);
@@ -340,6 +346,7 @@ public class UserDaoImpl implements UserDao {
 			if (rs.next()) { // 如果next有資料就取得id
 				int id = rs.getInt(1);
 				String name = rs.getString(2);
+				boolean isOver = rs.getBoolean(3);
 				user = new User(id, null, null, null, name);
 			}
 		} catch (SQLException e) {
