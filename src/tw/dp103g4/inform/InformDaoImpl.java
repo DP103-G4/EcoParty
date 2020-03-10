@@ -56,8 +56,14 @@ public class InformDaoImpl implements InformDao {
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement ps = connection.prepareStatement(sql);) {
 			ps.setInt(1, inform.getUserId());
+			System.out.println(inform.getUserId());
+			
 			ps.setInt(2, inform.getPartyId());
+			System.out.println(inform.getPartyId());
+
 			ps.setString(3, inform.getContent());
+			System.out.println(inform.getContent());
+
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
