@@ -81,6 +81,7 @@ public class TalkServlet extends HttpServlet {
 			int userId = jsonObject.get("userId").getAsInt();
 			List<NewestTalk> newestTalks = talkDao.getNewestTalk(userId);
 			writeText(response, gson.toJson(newestTalks));	
+			
 		} else if (action.equals("talksInsert")) {
 			String talkJson = jsonObject.get("talks").getAsString();
 			System.out.println("TalkJson = " + talkJson);
