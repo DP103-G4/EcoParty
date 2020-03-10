@@ -12,7 +12,7 @@ public interface UserDao {
 	User getUserByAccount(String account);
 	
 	//判斷登入：布林
-	boolean isLogin(String account, String password);
+	int isLogin(String account, String password);
 	
 	//登入：有相符就回傳
 	User findById(int id);

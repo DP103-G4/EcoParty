@@ -132,7 +132,7 @@ public class UserServlet extends HttpServlet {
 		}
 		// 判斷登入
 		else if (action.equals("isLogin")) {
-			boolean isValid = false;
+			int isValid = 0;
 			String account = jsonObject.get("account").getAsString();
 			String password = jsonObject.get("password").getAsString();
 			isValid = userDao.isLogin(account, password);
