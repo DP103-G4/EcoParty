@@ -156,6 +156,19 @@ public class PartyDaoImpl implements PartyDao {
 				ps.setBytes(17, coverImg);
 
 			count = ps.executeUpdate();
+			
+			if (count != 0) {
+				sql = "SELECT LAST_INSERT_ID() " + 
+						"	FROM  INFORMATION_SCHEMA.TABLES  " + 
+						"	WHERE TABLE_SCHEMA = 'EcoParty'  " + 
+						"		AND   TABLE_NAME   = 'Party';";
+				ps = connection.prepareStatement(sql);
+				
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -250,9 +263,9 @@ public class PartyDaoImpl implements PartyDao {
 				while (rs.next()) {
 					int id = rs.getInt(1);
 					int ownerId = rs.getInt(2);
-					String name = rs.getString(3);
+					String location = rs.getString(3);
 					Date startTime = rs.getDate(4);
-					String location = rs.getString(5);
+					String name = rs.getString(5);
 					Party party = new Party(id, ownerId, name, startTime, location, state);
 					partyList.add(party);
 				}

@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.mysql.cj.conf.ConnectionUrl.Type;
 
 @WebServlet("/TalkServlet")
 public class TalkServlet extends HttpServlet {
@@ -79,6 +81,16 @@ public class TalkServlet extends HttpServlet {
 			int userId = jsonObject.get("userId").getAsInt();
 			List<NewestTalk> newestTalks = talkDao.getNewestTalk(userId);
 			writeText(response, gson.toJson(newestTalks));	
+			
+		} else if (action.equals("talksInsert")) {
+			String talkJson = jsonObject.get("talks").getAsString();
+			System.out.println("TalkJson = " + talkJson);
+			List<Talk> talks = gson.fromJson(talkJson, new TypeToken<List<Talk>>() {}.getType());
+			int count = 0;
+			for (Talk talk:talks) {
+				count = talkDao.insert(talk);
+			}
+			writeText(response, String.valueOf(count));
 		}
 	}
 }
