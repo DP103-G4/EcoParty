@@ -297,7 +297,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public User searchUser(String account) {
-		String sql = "SELECT user_id, user_account FROM User WHERE user_account = ?;";
+		String sql = "SELECT user_id, user_name FROM User WHERE user_account = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		User user = null;
