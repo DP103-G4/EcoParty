@@ -11,6 +11,8 @@ public class User {
 	private String name;
 	private boolean isOver;
 	private Date time;
+	private boolean exists;
+	
 
 	public User(int id, String account, String password, String email, String name, boolean isOver, Date time) {
 		super();
