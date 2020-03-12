@@ -35,7 +35,7 @@ public class MsgWarnServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -61,7 +61,7 @@ public class MsgWarnServlet extends HttpServlet {
 			
 		} else if (action.equals("msgWarnInsert")) {
 			String msgWarnJson = jsonObject.get("msgWarn").getAsString();
-			System.out.println("msgWarnJson = " + msgWarnJson);
+//			System.out.println("msgWarnJson = " + msgWarnJson);
 			MsgWarn msgWarn = gson.fromJson(msgWarnJson, MsgWarn.class);
 			int count=0;
 			count = msgWarnDao.insert(msgWarn);

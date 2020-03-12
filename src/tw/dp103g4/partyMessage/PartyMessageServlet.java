@@ -56,7 +56,7 @@ public class PartyMessageServlet extends HttpServlet {
 			
 		} else if (action.equals("msgInsert")) {
 			String msgJson = jsonObject.get("message").getAsString();
-			System.out.println("msgJson = " + msgJson);
+//			System.out.println("msgJson = " + msgJson);
 			PartyMessage message = gson.fromJson(msgJson, PartyMessage.class);
 			int count = 0;
 			if (action.equals("msgInsert")) {
@@ -92,7 +92,7 @@ public class PartyMessageServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -55,7 +55,7 @@ public class UserServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 		// 將輸入資料列印出來除錯用
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (userDao == null) {
 			userDao = new UserDaoImpl();
@@ -106,7 +106,7 @@ public class UserServlet extends HttpServlet {
 			}
 		} else if (action.equals("insert") || action.equals("update")) {
 			String userJson = jsonObject.get("user").getAsString();
-			System.out.println("userJson = " + userJson);
+//			System.out.println("userJson = " + userJson);
 			// 字串解析成物件bookJson->Book.class
 			User user = gson.fromJson(userJson, User.class);
 			byte[] image = null;
@@ -183,7 +183,7 @@ public class UserServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 }

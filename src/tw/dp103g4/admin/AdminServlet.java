@@ -49,7 +49,7 @@ public class AdminServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 		
 		
 		Admin adminGson = gson.fromJson(jsonIn.toString(), Admin.class);
@@ -98,6 +98,6 @@ public class AdminServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 }

@@ -40,7 +40,7 @@ public class TalkServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -66,7 +66,7 @@ public class TalkServlet extends HttpServlet {
 			
 		} else if (action.equals("talkInsert")) {
 			String talkJson = jsonObject.get("talk").getAsString();
-			System.out.println("TalkJson = " + talkJson);
+//			System.out.println("TalkJson = " + talkJson);
 			Talk talk = gson.fromJson(talkJson, Talk.class);
 			int count = talkDao.insert(talk);
 			writeText(response, String.valueOf(count));
@@ -84,7 +84,7 @@ public class TalkServlet extends HttpServlet {
 			
 		} else if (action.equals("talksInsert")) {
 			String talkJson = jsonObject.get("talks").getAsString();
-			System.out.println("TalkJson = " + talkJson);
+//			System.out.println("TalkJson = " + talkJson);
 			List<Talk> talks = gson.fromJson(talkJson, new TypeToken<List<Talk>>() {}.getType());
 			int count = 0;
 			for (Talk talk:talks) {

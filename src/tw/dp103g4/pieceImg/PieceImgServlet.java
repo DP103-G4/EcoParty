@@ -79,7 +79,7 @@ public class PieceImgServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

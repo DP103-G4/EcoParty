@@ -32,7 +32,7 @@ public class InformServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (informDao == null) {
@@ -45,7 +45,7 @@ public class InformServlet extends HttpServlet {
 			writeText(response, gson.toJson(informs));
 		}  else if (action.equals("informInsert")) {
 			String informJson = jsonObject.get("inform").getAsString();
-			System.out.println("newsJson = " + informJson);
+//			System.out.println("newsJson = " + informJson);
 			Inform inform = gson.fromJson(informJson, Inform.class);
 			int count = 0;
 			count = informDao.insert(inform);
@@ -71,7 +71,7 @@ public class InformServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-		System.out.println("output: " + outText);		
+//		System.out.println("output: " + outText);		
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 

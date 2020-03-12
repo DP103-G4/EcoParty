@@ -49,7 +49,7 @@ public class ParticipantServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 //		將輸入資料列印出來除錯用
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (participantDao == null) {
@@ -67,7 +67,7 @@ public class ParticipantServlet extends HttpServlet {
 			writeText(response, gson.toJson(participantInfos));
 		} else if (action.equals("participantInsert") || action.equals("participantDelete")) {
 			participantJson = jsonObject.get("participant").getAsString();
-			System.out.println("participantJson = " + participantJson);
+//			System.out.println("participantJson = " + participantJson);
 			participant = gson.fromJson(participantJson, Participant.class);
 
 			int count = 0, deleted = 0;
@@ -120,7 +120,7 @@ public class ParticipantServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

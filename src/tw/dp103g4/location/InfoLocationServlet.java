@@ -31,7 +31,7 @@ public class InfoLocationServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (infoLocationDao == null) {
@@ -44,7 +44,7 @@ public class InfoLocationServlet extends HttpServlet {
 			writeText(response, gson.toJson(infoLocations));
 		} else if (action.equals("locationInsert") || action.equals("locationUpdate")) {
 			String locationJson = jsonObject.get("location").getAsString();
-			System.out.println("locationJson" + locationJson);
+//			System.out.println("locationJson" + locationJson);
 			
 			InfoLocation infoLoaction = gson.fromJson(locationJson, InfoLocation.class);
 			int count = 0;
@@ -67,7 +67,7 @@ public class InfoLocationServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
