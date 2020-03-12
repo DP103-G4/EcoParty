@@ -110,6 +110,7 @@ public class PartyPieceDaoImpl implements PartyPieceDao {
 			ps.setInt(1, partyPiece.getUserId());
 			ps.setInt(2, partyPiece.getPartyId());
 			ps.setString(3, partyPiece.getContent());
+			ps.setInt(4, partyPiece.getId());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -85,6 +85,23 @@ public class PartyPieceServlet extends HttpServlet {
 				
 			} else if (action.equals("pieceUpdate")) {
 				count = partyPieceDao.update(partyPiece);
+				count = pieceImgDao.delete(partyPiece.getId());
+				
+				
+				String imgsJson = jsonObject.get("imagesBase64").getAsString();
+				List<String> imagesBase64 = gson.fromJson(imgsJson, new TypeToken<List<String>>() {}.getType());
+
+				if (count != 0) {
+				byte[] image = null;
+					if (jsonObject.get("imagesBase64") != null) {
+						for (String imgBase64: imagesBase64) {
+							if (imgBase64 != null && !imgBase64.isEmpty()) {
+								image = Base64.getMimeDecoder().decode(imgBase64);
+								count = pieceImgDao.insert(partyPiece.getId(), image);
+							}
+						}
+					} 
+				}
 			}
 			writeText(response, String.valueOf(count));
 			

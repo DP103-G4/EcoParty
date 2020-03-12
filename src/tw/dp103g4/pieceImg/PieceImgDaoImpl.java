@@ -50,8 +50,33 @@ public class PieceImgDaoImpl implements PieceImgDao {
 
 	@Override
 	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		String sql;
+		sql = "delete from Piece_img where piece_id = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		
+		try {
+			connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
 	}
 
 	@Override
