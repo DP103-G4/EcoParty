@@ -126,7 +126,7 @@ public class PartyServlet extends HttpServlet {
 
 		} else if (action.equals("partyInsert")) {
 			partyJson = jsonObject.get("party").getAsString();
-			System.out.println("partyJson = " + partyJson);
+//			System.out.println("partyJson = " + partyJson);
 			party = gson.fromJson(partyJson, Party.class);
 			coverImg = null;
 			// 檢查是否有上傳圖片
@@ -160,7 +160,7 @@ public class PartyServlet extends HttpServlet {
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("partyUpdate")) {
 			partyJson = jsonObject.get("party").getAsString();
-			System.out.println("partyJson = " + partyJson);
+//			System.out.println("partyJson = " + partyJson);
 			party = gson.fromJson(partyJson, Party.class);
 			coverImg = null;
 			// 檢查是否有上傳圖片
@@ -207,7 +207,7 @@ public class PartyServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

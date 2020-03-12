@@ -40,7 +40,7 @@ public class PartyPieceServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (partyPieceDao == null) {
@@ -59,7 +59,7 @@ public class PartyPieceServlet extends HttpServlet {
 			
 		} else if (action.equals("pieceInsert") || action.equals("pieceUpdate")) {
 			String pieceJson = jsonObject.get("piece").getAsString();
-			System.out.println("pieceJson = " + pieceJson);
+//			System.out.println("pieceJson = " + pieceJson);
 
 			PartyPiece partyPiece = gson.fromJson(pieceJson, PartyPiece.class);
 			int count = 0;
@@ -117,7 +117,7 @@ public class PartyPieceServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 
 	}
 

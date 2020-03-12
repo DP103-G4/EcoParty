@@ -109,7 +109,7 @@ public class ReviewImgServlet extends HttpServlet {
 		out.print(outText);
 		
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 }

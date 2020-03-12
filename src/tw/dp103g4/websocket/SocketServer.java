@@ -37,7 +37,7 @@ public class SocketServer {
 //		}
 		String text = String.format("Session ID = %s, conected; userId = %s%nusers: %s", userSession.getId(),
 				userId, userIds);
-		System.out.println(text);
+//		System.out.println(text);
 	}
 	
 	@OnMessage
@@ -50,12 +50,12 @@ public class SocketServer {
 		}else {
 			sessionMap.remove(receiver);
 		}
-		System.out.println("Message received: " + message);
+//		System.out.println("Message received: " + message);
 	}
 	
 	@OnError
 	public void onError(Session userSession, Throwable e) {
-		System.out.println("Error: " + e.toString());
+//		System.out.println("Error: " + e.toString());
 	}
 	
 	@OnClose
@@ -81,6 +81,6 @@ public class SocketServer {
 //		}
 		String text = String.format("session ID = %s, disconnentes; close code = %d%nusers: %s", userSession.getId(),
 				reason.getCloseCode().getCode(),userIds);
-		System.out.print(text);
+//		System.out.print(text);
 	}
 }

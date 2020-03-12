@@ -64,7 +64,7 @@ public class IccTableServlet extends HttpServlet {
 			writeText(response, gson.toJson(iccTableInfo));
 		} else if (action.equals("iccUpdate")) {
 			iccTableJson = jsonObject.get("iccTable").getAsString();
-			System.out.println("iccTableJson = " + iccTableJson);
+//			System.out.println("iccTableJson = " + iccTableJson);
 			iccTable = gson.fromJson(iccTableJson, IccTable.class);
 			
 			int count = 0;
@@ -80,7 +80,7 @@ public class IccTableServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -31,7 +31,7 @@ public class PartyLikeServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println("input: " + jsonIn);
+//		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (partyLikeDao == null) {
@@ -45,14 +45,14 @@ public class PartyLikeServlet extends HttpServlet {
 			writeText(response, gson.toJson(partyLikes));
 		}  else if (action.equals("partyLikeInsert")) {
 			String partyLikeJson = jsonObject.get("partyLike").getAsString();
-			System.out.println("partyLikeJson = " + partyLikeJson);
+//			System.out.println("partyLikeJson = " + partyLikeJson);
 			PartyLike partyLike = gson.fromJson(partyLikeJson, PartyLike.class);
 			int count = 0;
 			count = partyLikeDao.insert(partyLike);
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("partyLikeDelete")) {
 			String partyLikeJson = jsonObject.get("partyLike").getAsString();
-			System.out.println("partyLikeJson = " + partyLikeJson);
+//			System.out.println("partyLikeJson = " + partyLikeJson);
 			PartyLike partyLike = gson.fromJson(partyLikeJson, PartyLike.class);
 			int count = 0;
 			count = partyLikeDao.delete(partyLike);
@@ -66,7 +66,7 @@ public class PartyLikeServlet extends HttpServlet {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
 		out.print(outText);
-		System.out.println("output" + outText);
+//		System.out.println("output" + outText);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -35,7 +35,7 @@ public class FriendShipServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(outText);
 		// 將輸出資料列印出來除錯用
-		System.out.println("output: " + outText);
+//		System.out.println("output: " + outText);
 
 	}
 
@@ -49,7 +49,7 @@ public class FriendShipServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			jsonIn.append(line);
 		}
-		System.out.println(jsonIn.toString());
+//		System.out.println(jsonIn.toString());
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (friendShipDao == null) {
 			friendShipDao = new FriendShipDaoMySql();
@@ -66,10 +66,10 @@ public class FriendShipServlet extends HttpServlet {
 			int idOne = jsonObject.get("idOne").getAsInt();
 			int idTwo = jsonObject.get("idTwo").getAsInt();
 			if (friendShipDao.searchFriendShipAdd(idTwo, idOne)) {
-				System.out.println("isInviteById");
+//				System.out.println("isInviteById");
 				count = friendShipDao.updateIsInvite(idTwo, idOne);
 			}else {
-				System.out.println("insert");
+//				System.out.println("insert");
 				count = friendShipDao.insert(idOne, idTwo);}
 			writeText(response, gson.toJson(count));
 
